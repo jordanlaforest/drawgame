@@ -7,14 +7,31 @@
  * # AboutCtrl
  * Controller of the drawgameApp
  */
-angular.module('drawgameApp')
-  .controller('GameCtrl', function ($scope) {
-    //stuff
-    console.log("GameCtrl");
-  }).controller('PlayerListCtrl', function(){
-		console.log("PlayerListCtrl");
-  }).controller('CanvasCtrl', function(){
-		console.log("CanvasCtrl");
-  }).controller('ChatCtrl', function(){
-		console.log("ChatCtrl");
-	});
+var app = angular.module('drawgameApp');
+
+app.controller('GameCtrl', function ($scope) {
+  $scope.messages = [];
+  $scope.addMessage = function(username, message){
+    $scope.messages.push({name: username, text: message});
+  };
+});
+
+app.controller('PlayerListCtrl', function($scope){
+
+});
+
+app.controller('CanvasCtrl', function($scope){
+
+});
+
+app.controller('ChatCtrl', function($scope){
+  $scope.sendMessage = function(){
+		$scope.addMessage("Me", $scope.message);
+		$scope.message = "";
+  };
+
+  $scope.addMessage("Bob", "Hey Guys!");
+  $scope.addMessage("Patrick", "Hello!");
+  $scope.addMessage("Sandy", "You guys suck at this!");
+  $scope.addMessage("Bob", ":(");
+});
