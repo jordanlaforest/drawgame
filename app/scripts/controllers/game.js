@@ -5,7 +5,9 @@ var app = angular.module('drawgameApp');
 app.controller('GameCtrl', function ($scope) {
   $scope.messages = [];
   $scope.players = [];
+  $scope.playerId = 0; //Which player is this client?
   $scope.drawingPlayer = 0;
+  $scope.currentWord = "Dog";
 
   $scope.addMessage = function(username, message){
     $scope.messages.push({name: username, text: message});
@@ -16,6 +18,16 @@ app.controller('GameCtrl', function ($scope) {
   $scope.isDrawing = function(playerId){
     return $scope.drawingPlayer === playerId;
   };
+  $scope.getCurrentDrawingPlayer = function(){
+		var retPlayer;
+		$scope.players.forEach(function(player){
+      if(player.id === $scope.drawingPlayer){
+				retPlayer = player;
+			}
+    });
+		return retPlayer;
+  };
+
 
   //Init
 	$scope.addPlayer(0, "Bob", 4);
