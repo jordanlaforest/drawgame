@@ -1,12 +1,5 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name drawgameApp.controller:AboutCtrl
- * @description
- * # AboutCtrl
- * Controller of the drawgameApp
- */
 var app = angular.module('drawgameApp');
 
 app.controller('GameCtrl', function ($scope) {
@@ -36,6 +29,42 @@ app.controller('PlayerListCtrl', function($scope){
 });
 
 app.controller('CanvasCtrl', function($scope){
+  var canvas = document.querySelector('canvas');
+  var ctx = canvas.getContext('2d');
+  $scope.drawing = false;
+  $scope.lastX = 0;
+  $scope.lastY = 0;
+
+  $scope.getMouseX = function(evt){
+    return evt.clientX - canvas.getBoundingClientRect().left;
+  }
+  $scope.getMouseY = function(evt){
+    return evt.clientY - canvas.getBoundingClientRect().top;
+  }
+
+  canvas.onmousedown = function(evt){
+    $scope.drawing = true;
+    $scope.lastX = $scope.getMouseX(evt);
+    $scope.lastY = $scope.getMouseY(evt);
+  };
+
+  canvas.onmousemove = function(evt) {
+    if($scope.drawing){
+      ctx.beginPath();
+      ctx.moveTo($scope.lastX, $scope.lastY);
+      ctx.lineTo($scope.getMouseX(evt), $scope.getMouseY(evt));
+			ctx.stroke();
+
+			$scope.lastX = $scope.getMouseX(evt);
+			$scope.lastY = $scope.getMouseY(evt);
+
+    }
+  };
+
+	canvas.onmouseup = canvas.onmouseleave = function() {
+    $scope.drawing = false;
+  }
+
 });
 
 app.controller('ChatCtrl', function($scope){
