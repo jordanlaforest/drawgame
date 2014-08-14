@@ -7,9 +7,7 @@
         </div>
         <div class="panel-body">
           <ul class="list-group">
-						<li class="list-group-item">Bob<span class="pull-right">4</span></li>
-						<li class="list-group-item active">Patrick<span class="pull-right">0</span></li>
-						<li class="list-group-item">Sandy <span class="pull-right">7</span></li>
+						<li ng-repeat="player in players" ng-class="{'active':isDrawing(player.id)}" class="list-group-item">{{player.username}}<span class="pull-right">{{player.score}}</span></li>
           </ul>
         </div>
       </div>
