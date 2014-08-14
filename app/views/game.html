@@ -1,0 +1,50 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="panel panel-default" ng-controller="PlayerListCtrl as playerList">
+        <div class="panel-heading">
+          Players
+        </div>
+        <div class="panel-body">
+          <ul class="list-group">
+						<li class="list-group-item">Bob<span class="pull-right">4</span></li>
+						<li class="list-group-item active">Patrick<span class="pull-right">0</span></li>
+						<li class="list-group-item">Sandy <span class="pull-right">7</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="panel panel-default" ng-controller="CanvasCtrl as canvas">
+        <div class="panel-heading text-center">
+          Your word is <strong>Dog</strong>
+        </div>
+        <div class="panel-body">
+          <canvas id="canvas" width="960" height="640"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="panel panel-default" ng-controller="ChatCtrl as chat">
+        <div class="panel-heading">
+          Chat
+        </div>
+        <div class="panel-body">
+					<ul class="list-unstyled">
+          	<li><strong>Bob:</strong> Hey guys!</li>
+          	<li><strong>Patrick:</strong> Hello!</li>
+          	<li><strong>Sandy:</strong> You guys suck at this!</li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <div class="input-group">
+            <input type="text" class="form-control" />
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">Send</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
