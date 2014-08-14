@@ -55,6 +55,7 @@ app.controller('CanvasCtrl', function($scope){
   }
 
   canvas.onmousedown = function(evt){
+		evt.preventDefault();
     $scope.drawing = true;
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
