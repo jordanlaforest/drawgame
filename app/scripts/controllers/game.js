@@ -49,10 +49,10 @@ app.controller('CanvasCtrl', function($scope){
 
   $scope.getMouseX = function(evt){
     return evt.clientX - canvas.getBoundingClientRect().left;
-  }
+  };
   $scope.getMouseY = function(evt){
     return evt.clientY - canvas.getBoundingClientRect().top;
-  }
+  };
 
   canvas.onmousedown = function(evt){
 		evt.preventDefault();
@@ -76,7 +76,7 @@ app.controller('CanvasCtrl', function($scope){
 
 	canvas.onmouseup = canvas.onmouseleave = function() {
     $scope.drawing = false;
-  }
+  };
 
 });
 
