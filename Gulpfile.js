@@ -72,6 +72,11 @@ gulp.task('serve', ['watch', 'clean', 'index'], function() {
   //first before searching in the app folder
   express()
 
+  //injects the livereload script into your stuff
+  .use(require('connect-livereload')({
+    port: LR_PORT
+  }))
+
   //serve the .tmp directory
   .use(express.static(paths.devDir))
 
@@ -80,9 +85,6 @@ gulp.task('serve', ['watch', 'clean', 'index'], function() {
 
   //serve the app directory (for views)
   .use(express.static('app/'))
-
-  //injects the livereload script into your stuff
-  .use(require('connect-livereload'))
 
   .listen(PORT, function() {
     //pretty print a message as if it were from gulp (with a time prefix)
