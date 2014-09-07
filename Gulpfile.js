@@ -25,7 +25,8 @@ var paths = {
   prodDir: 'dist/',
   devDir: '.tmp/'
 };
-var LR_PORT = 32756;
+var PORT = 9000,
+  LR_PORT = 32756;
 var lr;
 
 /**
@@ -107,7 +108,7 @@ gulp.task('serve', ['clean', 'watch', 'index'], function() {
   g.nodemon({
     watch: ['server/'],
     script: paths.server,
-    args: ['--dirs=' + paths.devDir + ',.,app', '--port=9000', '--lrport=32756']
+    args: ['--dirs=' + paths.devDir + ',.,app', '--port=' + PORT, '--lrport=' + LR_PORT]
   });
 });
 
