@@ -9,6 +9,7 @@ var gulp = require('gulp'),
  * Npm plugins
  */
 var mainBowerFiles = require('main-bower-files'),
+  forever = require('forever-monitor'),
   tinylr = require('tiny-lr'),
   del = require('del'),
   karma = require('karma').server;
@@ -58,7 +59,7 @@ gulp.task('livereload', function() {
 // by `gulp.watch()`
 function notifyLivereload(event) {
 
-  if(event === null) {
+  if (event === null) {
     return;
   }
 
@@ -105,11 +106,32 @@ gulp.task('watch', ['livereload'], function(done) {
 
 // Runs a local static file server
 gulp.task('serve', ['clean', 'watch', 'index'], function() {
+  var child = new(forever.Monitor)(paths.server, {
+    options: ['--dirs=' + paths.devDir + ',.,app', '--port=' + PORT, '--lrport=' + LR_PORT],
+    watch: true,
+    watchDirectory: 'server'
+  });
+
+  child.on('watch:restart', function(info) {
+    g.util.log('Restarting script because ' + g.util.colors.magenta(info.file) + ' changed');
+  });
+
+  child.on('restart', function() {
+    g.util.log('Forever restarting script for ' + g.util.colors.red(child.times) + ' time');
+  });
+
+  child.on('exit', function() {
+    g.util.log(g.util.colors.red('Forever exiting with code'));
+  });
+
+  child.start();
+  /*
   g.nodemon({
     watch: ['server/'],
     script: paths.server,
     args: ['--dirs=' + paths.devDir + ',.,app', '--port=' + PORT, '--lrport=' + LR_PORT]
   });
+*/
 });
 
 //NOTE if some of the bower files aren't being
