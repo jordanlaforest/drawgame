@@ -1,5 +1,4 @@
 var web = require('./web.js');
-var io = require('socket.io')(web.server);
 var argv = require('minimist')(process.argv.slice(2));
 
 if(!argv.dirs || !argv.port){
@@ -7,9 +6,9 @@ if(!argv.dirs || !argv.port){
   process.exit(1);
 }
 
-web(argv.dirs.split(','), argv.port, argv.lrport);
+web.start(argv.dirs.split(','), argv.port, argv.lrport);
 
-
+var io = require('socket.io')(web.server);
 io.on('connection', function(socket){
   console.log('A user connected: ' + socket.id);
   socket.broadcast.emit('userconnected', { name: 'test' });

@@ -3,7 +3,7 @@
  */
 angular.module('socket.io', [])
   .provider('$socket', function $socketProvider(){
-    var url = '';
+    var url = 'http://localhost';
     var opts = {};
 
     this.getUrl = function () {
@@ -18,7 +18,6 @@ angular.module('socket.io', [])
     this.setOptions = function (newOpts) {
       opts = newOpts;
     };
-
 
     this.$get = function socketFactory($rootScope) {
       var socket = io(url, opts);
