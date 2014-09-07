@@ -9,7 +9,6 @@ var gulp = require('gulp'),
  * Npm plugins
  */
 var mainBowerFiles = require('main-bower-files'),
-  express = require('express'),
   tinylr = require('tiny-lr'),
   del = require('del'),
   karma = require('karma').server;
@@ -26,8 +25,7 @@ var paths = {
   prodDir: 'dist/',
   devDir: '.tmp/'
 };
-var PORT = 9000,
-  LR_PORT = 32756;
+var LR_PORT = 32756;
 var lr;
 
 /**
@@ -106,36 +104,11 @@ gulp.task('watch', ['livereload'], function(done) {
 
 // Runs a local static file server
 gulp.task('serve', ['clean', 'watch', 'index'], function() {
-  //the order of serving matters, index.html will be found in paths.devDir
-  //first before searching in the app folder, index.html in the app folder
-  //doesn't work on its own
-  express()
-
-  //injects the livereload script into your pages
-  .use(require('connect-livereload')({
-    port: LR_PORT
-  }))
-
-  //serve the .tmp directory
-  .use(express.static(paths.devDir))
-
-  //serve the root directory
-  .use(express.static('.'))
-
-  //serve the app directory (for view manipulation)
-  .use(express.static('app/'))
-
-  .listen(PORT, function() {
-    // pretty print a message as if it were from gulp (with a time prefix)
-    g.util.log('Listening on port', g.util.colors.cyan(PORT));
-  });
-
-  //TODO live reload with the API server.
-  /*
   g.nodemon({
-    script: paths.server
+    watch: ['server/'],
+    script: paths.server,
+    args: ['--dirs=' + paths.devDir + ',.,app', '--port=9000', '--lrport=32756']
   });
-*/
 });
 
 //NOTE if some of the bower files aren't being

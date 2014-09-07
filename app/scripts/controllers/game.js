@@ -2,7 +2,7 @@
 
 var app = angular.module('drawgameApp');
 
-app.controller('GameCtrl', function ($scope) {
+app.controller('GameCtrl', function ($scope, $socket) {
   $scope.messages = [];
   $scope.players = [];
   $scope.playerId = 0; //Which player is this client?
@@ -80,11 +80,16 @@ app.controller('CanvasCtrl', function($scope){
 
 });
 
-app.controller('ChatCtrl', function($scope){
+app.controller('ChatCtrl', function($scope, $socket){
   $scope.sendMessage = function(){
 		$scope.addMessage("Me", $scope.message);
+    $socket.emit("chat", $scope.message);
 		$scope.message = "";
   };
+
+  $socket.on("chat", function(msg) {
+    $scope.addMessage("Someone", msg);
+  });
 
   $scope.addMessage("Bob", "Hey Guys!");
   $scope.addMessage("Patrick", "Hello!");
