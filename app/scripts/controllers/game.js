@@ -2,7 +2,7 @@
 
 var app = angular.module('drawgameApp');
 
-app.controller('GameCtrl', function ($scope, $socket) {
+app.controller('GameCtrl', function ($scope, socket) {
   $scope.messages = [];
   $scope.players = [];
   $scope.playerId = 0; //Which player is this client?
@@ -33,6 +33,10 @@ app.controller('GameCtrl', function ($scope, $socket) {
 	$scope.addPlayer(0, "Bob", 4);
 	$scope.addPlayer(1, "Patrick", 0);
 	$scope.addPlayer(2, "Sandy", 7);
+
+  socket.on('connect', function() {
+    socket.emit('init', {name: "Bobert"});
+  });
 
 });
 
@@ -80,15 +84,21 @@ app.controller('CanvasCtrl', function($scope){
 
 });
 
-app.controller('ChatCtrl', function($scope, $socket){
+app.controller('ChatCtrl', function($scope, socket){
   $scope.sendMessage = function(){
-		$scope.addMessage("Me", $scope.message);
-    $socket.emit("chat", $scope.message);
-		$scope.message = "";
+		$scope.addMessage('Me', $scope.message);
+    socket.emit('chat', $scope.message);
+		$scope.message = '';
   };
 
-  $socket.on("chat", function(msg) {
-    $scope.addMessage("Someone", msg);
+  socket.on('chat', function(data) {
+    $scope.addMessage(data.name, data.msg);
+  });
+  socket.on('userconnected', function(data) {
+    $scope.addMessage('Info', data.name + ' has connected.');
+  });
+  socket.on('userdisconnect', function(data) {
+    $scope.addMessage('Info', data.name + ' has disconnected.');
   });
 
   $scope.addMessage("Bob", "Hey Guys!");

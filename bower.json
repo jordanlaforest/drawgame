@@ -13,7 +13,8 @@
     "angular-route": "1.2.16",
     "bootstrap": "~3.2.0",
     "jquery": "~2.1.1",
-    "socket.io-client": "~1.1.0"
+    "socket.io-client": "~1.1.0",
+    "node-uuid": "~1.4.1"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",
@@ -22,6 +23,9 @@
   "overrides": {
     "socket.io-client": {
       "main": "./socket.io.js"
+    },
+    "node-uuid": {
+      "main": "./uuid.js"
     }
   },
   "appPath": "app"
