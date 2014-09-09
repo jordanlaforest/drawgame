@@ -24,7 +24,17 @@ io.on('connection', function(socket){
     console.log(socket.player.name + '(' + socket.id + ') has connected');
     socket.broadcast.emit('userconnected', { name: socket.player.name });
   });
+  socket.on('name', function(name) {
+    console.log(socket.player.name + ' wants to change name to ' + name + '...');
+    if(!name){
+      console.log('New name invalid, name not changed');
+    } else {
+      console.log('Success.');
+      socket.player.name = name;
+    }
+  });
   socket.on('disconnect', function() {
+    console.log(socket.player.name + ' has disconnected');
     io.emit('userdisconnect', { name: socket.player.name });
   });
   socket.on('chat', function(msg) {

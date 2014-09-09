@@ -13,30 +13,26 @@ app.controller('GameCtrl', function ($scope, socket) {
     $scope.messages.push({name: username, text: message});
   };
   $scope.addPlayer = function(id, username, score){
-		$scope.players.push({id: id, username: username, score: score});
+    $scope.players.push({id: id, username: username, score: score});
   };
   $scope.isDrawing = function(playerId){
     return $scope.drawingPlayer === playerId;
   };
   $scope.getCurrentDrawingPlayer = function(){
-		var retPlayer;
-		$scope.players.forEach(function(player){
+    var retPlayer;
+    $scope.players.forEach(function(player){
       if(player.id === $scope.drawingPlayer){
-				retPlayer = player;
-			}
+        retPlayer = player;
+      }
     });
-		return retPlayer;
+    return retPlayer;
   };
 
 
   //Init
-	$scope.addPlayer(0, "Bob", 4);
-	$scope.addPlayer(1, "Patrick", 0);
-	$scope.addPlayer(2, "Sandy", 7);
-
-  socket.on('connect', function() {
-    socket.emit('init', {name: "Bobert"});
-  });
+  $scope.addPlayer(0, "Bob", 4);
+  $scope.addPlayer(1, "Patrick", 0);
+  $scope.addPlayer(2, "Sandy", 7);
 
 });
 
@@ -59,7 +55,7 @@ app.controller('CanvasCtrl', function($scope){
   };
 
   canvas.onmousedown = function(evt){
-		evt.preventDefault();
+    evt.preventDefault();
     $scope.drawing = true;
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
@@ -70,15 +66,15 @@ app.controller('CanvasCtrl', function($scope){
       ctx.beginPath();
       ctx.moveTo($scope.lastX, $scope.lastY);
       ctx.lineTo($scope.getMouseX(evt), $scope.getMouseY(evt));
-			ctx.stroke();
+      ctx.stroke();
 
-			$scope.lastX = $scope.getMouseX(evt);
-			$scope.lastY = $scope.getMouseY(evt);
+      $scope.lastX = $scope.getMouseX(evt);
+      $scope.lastY = $scope.getMouseY(evt);
 
     }
   };
 
-	canvas.onmouseup = canvas.onmouseleave = function() {
+  canvas.onmouseup = canvas.onmouseleave = function() {
     $scope.drawing = false;
   };
 
@@ -86,9 +82,9 @@ app.controller('CanvasCtrl', function($scope){
 
 app.controller('ChatCtrl', function($scope, socket){
   $scope.sendMessage = function(){
-		$scope.addMessage('Me', $scope.message);
+    $scope.addMessage('Me', $scope.message);
     socket.emit('chat', $scope.message);
-		$scope.message = '';
+    $scope.message = '';
   };
 
   socket.on('chat', function(data) {

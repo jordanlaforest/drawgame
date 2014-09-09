@@ -24,7 +24,6 @@ angular.module('socket.io', [])
 
       socket.on('uid', function(uid) {
         localStorage.setItem('uid', uid);
-        console.log('Updated uid to: ' + uid);
       });
 
       return {
