@@ -1,3 +1,5 @@
+'use strict';
+
 var web     = require('./web.js');
 var players = require('./players.js');
 var argv    = require('minimist')(process.argv.slice(2));
@@ -15,7 +17,7 @@ io.on('connection', function(socket){
   console.log('A user(' + socket.id +') is connecting...');
   socket.on('init', function(data) {
     socket.player = new players.Player();
-    if(socket.id != data.uid){ //Player is reconnecting
+    if(socket.id !== data.uid){ //Player is reconnecting
       socket.player = players.remove(data.uid);
       socket.emit('uid', socket.id);
     }
@@ -38,7 +40,7 @@ io.on('connection', function(socket){
     io.emit('userdisconnect', { name: socket.player.name });
   });
   socket.on('chat', function(msg) {
-    console.log(socket.player.name + " said: " + msg);
+    console.log(socket.player.name + ' said: ' + msg);
     socket.broadcast.emit('chat', {
       name: socket.player.name,
       msg: msg

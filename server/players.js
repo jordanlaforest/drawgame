@@ -1,3 +1,5 @@
+'use strict';
+
 var players = {};
 
 module.exports = {
@@ -11,7 +13,7 @@ module.exports = {
     return players[uid];
   },
   remove: function(uid){
-    player = players[uid];
+    var player = players[uid];
     if(!player){ //If uid is no longer valid, create new player
       return new this.Player();
     }
