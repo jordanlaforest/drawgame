@@ -8,7 +8,7 @@ app.controller('PlayerCtrl', function($scope, socket){
   $scope.name     = localStorage.getItem('player.name');
 
   this.validName = function(name){
-    return !!$scope.name;
+    return !!name;
   };
 
   $scope.changeName = function(newName){
