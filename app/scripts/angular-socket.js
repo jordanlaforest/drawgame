@@ -23,23 +23,45 @@ angular.module('socket.io', [])
 
     this.$get = function socketFactory($rootScope) {
       var socket = io(url, opts);
+      var wrappedFunctions = {};
+
+      var wrapFunction = function(callback) {
+        if(!wrappedFunctions[callback]){
+          wrappedFunctions[callback] = function() {
+            var args = arguments;
+            $rootScope.$apply(function() {
+              callback.apply(socket, args);
+            });
+          };
+        }
+        return wrappedFunctions[callback];
+      };
+      var removeFunction = function(callback) {
+        var func = wrappedFunctions[callback];
+        delete wrappedFunctions[callback];
+        return func;
+      };
 
       socket.on('uid', function(uid) {
         localStorage.setItem('uid', uid);
       });
 
-      return {
+      var obj = {
         on: function on(event, callback) {
-          socket.on(event, function() {
-            var args = arguments;
-            $rootScope.$apply(function() {
-              callback.apply(socket, args);
-            });
-          });
+          socket.on(event, wrapFunction(callback));
+          return {
+            destroyWith: function(scope){
+              if(scope){
+                scope.$on('$destroy', function(){
+                  obj.off(event, callback);
+                });
+              }
+            }
+          };
         },
         off: function off(event, callback) {
           if(typeof callback === 'function') {
-            socket.removeListener(event, callback);
+            socket.removeListener(event, removeFunction(callback));
           } else {
             socket.removeAllListeners(event);
           }
@@ -69,5 +91,6 @@ angular.module('socket.io', [])
           return uid;
         }
       };
+      return obj;
     };
   });
