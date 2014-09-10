@@ -1,7 +1,7 @@
 {
   "node": true,
   "browser": true,
-  "esnext": true,
+  "esnext": false,
   "bitwise": true,
   "camelcase": true,
   "curly": true,
@@ -19,6 +19,7 @@
   "trailing": true,
   "smarttabs": true,
   "globals": {
-    "angular": false
+    "angular": true,
+    "io": true
   }
 }

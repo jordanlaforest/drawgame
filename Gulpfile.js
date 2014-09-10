@@ -82,8 +82,22 @@ function notifyLivereload(event) {
  * requires the livereload server be started first
  */
 gulp.task('watch', ['livereload'], function(done) {
-  gulp.watch([paths.scripts, paths.views, paths.devDir + '*.*'],
+  gulp.watch([paths.views, paths.devDir + '*.*'],
     notifyLivereload);
+
+  /**
+   * putting notifyLivereload after the previous task
+   * in the array doesn't work and i'm not quite sure why.
+   * I think it has to do with streaming, as browsersync's
+   * reload uses streaming.
+   */
+
+  gulp.watch(paths.scripts, function(file) {
+    gulp.start('lint')
+      .on('task_end', function() {
+        notifyLivereload(file);
+      });
+  });
 
   gulp.watch(paths.styles, function(file) {
     gulp.start('sass')
@@ -249,8 +263,20 @@ gulp.task('scripts:dist', function() {
     .pipe(gulp.dest(paths.prodDir + 'js/'));
 });
 
-gulp.task('jshint', function() {
+
+/**
+ * Easy to merge these tasks
+ */
+gulp.task('lint-app', function() {
   return gulp.src(paths.scripts)
     .pipe(g.jshint())
     .pipe(g.jshint.reporter('jshint-stylish'));
 });
+
+gulp.task('lint-server', function() {
+return gulp.src('server/{,**/}*.js')
+  .pipe(g.jshint())
+  .pipe(g.jshint.reporter('jshint-stylish'));
+});
+
+gulp.task('lint', ['lint-app', 'lint-server']);
