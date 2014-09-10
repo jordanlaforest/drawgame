@@ -1,3 +1,5 @@
+'use strict';
+
 /* A slightly modified code from this tutorial
  * http://code.tutsplus.com/tutorials/more-responsive-single-page-applications-with-angularjs-socketio-creating-the-library--cms-21738
  */
@@ -36,33 +38,33 @@ angular.module('socket.io', [])
           });
         },
         off: function off(event, callback) {
-          if(typeof callback == 'function') {
+          if(typeof callback === 'function') {
             socket.removeListener(event, callback);
           } else {
             socket.removeAllListeners(event);
           }
         },
         emit: function emit(event, data, callback) {
-          if('init' == event){ //Automatically add the uid during init
+          if('init' === event){ //Automatically add the uid during init
             data.uid = this.uid();
           }
-          if(typeof callback == 'function') {
+          if(typeof callback === 'function') {
             socket.emit(event, data, function() {
               var args = arguments;
 
               $rootScope.$apply(function () {
                 callback.apply(socket, args);
-              })
+              });
             });
           } else {
             socket.emit(event, data);
           }
         },
         uid: function uid() {
-          var uid = localStorage.getItem('uid');
-          if(!uid){
-            uid = socket.io.engine.id;
-            localStorage.setItem('uid', uid);
+          var id = localStorage.getItem('uid');
+          if(!id){
+            id = socket.io.engine.id;
+            localStorage.setItem('uid', id);
           }
           return uid;
         }

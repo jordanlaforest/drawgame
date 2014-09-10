@@ -7,7 +7,7 @@ app.controller('GameCtrl', function ($scope, socket) {
   $scope.players = [];
   $scope.playerId = 0; //Which player is this client?
   $scope.drawingPlayer = 0;
-  $scope.currentWord = "Dog";
+  $scope.currentWord = 'Dog';
 
   $scope.addMessage = function(username, message){
     $scope.messages.push({name: username, text: message});
@@ -30,9 +30,9 @@ app.controller('GameCtrl', function ($scope, socket) {
 
 
   //Init
-  $scope.addPlayer(0, "Bob", 4);
-  $scope.addPlayer(1, "Patrick", 0);
-  $scope.addPlayer(2, "Sandy", 7);
+  $scope.addPlayer(0, 'Bob', 4);
+  $scope.addPlayer(1, 'Patrick', 0);
+  $scope.addPlayer(2, 'Sandy', 7);
 
 });
 
@@ -97,8 +97,8 @@ app.controller('ChatCtrl', function($scope, socket){
     $scope.addMessage('Info', data.name + ' has disconnected.');
   });
 
-  $scope.addMessage("Bob", "Hey Guys!");
-  $scope.addMessage("Patrick", "Hello!");
-  $scope.addMessage("Sandy", "You guys suck at this!");
-  $scope.addMessage("Bob", ":(");
+  $scope.addMessage('Bob', 'Hey Guys!');
+  $scope.addMessage('Patrick', 'Hello!');
+  $scope.addMessage('Sandy', 'You guys suck at this!');
+  $scope.addMessage('Bob', ':(');
 });
