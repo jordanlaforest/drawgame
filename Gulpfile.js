@@ -10,7 +10,6 @@ var gulp = require('gulp'),
  */
 var mainBowerFiles = require('main-bower-files'),
   forever = require('forever-monitor'),
-  tinylr = require('tiny-lr'),
   del = require('del'),
   karma = require('karma').server;
 
@@ -27,8 +26,7 @@ var paths = {
   devDir: '.tmp/'
 };
 var PORT = 9000,
-  LR_PORT = 32756;
-var lr;
+  LR_PORT = 35729;
 
 /**
  * The clean task
@@ -39,80 +37,21 @@ gulp.task('clean', function(done) {
 });
 
 /**
- * Development server tasks
- *
- * livereload:    starts the livereload server
- * watch:         watches files and restarts the server
- *                also processes index.html when it changes
- * serve:         runs a local static file server, so we can test on a server
- */
-gulp.task('livereload', function() {
-  lr = tinylr();
-  //default port
-  lr.listen(LR_PORT, function() {
-    g.util.log('Live-reload server started on port', g.util.colors.cyan(LR_PORT));
-  });
-});
-
-// COPY PASTED FROM SOMEWHERE hehe
-// Notifies livereload of changes detected
-// by `gulp.watch()`
-function notifyLivereload(event) {
-
-  if (event === null) {
-    return;
-  }
-
-  // `gulp.watch()` events provide an absolute path
-  // so we need to make it relative to the server root
-  var fileName = require('path').relative(__dirname, event.path);
-
-  lr.changed({
-    body: {
-      files: [fileName]
-    }
-  });
-
-  //pretty print a message for the file changing
-  g.util.log(g.util.colors.magenta(fileName), 'changed');
-}
-
-/**
  * Watches files and reloads the webpage
  * requires the livereload server be started first
  */
-gulp.task('watch', ['livereload'], function(done) {
-  gulp.watch([paths.views, paths.devDir + '*.*'],
-    notifyLivereload);
+gulp.task('watch', function(done) {
+  g.livereload.listen(LR_PORT);
 
-  /**
-   * putting notifyLivereload after the previous task
-   * in the array doesn't work and i'm not quite sure why.
-   * I think it has to do with streaming, as browsersync's
-   * reload uses streaming.
-   */
+  gulp.watch(paths.views).on('change', g.livereload.changed);
 
-  gulp.watch(paths.scripts, function(file) {
-    gulp.start('lint')
-      .on('task_end', function() {
-        notifyLivereload(file);
-      });
-  });
+  gulp.watch(paths.scripts, ['lint-app']);
+  gulp.watch('server/*.js', ['lint-server']);
 
-  gulp.watch(paths.styles, function(file) {
-    gulp.start('sass')
-      .on('task_end', function() {
-        notifyLivereload(file);
-      });
-  });
+  gulp.watch(paths.styles, ['sass']);
 
   //this will update devDir index.html, and the previous trigger will occur
-  gulp.watch('app/index.html', function(file) {
-    gulp.start('index')
-      .on('task_end', function() {
-        notifyLivereload(file);
-      });
-  });
+  gulp.watch('app/index.html', ['index']);
 
   //ensure we can run watch synchronously
   done();
@@ -174,7 +113,10 @@ gulp.task('index', ['sass'], function() {
         ignorePath: [paths.devDir]
       }
     )) //app
-    .pipe(gulp.dest(paths.devDir));
+    .pipe(gulp.dest(paths.devDir))
+    .pipe(g.livereload({
+      auto: false
+    }));
 });
 
 gulp.task('index:dist', ['sass:dist'], function() {
@@ -215,7 +157,10 @@ gulp.task('index:dist', ['sass:dist'], function() {
 gulp.task('sass', function() {
   return gulp.src(paths.styles)
     .pipe(g.sass())
-    .pipe(gulp.dest(paths.devDir));
+    .pipe(gulp.dest(paths.devDir))
+    .pipe(g.livereload({
+      auto: false
+    }));
 });
 
 //gulp-sass is different from gulp-ruby-sass
@@ -270,13 +215,19 @@ gulp.task('scripts:dist', function() {
 gulp.task('lint-app', function() {
   return gulp.src(paths.scripts)
     .pipe(g.jshint())
-    .pipe(g.jshint.reporter('jshint-stylish'));
+    .pipe(g.jshint.reporter('jshint-stylish'))
+    .pipe(g.livereload({
+      auto: false
+    }));
 });
 
 gulp.task('lint-server', function() {
   return gulp.src('server/{,**/}*.js')
     .pipe(g.jshint())
-    .pipe(g.jshint.reporter('jshint-stylish'));
+    .pipe(g.jshint.reporter('jshint-stylish'))
+    .pipe(g.livereload({
+      auto: false
+    }));
 });
 
 gulp.task('lint', ['lint-app', 'lint-server']);
