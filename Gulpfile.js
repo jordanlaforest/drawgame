@@ -274,9 +274,9 @@ gulp.task('lint-app', function() {
 });
 
 gulp.task('lint-server', function() {
-return gulp.src('server/{,**/}*.js')
-  .pipe(g.jshint())
-  .pipe(g.jshint.reporter('jshint-stylish'));
+  return gulp.src('server/{,**/}*.js')
+    .pipe(g.jshint())
+    .pipe(g.jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('lint', ['lint-app', 'lint-server']);
