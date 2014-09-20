@@ -13,8 +13,8 @@ web.start(argv.dirs.split(','), argv.port, argv.lrport);
 
 var io = require('socket.io')(web.server);
 
-function emitServerMessage(socket, message) {
-  socket.broadcast.emit('servermessage', {
+function broadcastMessage(message) {
+ io.emit('servermessage', {
     message: message
   });
 }
@@ -36,7 +36,7 @@ io.on('connection', function(socket) {
 
     //TODO reuse this messag
     console.log(socket.player.name + '(' + socket.id + ') has connected');
-    emitServerMessage(socket, socket.player.name + ' has connected');
+    broadcastMessage(socket.player.name + ' has connected');
   });
 
   //adding or updating name
@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
 
       //Tell the players a name change occurred
       var msg = oldName + ' has changed their name to ' + socket.player.name;
-      emitServerMessage(socket, msg);
+      broadcastMessage(msg);
       console.log('Success: ' + msg);
     }
   });
@@ -60,7 +60,7 @@ io.on('connection', function(socket) {
     var msg = socket.player.name + ' has disconnected';
 
     console.log(msg);
-    emitServerMessage(socket, msg);
+    broadcastMessage(msg);
   });
 
   //chat event
