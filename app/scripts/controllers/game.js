@@ -90,11 +90,8 @@ app.controller('ChatCtrl', function($scope, socket){
   socket.on('chat', function(data) {
     $scope.addMessage(data.name, data.msg);
   }).destroyWith($scope);
-  socket.on('userconnected', function(data) {
-    $scope.addMessage('Info', data.name + ' has connected.');
-  }).destroyWith($scope);
-  socket.on('userdisconnect', function(data) {
-    $scope.addMessage('Info', data.name + ' has disconnected.');
+  socket.on('servermessage', function(data) {
+    $scope.addMessage('[INFO]', data.message);
   }).destroyWith($scope);
 
   $scope.addMessage('Bob', 'Hey Guys!');
