@@ -22,6 +22,8 @@ var paths = {
   views: ['app/views/*.html'],
   server: 'server/server.js',
 
+  images: 'app/images/*',
+
   prodDir: 'dist/',
   devDir: '.tmp/'
 };
@@ -142,6 +144,11 @@ gulp.task('index:dist', ['sass:dist'], function() {
     .pipe(gulp.dest(paths.prodDir));
 });
 
+gulp.task('images:dist', function() {
+  return gulp.src(paths.images)
+    .pipe(g.imagemin())
+    .pipe(gulp.dest(paths.prodDir));
+});
 
 //the return means we can use sass synchronously
 //we need to clean before running sass and index for example
