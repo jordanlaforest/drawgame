@@ -161,6 +161,9 @@ gulp.task('views:dist', function() {
     .pipe(g.sourcemaps.write('.'))
     .pipe(gulp.dest(paths.prodDir + 'js/'));
 });
+
+gulp.task('build', ['clean', 'index:dist', 'images:dist']);
+
 gulp.task('images:dist', function() {
   return gulp.src(paths.images)
     .pipe(g.imagemin())
