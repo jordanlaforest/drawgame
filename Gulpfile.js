@@ -160,6 +160,12 @@ gulp.task('sass', function() {
 gulp.task('sass:dist', function() {
   return gulp.src(paths.styles)
     .pipe(g.sass())
+    .pipe(g.minifyCss())
+    .pipe(g.autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false
+    }))
+    .pipe(g.concat('app.css'))
     .pipe(gulp.dest(paths.prodDir + 'css/'));
 });
 
