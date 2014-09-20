@@ -77,13 +77,6 @@ gulp.task('serve', ['clean', 'watch', 'index'], function() {
   });
 
   child.start();
-  /*
-  g.nodemon({
-    watch: ['server/'],
-    script: paths.server,
-    args: ['--dirs=' + paths.devDir + ',.,app', '--port=' + PORT, '--lrport=' + LR_PORT]
-  });
-*/
 });
 
 //NOTE if some of the bower files aren't being
