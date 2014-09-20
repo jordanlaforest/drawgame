@@ -45,12 +45,11 @@ gulp.task('watch', function(done) {
 
   gulp.watch(paths.views).on('change', g.livereload.changed);
 
-  gulp.watch(paths.scripts, ['lint-app']);
+  gulp.watch(paths.scripts, ['lint-app']).on('change', g.livereload.changed);
   gulp.watch('server/*.js', ['lint-server']);
 
   gulp.watch(paths.styles, ['sass']);
 
-  //this will update devDir index.html, and the previous trigger will occur
   gulp.watch('app/index.html', ['index']);
 
   //ensure we can run watch synchronously
@@ -215,19 +214,13 @@ gulp.task('scripts:dist', function() {
 gulp.task('lint-app', function() {
   return gulp.src(paths.scripts)
     .pipe(g.jshint())
-    .pipe(g.jshint.reporter('jshint-stylish'))
-    .pipe(g.livereload({
-      auto: false
-    }));
+    .pipe(g.jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('lint-server', function() {
   return gulp.src('server/{,**/}*.js')
     .pipe(g.jshint())
-    .pipe(g.jshint.reporter('jshint-stylish'))
-    .pipe(g.livereload({
-      auto: false
-    }));
+    .pipe(g.jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('lint', ['lint-app', 'lint-server']);
