@@ -154,7 +154,9 @@ gulp.task('views:dist', function() {
   return gulp.src(paths.views)
     .pipe(g.sourcemaps.init())
     .pipe(g.htmlmin(htmlminOpts))
-    .pipe(g.ngHtml2js())
+    .pipe(g.ngHtml2js({
+      prefix: 'views/'
+    }))
     .pipe(g.concat('views.js'))
     .pipe(g.uglify())
     .pipe(g.rev())
