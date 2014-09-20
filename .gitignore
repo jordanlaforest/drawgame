@@ -1,6 +1,14 @@
+# dependencies
 node_modules
+bower_components
+
+# build folders
 dist
 .tmp
+
+# tool folders
 .sass-cache
-bower_components
+
+# editor files
+*sublime*
 *.swp
