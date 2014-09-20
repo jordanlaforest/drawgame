@@ -17,9 +17,9 @@ var mainBowerFiles = require('main-bower-files'),
  * Local variables
  */
 var paths = {
-  scripts: ['app/scripts/{,*/}*.js'],
-  styles: ['app/styles/*.scss'],
-  views: ['app/views/*.html'],
+  scripts: 'app/scripts/{,*/}*.js',
+  styles: 'app/styles/*.scss',
+  views: 'app/views/*.html',
   server: 'server/server.js',
 
   images: 'app/images/*',
