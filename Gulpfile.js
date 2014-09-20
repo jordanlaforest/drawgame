@@ -166,6 +166,7 @@ gulp.task('sass:dist', function() {
       cascade: false
     }))
     .pipe(g.concat('app.css'))
+    .pipe(g.rev())
     .pipe(gulp.dest(paths.prodDir + 'css/'));
 });
 
@@ -200,12 +201,12 @@ gulp.task('scripts:dist', function() {
   return gulp.src(paths.scripts)
     .pipe(g.sourcemaps.init())
     .pipe(g.ngAnnotate()) //annotate functions with ['$scope', ..] so uglify doesn't break everything
-    .pipe(g.concat('app-built.js')) //merge files into one file with the name 'app-built.js'
+    .pipe(g.concat('app.js')) //merge files into one file with the name 'app-built.js'
     .pipe(g.uglify()) //obfuscate code to smaller variable names to save space
+    .pipe(g.rev())
     .pipe(g.sourcemaps.write('.'))
     .pipe(gulp.dest(paths.prodDir + 'js/'));
 });
-
 
 /**
  * Easy to merge these tasks
