@@ -16,7 +16,7 @@
       <div class="panel panel-default" ng-controller="CanvasCtrl">
         <div class="panel-heading text-center">
           <span ng-show="isDrawing(playerId)"> Your word is <strong>{{currentWord}}</strong></span>
-					<span ng-hide="isDrawing(playerId)"> <strong>{{getCurrentDrawingPlayer().username}}</strong> is currently drawing
+					<span ng-hide="isDrawing(playerId)"> <strong>{{getCurrentDrawingPlayer().username}}</strong> is currently drawing</span>
         </div>
         <div class="panel-body">
           <canvas id="canvas" width="960" height="640"></canvas>
