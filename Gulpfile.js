@@ -113,12 +113,12 @@ gulp.task('index', ['sass'], function() {
     }));
 });
 
-gulp.task('index:dist', ['sass:dist'], function() {
 var htmlminOpts = {
   removeComments: false,
   collapseWhitespace: true
 };
 
+gulp.task('index:dist', ['sass:dist', 'scripts:dist', 'views:dist'], function() {
   return gulp.src('app/index.html')
     .pipe(g.inject(
       gulp.src(mainBowerFiles(), {
@@ -150,6 +150,17 @@ var htmlminOpts = {
     .pipe(gulp.dest(paths.prodDir));
 });
 
+gulp.task('views:dist', function() {
+  return gulp.src(paths.views)
+    .pipe(g.sourcemaps.init())
+    .pipe(g.htmlmin(htmlminOpts))
+    .pipe(g.ngHtml2js())
+    .pipe(g.concat('views.js'))
+    .pipe(g.uglify())
+    .pipe(g.rev())
+    .pipe(g.sourcemaps.write('.'))
+    .pipe(gulp.dest(paths.prodDir + 'js/'));
+});
 gulp.task('images:dist', function() {
   return gulp.src(paths.images)
     .pipe(g.imagemin())
