@@ -14,6 +14,7 @@
     "gulp-autoprefixer": "^1.0.0",
     "gulp-concat": "~2.3.5",
     "gulp-google-cdn": "^1.1.0",
+    "gulp-htmlmin": "^0.2.0",
     "gulp-imagemin": "^1.0.1",
     "gulp-inject": "^1.0.2",
     "gulp-jshint": "~1.8.4",

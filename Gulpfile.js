@@ -114,6 +114,11 @@ gulp.task('index', ['sass'], function() {
 });
 
 gulp.task('index:dist', ['sass:dist'], function() {
+var htmlminOpts = {
+  removeComments: false,
+  collapseWhitespace: true
+};
+
   return gulp.src('app/index.html')
     .pipe(g.inject(
       gulp.src(mainBowerFiles(), {
@@ -130,9 +135,9 @@ gulp.task('index:dist', ['sass:dist'], function() {
     }))
     .pipe(g.inject(
       gulp.src(
-        paths.scripts.concat(
-          [paths.prodDir + '*.css']
-        ), {
+        ['js/*.js', 'css/*.css'].map(function(filename) {
+          return paths.prodDir + filename;
+        }), {
           read: false
         }
       ), {
@@ -141,6 +146,7 @@ gulp.task('index:dist', ['sass:dist'], function() {
         ignorePath: [paths.prodDir]
       }
     )) //app
+    .pipe(g.htmlmin(htmlminOpts))
     .pipe(gulp.dest(paths.prodDir));
 });
 
