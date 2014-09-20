@@ -1,3 +1,4 @@
+/* globals prompt */
 'use strict';
 
 var app = angular.module('drawgameApp');
