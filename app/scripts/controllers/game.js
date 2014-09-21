@@ -28,7 +28,6 @@ app.controller('GameCtrl', function ($scope, socket) {
     return retPlayer;
   };
 
-
   //Init
   $scope.addPlayer(0, 'Bob', 4);
   $scope.addPlayer(1, 'Patrick', 0);
@@ -36,11 +35,11 @@ app.controller('GameCtrl', function ($scope, socket) {
 
 });
 
-app.controller('PlayerListCtrl', function($scope){
+app.controller('PlayerListCtrl', function($scope) {
 
 });
 
-app.controller('CanvasCtrl', function($scope){
+app.controller('CanvasCtrl', function($scope, socket) {
   var canvas = document.querySelector('canvas');
   var ctx = canvas.getContext('2d');
   $scope.drawing = false;
@@ -54,11 +53,36 @@ app.controller('CanvasCtrl', function($scope){
     return evt.clientY - canvas.getBoundingClientRect().top;
   };
 
+  socket.on('draw:start', function(point) {
+    $scope.lastX = point.x;
+    $scope.lastY = point.y;
+  });
+  socket.on('draw:move', function(point) {
+    $scope.x = point.x;
+    $scope.y = point.y;
+
+    ctx.beginPath();
+    ctx.moveTo($scope.lastX, $scope.lastY);
+    ctx.lineTo($scope.x, $scope.y);
+    ctx.stroke();
+
+    $scope.lastX = $scope.x;
+    $scope.lastY = $scope.y;
+  });
+
+  //works without this, but keeping just in case for future life cycle events.
+  socket.on('draw:end', function(point) {
+    $scope.lastX = point.x;
+    $scope.lastY = point.y;
+  });
+
   canvas.onmousedown = function(evt){
     evt.preventDefault();
     $scope.drawing = true;
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
+
+    socket.emit('draw:start', {x: $scope.lastX, y: $scope.lastY});
   };
 
   canvas.onmousemove = function(evt) {
@@ -71,11 +95,17 @@ app.controller('CanvasCtrl', function($scope){
       $scope.lastX = $scope.getMouseX(evt);
       $scope.lastY = $scope.getMouseY(evt);
 
+      socket.emit('draw:move', {x: $scope.lastX, y: $scope.lastY});
     }
   };
 
-  canvas.onmouseup = canvas.onmouseleave = function() {
+  canvas.onmouseup = canvas.onmouseleave = function(evt) {
     $scope.drawing = false;
+
+    $scope.lastX = $scope.getMouseX(evt);
+    $scope.lastY = $scope.getMouseY(evt);
+
+    socket.emit('draw:end', {x: $scope.lastX, y: $scope.lastY });
   };
 
 });

@@ -71,4 +71,15 @@ io.on('connection', function(socket) {
       msg: msg
     });
   });
+
+  //just relay these events
+  socket.on('draw:start', function(point) {
+    socket.broadcast.emit('draw:start', point);
+  });
+  socket.on('draw:move', function(point) {
+    socket.broadcast.emit('draw:move', point);
+  });
+  socket.on('draw:end', function(point) {
+    socket.broadcast.emit('draw:end', point);
+  });
 });
