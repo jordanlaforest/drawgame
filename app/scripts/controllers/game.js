@@ -42,22 +42,55 @@ app.controller('PlayerListCtrl', function($scope) {
 app.controller('CanvasCtrl', function($scope, socket) {
   var canvas = document.querySelector('canvas');
   var ctx = canvas.getContext('2d');
+
+  //experimental
+  var width = canvas.width;
+  var height = canvas.height;
+
   $scope.drawing = false;
   $scope.lastX = 0;
   $scope.lastY = 0;
 
   $scope.getMouseX = function(evt){
+    //refresh these variables since i am just
+    //inspecting elements to test scalability
+    canvas = document.querySelector('canvas');
+    width = canvas.width;
+    height = canvas.height;
+
     return evt.clientX - canvas.getBoundingClientRect().left;
   };
   $scope.getMouseY = function(evt){
+    //refresh these variables since i am just
+    //inspecting elements to test scalability
+    canvas = document.querySelector('canvas');
+    width = canvas.width;
+    height = canvas.height;
     return evt.clientY - canvas.getBoundingClientRect().top;
   };
 
+  //helper method to divide by height
+  function createScaledPoint(x, y) {
+    return {
+      x: x / width,
+      y: y / height
+    };
+  }
+
+  function scalePoint(point, width, height) {
+    return {
+      x: point.x * width,
+      y: point.y * height
+    };
+  }
+
   socket.on('draw:start', function(point) {
+    point = scalePoint(point, width, height);
     $scope.lastX = point.x;
     $scope.lastY = point.y;
   });
   socket.on('draw:move', function(point) {
+    point = scalePoint(point, width, height);
     $scope.x = point.x;
     $scope.y = point.y;
 
@@ -72,6 +105,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
 
   //works without this, but keeping just in case for future life cycle events.
   socket.on('draw:end', function(point) {
+    point = scalePoint(point, width, height);
     $scope.lastX = point.x;
     $scope.lastY = point.y;
   });
@@ -82,7 +116,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
 
-    socket.emit('draw:start', {x: $scope.lastX, y: $scope.lastY});
+    socket.emit('draw:start', createScaledPoint($scope.lastX, $scope.lastY));
   };
 
   canvas.onmousemove = function(evt) {
@@ -95,7 +129,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
       $scope.lastX = $scope.getMouseX(evt);
       $scope.lastY = $scope.getMouseY(evt);
 
-      socket.emit('draw:move', {x: $scope.lastX, y: $scope.lastY});
+      socket.emit('draw:move', createScaledPoint($scope.lastX, $scope.lastY));
     }
   };
 
@@ -105,7 +139,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
 
-    socket.emit('draw:end', {x: $scope.lastX, y: $scope.lastY });
+    socket.emit('draw:end', createScaledPoint($scope.lastX, $scope.lastY));
   };
 
 });
