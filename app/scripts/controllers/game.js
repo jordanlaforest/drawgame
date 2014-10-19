@@ -5,9 +5,18 @@ var app = angular.module('drawgameApp');
 app.controller('GameCtrl', function ($scope, socket) {
   $scope.messages = [];
   $scope.players = [];
-  $scope.playerId = 0; //Which player is this client?
-  $scope.drawingPlayer = 0;
-  $scope.currentWord = 'Dog';
+
+  //connect to the server, get my id and who's turn it is
+  $scope.initialize = function() {
+    $scope.myId = 0; //Which player is this client?
+    $scope.drawingPlayer = 0;
+    $scope.currentWord = 'Dog'; //i think only the user currently drawing
+                                //should have this?
+
+    socket.on('init:done', function() {
+
+    });
+  };
 
   $scope.addMessage = function(username, message){
     $scope.messages.push({name: username, text: message});
@@ -15,8 +24,8 @@ app.controller('GameCtrl', function ($scope, socket) {
   $scope.addPlayer = function(id, username, score){
     $scope.players.push({id: id, username: username, score: score});
   };
-  $scope.isDrawing = function(playerId){
-    return $scope.drawingPlayer === playerId;
+  $scope.amIDrawing = function(myId){
+    return $scope.drawingPlayer === myId;
   };
   $scope.getCurrentDrawingPlayer = function(){
     var retPlayer;
@@ -33,6 +42,7 @@ app.controller('GameCtrl', function ($scope, socket) {
   $scope.addPlayer(1, 'Patrick', 0);
   $scope.addPlayer(2, 'Sandy', 7);
 
+  $scope.initialize();
 });
 
 app.controller('PlayerListCtrl', function($scope) {
@@ -146,6 +156,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
 
 app.controller('ChatCtrl', function($scope, socket){
   $scope.sendMessage = function(){
+    //TODO don't send chat until it actually gets sent?
     $scope.addMessage('Me', $scope.message);
     socket.emit('chat', $scope.message);
     $scope.message = '';

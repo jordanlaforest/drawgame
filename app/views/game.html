@@ -1,5 +1,6 @@
 <div class="container-fluid">
   <div class="row">
+    <!-- Player List -->
     <div class="col-md-2">
       <div class="panel panel-default" ng-controller="PlayerListCtrl">
         <div class="panel-heading">
@@ -11,29 +12,38 @@
           </ul>
         </div>
       </div>
-    </div>
+    </div> <!-- end of player list -->
+
+    <!-- canvas -->
     <div class="col-md-8">
       <div class="panel panel-default" ng-controller="CanvasCtrl">
         <div class="panel-heading text-center">
-          <span ng-show="isDrawing(playerId)"> Your word is <strong>{{currentWord}}</strong></span>
-					<span ng-hide="isDrawing(playerId)"> <strong>{{getCurrentDrawingPlayer().username}}</strong> is currently drawing</span>
+          <!--  -->
+          <span ng-show="amIDrawing(playerId)"> Your word is <strong>{{currentWord}}</strong></span>
+					<span ng-hide="amIDrawing(playerId)"> <strong>{{getCurrentDrawingPlayer().username}}</strong> is currently drawing</span>
         </div>
         <div class="panel-body">
           <canvas id="canvas" width="960" height="640"></canvas>
         </div>
       </div>
-    </div>
+    </div> <!-- end of canvas -->
+
+    <!-- chat -->
     <div class="col-md-2">
       <div class="panel panel-default" ng-controller="ChatCtrl">
-        <div class="panel-heading">
-          Chat
-        </div>
+
+        <!-- heading -->
+        <header class="panel-heading">Chat</header>
+
+        <!-- body -->
         <div class="panel-body">
 					<ul class="list-unstyled">
           	<li ng-repeat="mes in messages"><strong>{{mes.name}}:</strong> {{mes.text}}</li>
           </ul>
         </div>
-        <div class="panel-footer">
+
+        <!-- footer -->
+        <footer class="panel-footer">
 					<form role="form" ng-submit="sendMessage()">
 						<div class="input-group">
 							<input type="text" ng-model="message" class="form-control" />
@@ -42,8 +52,8 @@
 							</span>
 						</div>
 					</form>
-        </div>
+        </footer>
       </div>
-    </div>
+    </div> <!-- end of chat -->
   </div>
 </div>
