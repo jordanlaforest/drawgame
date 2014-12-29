@@ -16,13 +16,16 @@ var mainBowerFiles = require('main-bower-files'),
 /**
  * Local variables
  */
+var appFolder = 'client/';
 var paths = {
-  scripts: ['app/scripts/{,*/}*.js'],
-  styles: 'app/styles/*.scss',
-  views: 'app/views/*.html',
+  scripts: [appFolder + '/scripts/{,*/}*.js'],
+  index: appFolder + 'index.html',
+  styles: appFolder + '/styles/*.scss',
+  views: appFolder + '/views/*.html',
+
   server: 'server/server.js',
 
-  images: 'app/images/*',
+  images: appFolder + '/images/*',
 
   prodDir: 'dist/',
   devDir: '.tmp/'
@@ -52,7 +55,7 @@ gulp.task('watch', function(done) {
 
   gulp.watch(paths.styles, ['sass']);
 
-  gulp.watch('app/index.html', ['index']);
+  gulp.watch(paths.index, ['index']);
 
   //ensure we can run watch synchronously
   done();
@@ -61,7 +64,7 @@ gulp.task('watch', function(done) {
 // Runs a local static file server
 gulp.task('serve', ['clean', 'watch', 'index'], function() {
   var child = new(forever.Monitor)(paths.server, {
-    options: ['--dirs=' + paths.devDir + ',.,app', '--port=' + PORT, '--lrport=' + LR_PORT],
+    args: ['--dirs=' + paths.devDir + ',.,client', '--port=' + PORT, '--lrport=' + LR_PORT],
     watch: true,
     watchDirectory: 'server'
   });
@@ -85,7 +88,7 @@ gulp.task('serve', ['clean', 'watch', 'index'], function() {
 //found correctly, look up main-bower-files on npm
 //for options
 gulp.task('index', ['sass'], function() {
-  return gulp.src('app/index.html')
+  return gulp.src(paths.index)
     .pipe(g.inject(
       gulp.src(mainBowerFiles(), {
         read: false
@@ -119,7 +122,7 @@ var htmlminOpts = {
 };
 
 gulp.task('index:dist', ['sass:dist', 'scripts:dist', 'views:dist'], function() {
-  return gulp.src('app/index.html')
+  return gulp.src(paths.index)
     .pipe(g.inject(
       gulp.src(mainBowerFiles(), {
         read: false
