@@ -12,16 +12,17 @@ until someone asks what they mean.
 ### games
 1. get /games ?
 2. /game/:id
-    a. get /info
-    b. post /edit
-    c. post /join and /leave ?
+    1. get /info
+    2. post /edit
+    3. post /join and /leave ?
 
 ### users
 If we decide to store some user info on the server side, here would be a structure
+
 1. get /users ?
 2. /user/:id
-    a. get /info ?
-    b. post /edit ?
+    1. get /info ?
+    2. post /edit ?
 
 all gets return json
 
