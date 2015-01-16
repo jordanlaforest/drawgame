@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "debug": true,
+  "execMap": {
+    "js": "iojs"
+  },
+  "ext": "jade html js css"
+}
