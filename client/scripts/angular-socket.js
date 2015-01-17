@@ -1,5 +1,3 @@
-'use strict';
-
 /* A slightly modified code from this tutorial
  * http://code.tutsplus.com/tutorials/more-responsive-single-page-applications-with-angularjs-socketio-creating-the-library--cms-21738
  */

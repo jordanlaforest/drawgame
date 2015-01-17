@@ -1,6 +1,34 @@
-'use strict';
+import {
+  SERVER_MESSAGE_EVENT,
+  INIT_EVENT, NAME_CHANGE_EVENT, CHAT_EVENT, CREATE_UID_EVENT,
+  DRAW_START_EVENT, DRAW_MOVE_EVENT, DRAW_END_EVENT
+}
+from '../../../common/EventConstants';
 
-var app = angular.module('drawgameApp');
+let app = angular.module('drawgameApp');
+
+class GameController {
+  constructor($scope) {
+    this.messages = [];
+    this.players = [];
+
+    this.myId = 0;
+    this.drawingPlayer = 0;
+    this.currentWord = 'Dog';
+  }
+
+  addMessage(name, text) {
+    this.messages.push({ name, text });
+  }
+
+  addPlayer(id, username, score) {
+    this.players.push({ id, username, score });
+  }
+
+  get amIDrawing() {
+    return this.myId === this.drawingPlayer;
+  }
+}
 
 app.controller('GameCtrl', function ($scope, socket) {
   $scope.messages = [];
@@ -12,24 +40,20 @@ app.controller('GameCtrl', function ($scope, socket) {
     $scope.drawingPlayer = 0;
     $scope.currentWord = 'Dog'; //i think only the user currently drawing
                                 //should have this?
-
-    socket.on('init:done', function() {
-
-    });
   };
 
-  $scope.addMessage = function(username, message){
-    $scope.messages.push({name: username, text: message});
+  $scope.addMessage = function(name, text){
+    $scope.messages.push({ name, text });
   };
   $scope.addPlayer = function(id, username, score){
-    $scope.players.push({id: id, username: username, score: score});
+    $scope.players.push({ id, username, score });
   };
   $scope.amIDrawing = function(myId){
     return $scope.drawingPlayer === myId;
   };
   $scope.getCurrentDrawingPlayer = function(){
     var retPlayer;
-    $scope.players.forEach(function(player){
+    $scope.players.forEach((player) => {
       if(player.id === $scope.drawingPlayer){
         retPlayer = player;
       }
@@ -50,74 +74,70 @@ app.controller('PlayerListCtrl', function($scope) {
 });
 
 app.controller('CanvasCtrl', function($scope, socket) {
-  var canvas = document.querySelector('canvas');
-  var ctx = canvas.getContext('2d');
-
-  //experimental
-  var width = canvas.width;
-  var height = canvas.height;
-
-  $scope.drawing = false;
-  $scope.lastX = 0;
-  $scope.lastY = 0;
-
-  $scope.getMouseX = function(evt){
-    //refresh these variables since i am just
-    //inspecting elements to test scalability
-    canvas = document.querySelector('canvas');
-    width = canvas.width;
-    height = canvas.height;
-
-    return evt.clientX - canvas.getBoundingClientRect().left;
-  };
-  $scope.getMouseY = function(evt){
-    //refresh these variables since i am just
-    //inspecting elements to test scalability
-    canvas = document.querySelector('canvas');
-    width = canvas.width;
-    height = canvas.height;
-    return evt.clientY - canvas.getBoundingClientRect().top;
-  };
+  let canvas = document.querySelector('canvas');
+  let ctx = canvas.getContext('2d');
+  let { width, height } = canvas;
 
   //helper method to divide by height
-  function createScaledPoint(x, y) {
+  function unscalePoint({ x, y }) {
     return {
       x: x / width,
       y: y / height
     };
   }
 
-  function scalePoint(point, width, height) {
+  function scalePoint({ x, y }) {
     return {
-      x: point.x * width,
-      y: point.y * height
+      x: x * width,
+      y: y * height
     };
   }
 
-  socket.on('draw:start', function(point) {
-    point = scalePoint(point, width, height);
-    $scope.lastX = point.x;
-    $scope.lastY = point.y;
-  });
-  socket.on('draw:move', function(point) {
-    point = scalePoint(point, width, height);
-    $scope.x = point.x;
-    $scope.y = point.y;
+  $scope.drawing = false;
+  $scope.lastX = 0;
+  $scope.lastY = 0;
 
+  $scope.getMouseX = function({ clientX }){
+    //refresh these variables since i am just
+    //inspecting elements to test scalability
+    canvas = document.querySelector('canvas');
+    let { width, height } = canvas;
+
+    return clientX - canvas.getBoundingClientRect().left;
+  };
+  $scope.getMouseY = function({ clientY }){
+    //refresh these variables since i am just
+    //inspecting elements to test scalability
+    canvas = document.querySelector('canvas');
+    let { width, height } = canvas;
+
+    return clientY - canvas.getBoundingClientRect().top;
+  };
+
+  let setScaled = (point) => {
+    let { x, y } = scalePoint(point);
+    $scope.lastX = x;
+    $scope.lastY = y;
+  };
+
+  socket.on(DRAW_START_EVENT, setScaled);
+  socket.on(DRAW_END_EVENT, setScaled);
+
+  socket.on(DRAW_MOVE_EVENT, (point) => {
+    let { lastX, lastY } = $scope;
+    let { x, y } = scalePoint(point);
+
+    // move the context
     ctx.beginPath();
-    ctx.moveTo($scope.lastX, $scope.lastY);
-    ctx.lineTo($scope.x, $scope.y);
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(x, y);
     ctx.stroke();
+
+    $scope.x = x;
+    $scope.y = y;
 
     $scope.lastX = $scope.x;
     $scope.lastY = $scope.y;
-  });
-
-  //works without this, but keeping just in case for future life cycle events.
-  socket.on('draw:end', function(point) {
-    point = scalePoint(point, width, height);
-    $scope.lastX = point.x;
-    $scope.lastY = point.y;
   });
 
   canvas.onmousedown = function(evt){
@@ -126,7 +146,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
 
-    socket.emit('draw:start', createScaledPoint($scope.lastX, $scope.lastY));
+    socket.emit(DRAW_START_EVENT, unscalePoint({x: $scope.lastX, y: $scope.lastY}));
   };
 
   canvas.onmousemove = function(evt) {
@@ -139,7 +159,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
       $scope.lastX = $scope.getMouseX(evt);
       $scope.lastY = $scope.getMouseY(evt);
 
-      socket.emit('draw:move', createScaledPoint($scope.lastX, $scope.lastY));
+      socket.emit(DRAW_MOVE_EVENT, unscalePoint({x: $scope.lastX, y: $scope.lastY}));
     }
   };
 
@@ -149,7 +169,7 @@ app.controller('CanvasCtrl', function($scope, socket) {
     $scope.lastX = $scope.getMouseX(evt);
     $scope.lastY = $scope.getMouseY(evt);
 
-    socket.emit('draw:end', createScaledPoint($scope.lastX, $scope.lastY));
+    socket.emit(DRAW_END_EVENT, scalePoint($scope.lastX, $scope.lastY));
   };
 
 });
@@ -165,7 +185,7 @@ app.controller('ChatCtrl', function($scope, socket){
   socket.on('chat', function(data) {
     $scope.addMessage(data.name, data.msg);
   }).destroyWith($scope);
-  socket.on('servermessage', function(data) {
+  socket.on(SERVER_MESSAGE_EVENT, function(data) {
     $scope.addMessage('[INFO]', data.message);
   }).destroyWith($scope);
 

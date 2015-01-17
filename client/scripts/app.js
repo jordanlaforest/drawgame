@@ -1,4 +1,4 @@
-'use strict';
+import './angular-socket';
 
 /**
  * @ngdoc overview
@@ -32,3 +32,7 @@ angular
         redirectTo: '/'
       });
   });
+
+import './controllers/game';
+import './controllers/main';
+import './controllers/player';
