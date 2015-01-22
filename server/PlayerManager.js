@@ -6,7 +6,9 @@ export default class PlayerManager {
   }
 
   addPlayer(socket, data) {
-    if(socket.player !== undefined ) return false;
+    if(socket.player !== undefined ) {
+      return false;
+    }
     socket.player = new Player(data);
     this.players[socket.id] = socket.player;
     return true;

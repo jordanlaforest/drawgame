@@ -11,7 +11,7 @@ On the server side, 6to5 overrides nodes require algorithm to precompile the es6
 On the server side, when your index requests the bundled file, moonboots will either (re)generate the bundle or use the bundle it has cached. Moonboots provides some helper functions to generate the javascript source, express actually calls this when you try to request the source. Look in `server/WebServer.js` (renamed `web.js` to this) to see this.
 
 # Server Side
-I refactored `game.js` -> `server/GameServer.js`. The game server handles all the game logic, and attaches the websocket to the http server it gets passed. I also renamed `players.js` to `PlayerManager.js`. As a general rule of thumb, keep your classes simple and only manage a small amount of shared state.
+I refactored `server/game.js` -> `server/GameServer.js`. The game server handles all the game logic, and attaches the websocket to the http server it gets passed. I also renamed `server/players.js` to `server/PlayerManager.js`. As a general rule of thumb, keep your classes simple and only manage a small amount of shared state. `server/web.js` became `server/WebServer.js`, which is now much smaller.
 
 # Common Code
 `common/Player.js` currently is a simple empty class. `common/EventConstants.js` currently just contains strings.
@@ -21,3 +21,6 @@ Currently, the biggest change is that I removed the script tags in index.html, a
 
 # Dumping angular in favour of react
 I have had a much better experience with react, but it has an initial setup hurdle time. However, we can dump bower entirely and switch entirely to npm. I am not a big fan of having both client side node modules and server side node_modules, but we can have package.json in both `server` and `client`.
+
+# Livereload
+I am working on this.
