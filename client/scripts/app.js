@@ -1,3 +1,5 @@
+import 'angular';
+import 'angular-route';
 import './angular-socket';
 
 /**
@@ -8,30 +10,27 @@ import './angular-socket';
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('drawgameApp', [
-    'ngAnimate',
-    'ngCookies',
-    'ngResource',
     'ngRoute',
-    'ngSanitize',
-    'ngTouch',
     'socket.io'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
+        templateUrl: 'views/main.tpl',
         controller: 'MainCtrl'
       })
       .when('/game/:gameId', {
-        templateUrl: 'views/game.html',
+        templateUrl: 'views/game.tpl',
         controller: 'GameCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
   });
+
+export default app;
 
 import './controllers/game';
 import './controllers/main';

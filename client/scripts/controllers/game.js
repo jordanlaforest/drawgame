@@ -1,11 +1,9 @@
+import app from '../app';
 import {
   SERVER_MESSAGE_EVENT,
-  INIT_EVENT, NAME_CHANGE_EVENT, CHAT_EVENT, CREATE_UID_EVENT,
   DRAW_START_EVENT, DRAW_MOVE_EVENT, DRAW_END_EVENT
 }
 from '../../../common/EventConstants';
-
-let app = angular.module('drawgameApp');
 
 class GameController {
   constructor($scope) {

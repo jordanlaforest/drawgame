@@ -1,5 +1,4 @@
-'use strict';
-
+import app from '../app';
 /**
  * @ngdoc function
  * @name drawgameApp.controller:MainCtrl
@@ -7,7 +6,7 @@
  * # MainCtrl
  * Controller of the drawgameApp
  */
-angular.module('drawgameApp')
+app
   .controller('MainCtrl', function ($scope) {
     //stuff
   });

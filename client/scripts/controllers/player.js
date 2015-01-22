@@ -1,7 +1,7 @@
-import { INIT_EVENT, NAME_CHANGE_EVENT } from '../../../common/EventConstants';
-import Player from '../../../common/Player';
+import app from '../app';
+import { INIT_EVENT, NAME_CHANGE_EVENT } from '../../common/EventConstants';
+import Player from '../../common/Player';
 
-let app = angular.module('drawgameApp');
 const LOCAL_STORAGE_KEY = 'player.name';
 
 const PROMPT_MSG        = 'Please choose a name:';
@@ -13,7 +13,7 @@ class PlayerController {
     this.player = new Player({ name : '', score: 0 });
     this.socket = socket;
 
-    this.promptForName();
+    this.getName();
   }
 
   isValid(name) {
@@ -28,14 +28,15 @@ class PlayerController {
     }
   }
 
-  promptForName() {
+  getName() {
     let name = localStorage.getItem('player.name') ;
-    if(name !== undefined ) {
+    if(name !== null ) {
       this.player.name = name;
     } else {
+      var invalid = false;
       do {
         this.player.name = prompt(PROMPT_MSG);
-        let invalid = !this.isValid(this.player.name);
+        invalid = !this.isValid(this.player.name);
         // block scoped variable
         if(invalid) {
           alert(INVALID_NAME_MSG);

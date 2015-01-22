@@ -1,9 +1,12 @@
 /* A slightly modified code from this tutorial
  * http://code.tutsplus.com/tutorials/more-responsive-single-page-applications-with-angularjs-socketio-creating-the-library--cms-21738
  */
+import 'angular';
+import io from 'socket.io-client';
+
 angular.module('socket.io', [])
   .provider('socket', function socketProvider(){
-    var url = '';
+    var url = 'http://localhost:9000';
     var opts = {};
 
     this.getUrl = function () {
