@@ -1,6 +1,9 @@
-import 'angular';
+import './components/App.jsx';
+
+
+/*import 'angular';
 import 'angular-route';
-import './angular-socket';
+import './angular-socket'; */
 
 /**
  * @ngdoc overview
@@ -9,7 +12,7 @@ import './angular-socket';
  * # drawgameApp
  *
  * Main module of the application.
- */
+ *
 var app = angular
   .module('drawgameApp', [
     'ngRoute',
@@ -34,4 +37,4 @@ export default app;
 
 import './controllers/game';
 import './controllers/main';
-import './controllers/player';
+import './controllers/player';*/
