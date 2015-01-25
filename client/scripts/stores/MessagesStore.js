@@ -1,7 +1,5 @@
 import Marty from 'marty';
 import MessagesConstants from '../constants/MessagesConstants';
-import Socket from '../utils/Socket';
-import { CHAT_EVENT } from '../../../common/EventConstants';
 
 var MessagesStore = Marty.createStore({
   handlers: {
@@ -22,7 +20,6 @@ var MessagesStore = Marty.createStore({
   },
   sendMessage(message) {
     this.addMessage({ name: 'Me', message });
-    Socket.emit(CHAT_EVENT, message);
   }
 });
 

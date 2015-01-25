@@ -10,7 +10,6 @@ import DrawingConstants from '../constants/DrawingConstants';
 var GameCanvas = React.createClass({
 
   getInitialState () {
-
     let width = 800;
     let height = 600;
     return {
@@ -34,13 +33,16 @@ var GameCanvas = React.createClass({
     this.dispatchToken = Dispatcher.register( (action) => {
       let { type } = action;
       let { point: lastPoint } = this.state;
-      let point = this.scalePoint(action.arguments[0]);
+      // console.log(action);
 
       if(type === DrawingConstants.PATH_START.toString()) {
+        let point = this.scalePoint(action.arguments[0]);
         this._drawStart(point);
       } else if(type === DrawingConstants.PATH_MOVE.toString()) {
+        let point = this.scalePoint(action.arguments[0]);
         this._drawMove(lastPoint, point);
       } else if(type === DrawingConstants.PATH_END.toString()) {
+        let point = this.scalePoint(action.arguments[0]);
         this._drawEnd(lastPoint, point);
       }
     });

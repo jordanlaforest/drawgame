@@ -1,16 +1,32 @@
+import Marty from 'marty';
 import React from 'react';
 import { ButtonLink } from 'react-router-bootstrap';
 
 import Table from 'react-bootstrap/Table';
 import Glyphicon from 'react-bootstrap/Glyphicon';
 
+import GameAPI from '../sources/GameAPI';
+import MainStore from '../stores/MainStore';
+
+var MainStateMixin = Marty.createStateMixin({
+  listenTo: MainStore,
+  getState() {
+    return {
+      games: MainStore.getGames()
+    };
+  }
+});
+
 var Main = React.createClass({
+  mixins: [MainStateMixin],
+  componentDidMount() {
+    GameAPI.loadGames();
+  },
+  componentWillUnmount() {
+    MainStore.unloadGames();
+  },
   render() {
-    let games = [
-      { name: "Canadian peeps", players: "5/10", password: false },
-      { name: "American peeps", players: "2/4", password: true },
-      { name: "British peeps", players: "3/8", password: true }
-    ];
+    let { games } = this.state;
     return (
       <div>
         <ButtonLink to="creategame">Create Game</ButtonLink>

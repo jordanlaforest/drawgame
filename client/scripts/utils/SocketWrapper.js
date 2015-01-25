@@ -43,4 +43,4 @@ class SocketWrapper {
 }
 
 // socket singleton was easier I found
-export default new SocketWrapper('http://localhost:9000');
+export default SocketWrapper;

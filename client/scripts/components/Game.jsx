@@ -14,12 +14,7 @@ import Chat from './Chat.jsx';
 import GameStore from '../stores/GameStore';
 import PlayersStore from '../stores/PlayersStore';
 
-import GameActionsCreators from '../actions/GameActionCreators';
-
-import MessagesSource from '../sources/MessagesSource';
-import DrawingSource from '../sources/DrawingSource';
-
-GameActionsCreators.initGame();
+import GameAPI from '../sources/GameAPI';
 
 var GameState = Marty.createStateMixin({
   listenTo: [GameStore, PlayersStore],
@@ -38,10 +33,10 @@ var GameState = Marty.createStateMixin({
 var Game = React.createClass({
   mixins: [ State, GameState ],
   componentWillMount() {
-    MessagesSource.open();
-    DrawingSource.open();
+    GameAPI.loadGame(this.getParams().gameid);
   },
   componentWillUnmount() {
+    PlayersStore.unloadPlayers();
     MessagesSource.close();
     DrawingSource.close();
   },

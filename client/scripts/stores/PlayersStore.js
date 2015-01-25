@@ -1,11 +1,8 @@
 /* globals prompt, alert */
 import Marty from 'marty';
 import PlayerConstants from '../constants/PlayerConstants';
-import PlayerSource from '../sources/PlayerSource';
-import Player from '../../common/Player';
-
-import { INIT_EVENT } from '../../common/EventConstants';
-import Socket from '../utils/Socket';
+import PlayerLocalSource from '../sources/PlayerLocalSource';
+import Player from '../common/Player';
 
 const PROMPT_MSG        = 'Please choose a name:';
 const INVALID_NAME_MSG  = 'Invalid name, please try again.';
@@ -17,11 +14,12 @@ function isValidName(name) {
 var PlayersStore = Marty.createStore({
   handlers: {
     addPlayer: PlayerConstants.ADD_PLAYER,
+    addPlayers: PlayerConstants.ADD_PLAYERS,
     initPlayer: PlayerConstants.INIT_PLAYER
   },
   getInitialState() {
     return {
-      player: PlayerSource.player,
+      player: PlayerLocalSource.player,
       players: [],
       id: 1
     };
@@ -32,10 +30,19 @@ var PlayersStore = Marty.createStore({
       name,
       score
     }));
+    this.hasChanged();
+  },
+  addPlayers(players) {
+    this.state.players.push(...players);
+    this.hasChanged();
+  },
+  unloadPlayers() {
+    this.state.players = [];
+    this.hasChanged();
   },
   initPlayer() {
     // check if it is in local storage already
-    var name = PlayerSource.getName();
+    var name = PlayerLocalSource.getName();
     let invalid = !isValidName(name);
     while(invalid) {
       name = prompt(PROMPT_MSG);
@@ -44,8 +51,7 @@ var PlayersStore = Marty.createStore({
         alert(INVALID_NAME_MSG);
       }
     }
-    PlayerSource.setName(name);
-    Socket.emit(INIT_EVENT, PlayerSource.player);
+    PlayerLocalSource.setName(name);
   },
   getPlayer(idx) {
     return this.state.players[idx];

@@ -1,8 +1,8 @@
 // modified version of marty-socket.io-state-source on npm
 export default function socketStateMixin() {
   return {
-    open() {
-      console.log('listening on socket');
+    open(socket) {
+      this.socket = socket;
       Object.keys(this.events).forEach((event) => {
         var handler = this.events[event];
         if (!handler) {
@@ -12,7 +12,6 @@ export default function socketStateMixin() {
       });
     },
     close() {
-      console.log('unlistening on socket');
        Object.keys(this.events).forEach((event) => {
         var handler = this.events[event];
         this.socket.off(event, this[handler]);
