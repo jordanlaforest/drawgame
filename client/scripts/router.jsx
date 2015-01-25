@@ -8,6 +8,7 @@ import Main from './components/Main.jsx';
 import CreateGame from './components/CreateGame.jsx';
 import EditPlayer from './components/EditPlayer.jsx';
 
+// somehow this is causing the LeaveGame button to be always active...
 var routes = (
   <Route name="app" path="/" handler={App}>
     <Route name="game" path="/game/:gameid" handler={Game} />

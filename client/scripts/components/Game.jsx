@@ -6,10 +6,12 @@ import { ButtonLink } from 'react-router-bootstrap';
 import Grid from 'react-bootstrap/Grid';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
 
 import PlayerList from './PlayerList.jsx';
 import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
+import DrawingControls from './DrawingControls.jsx';
 
 import GameStore from '../stores/GameStore';
 import PlayersStore from '../stores/PlayersStore';
@@ -44,14 +46,24 @@ var Game = React.createClass({
     DrawingSource.close();
   },
   render() {
+    let { players, currentWord, drawingPlayer: { name }}  = this.state;
+    console.log(this.state);
     return (
       <div>
         <ButtonLink to="app">Leave Game</ButtonLink>
+        <Button> Skip Word </Button>
         <Grid fluid>
           <Row>
-            <Col md={2}> <PlayerList players={this.state.players} isDrawing={GameStore.isDrawing.bind(GameStore)} /> </Col>
+            <Col md={2}>
+              <Row>
+                <PlayerList players={players} isDrawing={GameStore.isDrawing.bind(GameStore)} />
+              </Row>
+              <Row>
+                <DrawingControls />
+              </Row>
+            </Col>
             <Col md={8}>
-              <GameCanvas amIDrawing={GameStore.amIDrawing()} currentWord={this.state.currentWord} username={this.state.drawingPlayer.username} />
+              <GameCanvas amIDrawing={GameStore.amIDrawing()} currentWord={currentWord} name={name} />
             </Col>
             <Col md={2}> <Chat /> </Col>
           </Row>
