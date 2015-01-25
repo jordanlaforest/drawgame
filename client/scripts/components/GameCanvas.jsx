@@ -7,6 +7,8 @@ import Panel from 'react-bootstrap/Panel';
 import DrawingActionCreators from '../actions/DrawingActionCreators';
 import DrawingConstants from '../constants/DrawingConstants';
 
+var noop = () => 0;
+
 var GameCanvas = React.createClass({
 
   getInitialState () {
@@ -49,21 +51,21 @@ var GameCanvas = React.createClass({
   },
 
   render() {
-    let { currentWord, username, amIDrawing } = this.props;
+    let { currentWord, name, amIDrawing } = this.props;
     let { width, height } = this.state;
 
-    let strongWord = <p>Your word is <strong>{currentWord}</strong></p>;
-    let strongUsername = <p><strong>{username}</strong> is currently drawing</p>;
-    let canvasHeader = amIDrawing ? strongWord : strongUsername;
+    let yourWord = <p>Your word is <strong>{currentWord}</strong></p>;
+    let someoneElseDrawing = <p><strong>{name}</strong> is currently drawing</p>;
+    let canvasHeader = amIDrawing ? yourWord : someoneElseDrawing;
     return (
       <Panel header={ canvasHeader }>
         <canvas
           width={width}
           height={height}
-          onMouseDown={this.drawStart}
-          onMouseMove={this.drawMove}
-          onMouseLeave={this.drawEnd}
-          onMouseUp={this.drawEnd}
+          onMouseDown={amIDrawing ? this.drawStart : noop}
+          onMouseMove={amIDrawing ? this.drawMove : noop}
+          onMouseLeave={amIDrawing ? this.drawEnd : noop}
+          onMouseUp={amIDrawing ? this.drawEnd : noop}
           ref="canvas">
         </canvas>
       </Panel>
