@@ -3,7 +3,7 @@ import PlayerManager from './PlayerManager';
 import {
   SERVER_MESSAGE_EVENT,
   INIT_EVENT, NAME_CHANGE_EVENT, CHAT_EVENT, CREATE_UID_EVENT,
-  DRAW_START_EVENT, DRAW_MOVE_EVENT, DRAW_END_EVENT
+  PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT
 }
 from '../common/EventConstants';
 
@@ -36,15 +36,16 @@ export default class GameServer {
       this.listenForInitEvent(socket);
       this.listenForNameEvent(socket);
       this.listenForChatEvent(socket);
-      this.listenForDrawEvents(socket);
+      this.listenForPathEvents(socket);
 
       // disconnect event
       socket.on('disconnect', () => {
-        console.log(socket.player);
-        let { player: { name } } = socket;
-        // name = socket.player.name;
-        let message = `${name} has disconnected`;
-        this.mirrorMessage(message);
+        if(socket.player !== undefined) {
+          let { player: { name } } = socket;
+          // name = socket.player.name;
+          let message = `${name} has disconnected`;
+          this.mirrorMessage(message);
+        }
       });
     });
   }
@@ -81,18 +82,18 @@ export default class GameServer {
   }
 
   listenForChatEvent(socket) {
-    socket.on(CHAT_EVENT, (msg) => {
+    socket.on(CHAT_EVENT, (message) => {
       let { player : { name }, id } = socket;
       // player = socket.player.name;
       // id = socket.id;
-      console.log(`${name}${id} said: ${msg}`);
-      socket.broadcast.emit(CHAT_EVENT, { name, msg });
+      console.log(`${name}[${id}] said: ${message}`);
+      socket.broadcast.emit(CHAT_EVENT, { name, message });
     });
   }
 
-  listenForDrawEvents(socket) {
-    this.relayEvent(socket, DRAW_START_EVENT);
-    this.relayEvent(socket, DRAW_MOVE_EVENT);
-    this.relayEvent(socket, DRAW_END_EVENT);
+  listenForPathEvents(socket) {
+    this.relayEvent(socket, PATH_START_EVENT);
+    this.relayEvent(socket, PATH_MOVE_EVENT);
+    this.relayEvent(socket, PATH_END_EVENT);
   }
 }

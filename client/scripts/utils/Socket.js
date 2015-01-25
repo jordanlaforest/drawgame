@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 
-export default class SocketWrapper {
-  constructor(url = 'http://localhost:9000', options = {}) {
+class SocketWrapper {
+  constructor(url, options = {}) {
     this.url = url;
     this.options = options;
 
@@ -41,3 +41,6 @@ export default class SocketWrapper {
     return id;
   }
 }
+
+// socket singleton was easier I found
+export default new SocketWrapper('http://localhost:9000');
