@@ -14,6 +14,9 @@ import Chat from './Chat.jsx';
 import GameStore from '../stores/GameStore';
 import PlayersStore from '../stores/PlayersStore';
 
+import MessagesSource from '../sources/MessagesSource';
+import DrawingSource from '../sources/DrawingSource';
+
 import GameAPI from '../sources/GameAPI';
 
 var GameState = Marty.createStateMixin({
