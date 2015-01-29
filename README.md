@@ -1,12 +1,18 @@
 # Other readmes
 There are readmes in `client` and `server` folder. Read those
 
-# Building
+# Installing
 run the following:
 
-1. `npm install`
-2. `bower install`
-3. `gulp serve`
+1. `cd client && npm install`
+2. `cd server && npm install`
 
-make sure you have the same version of gulp installed globally and locally.
-read package.json to see which version you need.
+# Running
+
+After installing, run the following two commands, in two terminals:
+1. `cd client && npm start`
+2. `cd server && npm start`
+
+The client server is a live reload beefy instance. The server is the regular 
+Game API server / web socket server. In production these will eventually
+be merged.

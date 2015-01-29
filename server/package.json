@@ -4,7 +4,7 @@
   "description": " A game similar to pictionary.",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon main.js --port=9000"
+    "start": "nodemon main.js --port=9000"
   },
   "repository": {
     "type": "git",
