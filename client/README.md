@@ -1,6 +1,9 @@
-# Live reload
-We use gulp-livereload currently, may change this later.
+# Url structure
+`/` redirects to the Main page
+`/create` directs to the Game Creation page
+`/edit` directs to the Player Editing page
+`/game/:gameid` directs to the Game page, where `gameid` is the specific game you want to join
 
-# Playing the game
-The main page doesn't show rooms right now. To enter a room, you want to go to
-game/:id, where :id means the id of the game you want to join.
+# Navigation
+currently there is navigation from Main to every other page, and Game page back
+to the main page.
