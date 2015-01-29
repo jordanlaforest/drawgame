@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/jordanlaforest/drawgame/badges/gpa.svg)](https://codeclimate.com/github/jordanlaforest/drawgame)
+
 # Other readmes
 There are readmes in `client` and `server` folder. Read those
 
