@@ -1,10 +1,10 @@
 {
   "name": "DrawGameClient",
-  "description": "We use gulp-livereload currently, may change this later.",
+  "description": "The client for the drawgame game",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {
-    "marty": "^0.8.3",
+    "marty": "^0.8.6",
     "react": "^0.12.2",
     "react-bootstrap": "^0.13.3",
     "react-router": "^0.11.6",
@@ -12,12 +12,12 @@
     "socket.io-client": "^1.3.2"
   },
   "scripts": {
-    "start": "./node_modules/beefy/bin/beefy scripts/index.jsx:bundle.js 3000 --live -- -t 6to5ify"
+    "start": "./node_modules/beefy/bin/beefy index.jsx:bundle.js 3000 --live -- --extension=.jsx --extension=.js -t [ 6to5ify --sourceMapRelative . ]"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "6to5ify": "^3.1.2",
+    "6to5ify": "^4.0.0",
     "beefy": "^2.1.2",
     "reactify": "^1.0.0",
     "watchify": "^2.2.1"

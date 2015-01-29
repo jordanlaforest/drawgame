@@ -7,13 +7,11 @@ var GameAPI = Marty.createStateSource({
   baseUrl: 'http://localhost:9000',
   loadGames () {
     this.get('/games')
-      .then( (res) => res.json() )
-      .then( (games) => MainSourceActionCreators.addGames(games) );
+      .then( ({ body: games }) => MainSourceActionCreators.addGames(games) );
   },
   loadGame (gameId) {
     this.get(`/game/${gameId}/info`)
-      .then( (res) => res.json() )
-      .then( (info) => GameSourceActionCreators.initGame(info) );
+      .then( ({ body: info }) => GameSourceActionCreators.initGame(info) );
   }
 });
 

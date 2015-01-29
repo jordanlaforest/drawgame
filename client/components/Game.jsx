@@ -47,7 +47,6 @@ var Game = React.createClass({
   },
   render() {
     let { players, currentWord, drawingPlayer: { name }}  = this.state;
-    console.log(this.state);
     return (
       <div>
         <ButtonLink to="app">Leave Game</ButtonLink>
