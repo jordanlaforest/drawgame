@@ -20,7 +20,11 @@
     "url": "https://github.com/jordanlaforest/drawgame/issues"
   },
   "homepage": "https://github.com/jordanlaforest/drawgame",
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "^8.1.3",
+    "tiny-lr": "^0.1.5",
+    "watchify": "^2.3.0"
+  },
   "dependencies": {
     "6to5": "^2.13.5",
     "express": "^4.11.1",
