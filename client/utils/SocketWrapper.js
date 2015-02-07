@@ -40,6 +40,10 @@ class SocketWrapper {
     }
     return id;
   }
+
+  close() {
+    this.socket.disconnect();
+  }
 }
 
 // socket singleton was easier I found

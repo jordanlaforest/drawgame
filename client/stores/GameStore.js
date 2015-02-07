@@ -14,20 +14,15 @@ import GameActionCreators from '../actions/GameActionCreators';
 
 import SocketWrapper from '../utils/SocketWrapper';
 
-import {
-  INIT_EVENT,
-  CHAT_EVENT,
-  PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT
-} from '../common/EventConstants';
+import DrawingStore from './DrawingStore';
+import MessagesStore from './MessagesStore';
+
+import { INIT_EVENT } from '../common/EventConstants';
 
 var GameStore = Marty.createStore({
   handlers: {
     onInitGame: GameConstants.INIT_GAME,
     onSendPlayer: GameConstants.SEND_PLAYER,
-    onSendMessage: MessagesConstants.SEND_MESSAGE,
-    onSendPathStart: DrawingConstants.SEND_PATH_START,
-    onSendPathEnd: DrawingConstants.SEND_PATH_END,
-    onSendPathMove: DrawingConstants.SEND_PATH_MOVE
   },
   getInitialState() {
     return {
@@ -55,29 +50,29 @@ var GameStore = Marty.createStore({
     this.state.drawingPlayer = currentlyDrawing;
     this.hasChanged();
 
-    this.socket = new SocketWrapper('http://localhost:9000');
+    this.state.socket = new SocketWrapper('http://localhost:9000');
 
     let sendPlayer = () => GameActionCreators.sendPlayer(PlayerLocalSource.player);
-    this.socket.on('connect', sendPlayer);
+    this.state.socket.on('connect', sendPlayer);
 
-    MessagesSource.open(this.socket);
-    DrawingSource.open(this.socket);
+    MessagesSource.open(this.state.socket);
+    DrawingSource.open(this.state.socket);
+
+    MessagesStore.setSocket(this.state.socket);
+    DrawingStore.setSocket(this.state.socket);
   },
-  onSendMessage(message) {
-    this.socket.emit(CHAT_EVENT, message);
+  onQuitGame() {
+    MessagesSource.close();
+    DrawingSource.close();
+
+    this.state.socket.close();
+
+    MessagesStore.removeSocket();
+    DrawingStore.removeSocket();
   },
   onSendPlayer(player) {
-    this.socket.emit(INIT_EVENT, player);
+    this.state.socket.emit(INIT_EVENT, player);
   },
-  onSendPathStart(point) {
-    this.socket.emit(PATH_START_EVENT, point);
-  },
-  onSendPathEnd(point) {
-    this.socket.emit(PATH_END_EVENT, point);
-  },
-  onSendPathMove(point) {
-    this.socket.emit(PATH_MOVE_EVENT, point);
-  }
 });
 
 export default GameStore;

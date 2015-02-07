@@ -18,4 +18,4 @@ var routes = (
   </Route>
 );
 
-Router.run(routes, HistoryLocation, (Handler) => React.render(<Handler />, document.getElementById('view')));
+Router.run(routes, (Handler) => React.render(<Handler />, document.getElementById('view')));
