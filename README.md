@@ -11,10 +11,6 @@ run the following:
 
 # Running
 
-After installing, run the following two commands, in two terminals:
-1. `cd client && npm start`
-2. `cd server && npm start`
+After installing, you only need to `cd server && npm start`. The server has a livereload server enabled with [tinylr](https://github.com/mklabs/tiny-lr) and [watchify](https://github.com/substack/watchify). Watchify cache makes the build soooo much faster than with beefy. Anyways, this all runs on top of the basic express app.
 
-The client server is a live reload beefy instance. The server is the regular 
-Game API server / web socket server. In production these will eventually
-be merged.
+Important note: in development, the index.html page requests `bundle.js` which is what watchify actually builds. So, you must leave this file in index.html during development.
