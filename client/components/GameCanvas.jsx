@@ -17,7 +17,7 @@ var GameCanvas = React.createClass({
     return {
       width,
       height,
-      drawing: false,
+      penDown: false,
       lastPoint: { x: 0, y: 0 },
       point: { x: 0, y: 0 }
     };
@@ -108,12 +108,12 @@ var GameCanvas = React.createClass({
     this.setState({
       lastPoint,
       point: lastPoint,
-      drawing: true
+      penDown: true
     });
   },
   drawMove(event) {
     let point = this.getMousePoint(event);
-    if(this.state.drawing) {
+    if(this.state.penDown) {
       DrawingActionCreators.movePath(this.scaleToPercent(point));
     }
     this._drawMove(this.state.point, point);
@@ -124,7 +124,7 @@ var GameCanvas = React.createClass({
       point
     });
 
-    if( this.state.drawing ) {
+    if( this.state.penDown ) {
       let ctx = this.getCanvas().getContext('2d');
       ctx.beginPath();
       ctx.moveTo(lastPoint.x, lastPoint.y);
@@ -136,14 +136,14 @@ var GameCanvas = React.createClass({
     let lastPoint = this.state.point;
     let point = this.getMousePoint(event);
 
-    if(this.state.drawing) {
+    if(this.state.penDown) {
       DrawingActionCreators.endPath(this.scaleToPercent(point));
     }
     this._drawEnd(lastPoint, point);
   },
   _drawEnd(lastPoint, point) {
     this.setState({
-      drawing: false,
+      penDown: false,
       lastPoint,
       point
     });
