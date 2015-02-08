@@ -35,16 +35,15 @@ var GameCanvas = React.createClass({
     this.dispatchToken = Dispatcher.register( (action) => {
       let { type } = action;
       let { point: lastPoint } = this.state;
-      // console.log(action);
 
       if(type === DrawingConstants.PATH_START.toString()) {
-        let point = this.scalePoint(action.arguments[0]);
+        let point = this.scaleToPixels(action.arguments[0]);
         this._drawStart(point);
       } else if(type === DrawingConstants.PATH_MOVE.toString()) {
-        let point = this.scalePoint(action.arguments[0]);
+        let point = this.scaleToPixels(action.arguments[0]);
         this._drawMove(lastPoint, point);
       } else if(type === DrawingConstants.PATH_END.toString()) {
-        let point = this.scalePoint(action.arguments[0]);
+        let point = this.scaleToPixels(action.arguments[0]);
         this._drawEnd(lastPoint, point);
       }
     });
@@ -71,14 +70,14 @@ var GameCanvas = React.createClass({
       </Panel>
     );
   },
-  convertPoint({ x, y }) {
+  scaleToPercent({ x, y }) {
     let { width, height } = this.state;
     return {
       x: x / width,
       y: y / height
     };
   },
-  scalePoint({ x, y }) {
+  scaleToPixels({ x, y }) {
     let { width, height } = this.state;
     return {
       x: x * width,
@@ -103,7 +102,7 @@ var GameCanvas = React.createClass({
   drawStart(event) {
     let mousePoint = this.getMousePoint(event);
     this._drawStart(mousePoint);
-    DrawingActionCreators.startPath(this.convertPoint(mousePoint));
+    DrawingActionCreators.startPath(this.scaleToPercent(mousePoint));
   },
   _drawStart(lastPoint) {
     this.setState({
@@ -115,7 +114,7 @@ var GameCanvas = React.createClass({
   drawMove(event) {
     let point = this.getMousePoint(event);
     if(this.state.drawing) {
-      DrawingActionCreators.movePath(this.convertPoint(point));
+      DrawingActionCreators.movePath(this.scaleToPercent(point));
     }
     this._drawMove(this.state.point, point);
   },
@@ -138,7 +137,7 @@ var GameCanvas = React.createClass({
     let point = this.getMousePoint(event);
 
     if(this.state.drawing) {
-      DrawingActionCreators.endPath(this.convertPoint(point));
+      DrawingActionCreators.endPath(this.scaleToPercent(point));
     }
     this._drawEnd(lastPoint, point);
   },
