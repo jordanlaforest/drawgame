@@ -4,7 +4,7 @@ import Panel from 'react-bootstrap/Panel';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 
-var Main = React.createClass({
+var PlayerList = React.createClass({
   render: function () {
     let { players, isDrawing } = this.props;
     return (
@@ -24,4 +24,4 @@ var Main = React.createClass({
   }
 });
 
-export default Main;
+export default PlayerList;
