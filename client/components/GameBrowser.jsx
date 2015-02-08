@@ -6,24 +6,24 @@ import Table from 'react-bootstrap/Table';
 import Glyphicon from 'react-bootstrap/Glyphicon';
 
 import GameAPI from '../sources/GameAPI';
-import MainStore from '../stores/MainStore';
+import GameBrowserStore from '../stores/GameBrowserStore';
 
-var MainStateMixin = Marty.createStateMixin({
-  listenTo: MainStore,
+var GameBrowserStateMixin = Marty.createStateMixin({
+  listenTo: GameBrowserStore,
   getState() {
     return {
-      games: MainStore.getGames()
+      games: GameBrowserStore.getGames()
     };
   }
 });
 
-var Main = React.createClass({
-  mixins: [MainStateMixin],
+var GameBrowser = React.createClass({
+  mixins: [GameBrowserStateMixin],
   componentDidMount() {
     GameAPI.loadGames();
   },
   componentWillUnmount() {
-    MainStore.unloadGames();
+    GameBrowserStore.unloadGames();
   },
   render() {
     let { games } = this.state;
@@ -59,4 +59,4 @@ var Main = React.createClass({
   }
 });
 
-export default Main;
+export default GameBrowser;

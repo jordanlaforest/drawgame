@@ -1,9 +1,9 @@
 import Marty from 'marty';
-import MainConstants from '../constants/MainConstants';
+import GameBrowserConstants from '../constants/GameBrowserConstants';
 
-var MainStore = Marty.createStore({
+var GameBrowserStore = Marty.createStore({
   handlers: {
-    addGames: MainConstants.ADD_GAMES
+    addGames: GameBrowserConstants.ADD_GAMES
   },
   getInitialState() {
     return {
@@ -22,4 +22,4 @@ var MainStore = Marty.createStore({
   }
 });
 
-export default MainStore;
+export default GameBrowserStore;

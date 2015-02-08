@@ -1,7 +1,7 @@
 import Marty from 'marty';
-import MainConstants from '../constants/MainConstants';
+import GameBrowserConstants from '../constants/GameBrowserConstants';
 
-var MainSourceActionCreators = Marty.createActionCreators({
-  addGames: MainConstants.ADD_GAMES(),
+var GameBrowserSourceActionCreators = Marty.createActionCreators({
+  addGames: GameBrowserConstants.ADD_GAMES(),
 });
-export default MainSourceActionCreators;
+export default GameBrowserSourceActionCreators;
