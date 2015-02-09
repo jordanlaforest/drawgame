@@ -2,7 +2,7 @@ import Player from '../../common/Player';
 
 export default function(app) {
 
-  app.get('/games', function(req, res) {
+  app.get('/api/games', function(req, res) {
     res.send([
       { name: 'Canadian peeps', players: '5/10', password: false },
       { name: 'American peeps', players: '2/4', password: true },
@@ -10,7 +10,7 @@ export default function(app) {
     ]);
   });
 
-  app.get('/game/:id/info', function(req, res) {
+  app.get('/api/game/:id/info', function(req, res) {
     let { id } = req.params;
     id = parseInt(id);
 
