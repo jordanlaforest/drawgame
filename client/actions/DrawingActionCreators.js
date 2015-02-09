@@ -2,9 +2,9 @@ import Marty from 'marty';
 import DrawingConstants from '../constants/DrawingConstants';
 
 var DrawingActionCreators = Marty.createActionCreators({
-  startPath: DrawingConstants.SEND_PATH_START(),
-  endPath: DrawingConstants.SEND_PATH_END(),
-  movePath: DrawingConstants.SEND_PATH_MOVE(),
+  startPath: DrawingConstants.SEND_PEN_DOWN(),
+  endPath: DrawingConstants.SEND_PEN_UP(),
+  movePath: DrawingConstants.SEND_PEN_MOVE(),
 });
 
 export default DrawingActionCreators;

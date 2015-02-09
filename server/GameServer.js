@@ -3,7 +3,7 @@ import PlayerManager from './PlayerManager';
 import {
   SERVER_MESSAGE_EVENT,
   INIT_EVENT, NAME_CHANGE_EVENT, CHAT_EVENT, CREATE_UID_EVENT,
-  PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT
+  PEN_DOWN_EVENT, PEN_MOVE_EVENT, PEN_UP_EVENT
 }
 from '../common/EventConstants';
 
@@ -92,8 +92,8 @@ export default class GameServer {
   }
 
   listenForPathEvents(socket) {
-    this.relayEvent(socket, PATH_START_EVENT);
-    this.relayEvent(socket, PATH_MOVE_EVENT);
-    this.relayEvent(socket, PATH_END_EVENT);
+    this.relayEvent(socket, PEN_DOWN_EVENT);
+    this.relayEvent(socket, PEN_MOVE_EVENT);
+    this.relayEvent(socket, PEN_UP_EVENT);
   }
 }

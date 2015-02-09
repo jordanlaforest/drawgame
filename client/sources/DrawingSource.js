@@ -1,5 +1,5 @@
 import {
-  PATH_START_EVENT, PATH_END_EVENT, PATH_MOVE_EVENT
+  PEN_DOWN_EVENT, PEN_UP_EVENT, PEN_MOVE_EVENT
 }
 from '../common/EventConstants';
 import Marty from 'marty';
@@ -9,18 +9,18 @@ import DrawingSourceActionCreators from '../actions/DrawingSourceActionCreators'
 var DrawingSource = Marty.createStateSource({
   mixins: [SocketStateSource()],
   events: {
-    [PATH_START_EVENT]: 'onPathStart',
-    [PATH_END_EVENT]: 'onPathEnd',
-    [PATH_MOVE_EVENT]: 'onPathMove'
+    [PEN_DOWN_EVENT]: 'onPenDown',
+    [PEN_UP_EVENT]: 'onPenUp',
+    [PEN_MOVE_EVENT]: 'onPenMove'
   },
-  onPathStart(point) {
-    DrawingSourceActionCreators.pathStart(point);
+  onPenDown(point) {
+    DrawingSourceActionCreators.penDown(point);
   },
-  onPathMove(point) {
-    DrawingSourceActionCreators.pathMove(point);
+  onPenMove(point) {
+    DrawingSourceActionCreators.penMove(point);
   },
-  onPathEnd(point) {
-    DrawingSourceActionCreators.pathEnd(point);
+  onPenUp(point) {
+    DrawingSourceActionCreators.penUp(point);
   }
 });
 

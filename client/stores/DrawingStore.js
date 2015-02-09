@@ -1,12 +1,12 @@
 import Marty from 'marty';
 import DrawingConstants from '../constants/DrawingConstants';
 
-import { PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT } from '../common/EventConstants';
+import { PEN_DOWN_EVENT, PEN_MOVE_EVENT, PEN_UP_EVENT } from '../common/EventConstants';
 var DrawingStore = Marty.createStore({
   handlers: {
-    onSendPathStart: DrawingConstants.SEND_PATH_START,
-    onSendPathEnd: DrawingConstants.SEND_PATH_END,
-    onSendPathMove: DrawingConstants.SEND_PATH_MOVE
+    onSendPenDown: DrawingConstants.SEND_PEN_DOWN,
+    onSendPenUp: DrawingConstants.SEND_PEN_UP,
+    onSendPenMove: DrawingConstants.SEND_PEN_MOVE
   },
   getInitialState() {
     return {
@@ -27,14 +27,14 @@ var DrawingStore = Marty.createStore({
   onSendMessage(message) {
     this.socket.emit(CHAT_EVENT, message);
   },
-  onSendPathStart(point) {
-    this.state.socket.emit(PATH_START_EVENT, point);
+  onSendPenDown(point) {
+    this.state.socket.emit(PEN_DOWN_EVENT, point);
   },
-  onSendPathEnd(point) {
-    this.state.socket.emit(PATH_END_EVENT, point);
+  onSendPenUp(point) {
+    this.state.socket.emit(PEN_UP_EVENT, point);
   },
-  onSendPathMove(point) {
-    this.state.socket.emit(PATH_MOVE_EVENT, point);
+  onSendPenMove(point) {
+    this.state.socket.emit(PEN_MOVE_EVENT, point);
   }
 });
 

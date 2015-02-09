@@ -36,13 +36,13 @@ var GameCanvas = React.createClass({
       let { type } = action;
       let { point: lastPoint } = this.state;
 
-      if(type === DrawingConstants.PATH_START.toString()) {
+      if(type === DrawingConstants.PEN_DOWN.toString()) {
         let point = this.scaleToPixels(action.arguments[0]);
         this._drawStart(point);
-      } else if(type === DrawingConstants.PATH_MOVE.toString()) {
+      } else if(type === DrawingConstants.PEN_MOVE.toString()) {
         let point = this.scaleToPixels(action.arguments[0]);
         this._drawMove(lastPoint, point);
-      } else if(type === DrawingConstants.PATH_END.toString()) {
+      } else if(type === DrawingConstants.PEN_UP.toString()) {
         let point = this.scaleToPixels(action.arguments[0]);
         this._drawEnd(lastPoint, point);
       }

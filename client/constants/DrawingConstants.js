@@ -2,13 +2,13 @@ import Marty from 'marty';
 
 var DrawingConstants = Marty.createConstants([
   //receive from server
-  'PATH_START',
-  'PATH_END',
-  'PATH_MOVE',
+  'PEN_DOWN',
+  'PEN_UP',
+  'PEN_MOVE',
   //send to server
-  'SEND_PATH_START',
-  'SEND_PATH_END',
-  'SEND_PATH_MOVE'
+  'SEND_PEN_DOWN',
+  'SEND_PEN_UP',
+  'SEND_PEN_MOVE'
 ]);
 
 export default DrawingConstants;
