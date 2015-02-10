@@ -4,7 +4,7 @@
 There are readmes in `client` and `server` folder. Read those
 
 # Installing
-run the following:
+Run the following:
 
 1. `cd client && npm install`
 2. `cd server && npm install`
