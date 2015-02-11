@@ -4,6 +4,7 @@ import watchify from 'watchify'
 import tinylr from 'tiny-lr';
 import fs from 'fs';
 import lr from 'connect-livereload';
+import pkg from '../../client/package.json';
 
 export default function(app) {
   if(app.get('env') === 'production') {
@@ -40,6 +41,10 @@ function createBrowserify() {
     });
     // add the main file
     b.add('../client/index.jsx')
+
+    // tell browserify that each library is externally requireable
+    Object.keys(pkg.dependencies).forEach((lib) => b.external(lib));
+
     // transform using 6to5
     // this is really stupid, you must have 6to5ify installed in client side
     // also need reactify to use marty js
