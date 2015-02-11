@@ -5,10 +5,11 @@ import GameSourceActionCreators from '../actions/GameSourceActionCreators';
 // origin is so that this works anywhere, not just localhost.
 let apiPath = 'api';
 let { origin } = window.location;
+let base = origin + window.location.pathname;
 
 var GameAPI = Marty.createStateSource({
   type: 'http',
-  baseUrl: origin,
+  baseUrl: base,
   loadGames () {
     this.get(`${apiPath}/games`)
       .then( ({ body: games }) => MainSourceActionCreators.addGames(games) );
