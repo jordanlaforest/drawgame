@@ -2,15 +2,17 @@ import express from 'express';
 import browserify from 'browserify';
 import watchify from 'watchify'
 import tinylr from 'tiny-lr';
+import fs from 'fs';
+import lr from 'connect-livereload';
 
 export default function(app) {
-  if(app.get('env') === 'development') {
-    // statically serve client
-    app.use( express.static('../client') );
+  if(app.get('env') === 'production') {
+    createBrowserify().bundle().pipe(fs.createWriteStream('../client/bundle.js'));
+  }else{
+    var lrPort = 35729;
+    tinylr().listen(lrPort);
 
-    tinylr().listen(35729);
-
-    var watcher = createWatcher();
+    var watcher = watchify(createBrowserify());
     watcher.on('update', (ids) => tinylr.changed(...ids));
 
     // browserify on command
@@ -20,10 +22,17 @@ export default function(app) {
         .bundle() // create bundle.js
         .pipe(res); // send the file
     });
+
+    // inject livereload script tag
+    app.use(lr({
+      port: lrPort
+    }));
   }
+  // statically serve client
+  app.use( express.static('../client') );
 }
 
-function createWatcher() {
+function createBrowserify() {
     // start up browserify
     let b = browserify({
       basedir: '../client',
@@ -37,6 +46,5 @@ function createWatcher() {
     b.transform('6to5ify', {
       sourceMapRelative: '../client'
     });
-
-    return watchify(b);
+    return b;
 }
