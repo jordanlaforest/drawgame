@@ -12,3 +12,6 @@ dist
 # editor files
 *sublime*
 *.swp
+
+# browserify bundle
+bundle.js

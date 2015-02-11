@@ -38,13 +38,13 @@ var GameCanvas = React.createClass({
 
       if(type === DrawingConstants.PEN_DOWN.toString()) {
         let point = this.scaleToPixels(action.arguments[0]);
-        this._drawStart(point);
+        this._dropPen(point);
       } else if(type === DrawingConstants.PEN_MOVE.toString()) {
         let point = this.scaleToPixels(action.arguments[0]);
-        this._drawMove(lastPoint, point);
+        this._movePen(lastPoint, point);
       } else if(type === DrawingConstants.PEN_UP.toString()) {
         let point = this.scaleToPixels(action.arguments[0]);
-        this._drawEnd(lastPoint, point);
+        this._raisePen(lastPoint, point);
       }
     });
   },
@@ -61,10 +61,10 @@ var GameCanvas = React.createClass({
         <canvas
           width={width}
           height={height}
-          onMouseDown={amIDrawing ? this.drawStart : noop}
-          onMouseMove={amIDrawing ? this.drawMove : noop}
-          onMouseLeave={amIDrawing ? this.drawEnd : noop}
-          onMouseUp={amIDrawing ? this.drawEnd : noop}
+          onMouseDown={amIDrawing ? this.dropPen : noop}
+          onMouseMove={amIDrawing ? this.movePen : noop}
+          onMouseLeave={amIDrawing ? this.raisePen : noop}
+          onMouseUp={amIDrawing ? this.raisePen : noop}
           ref="canvas">
         </canvas>
       </Panel>
@@ -99,26 +99,26 @@ var GameCanvas = React.createClass({
       y: this.getMouseY(event)
     }
   },
-  drawStart(event) {
+  dropPen(event) {
     let mousePoint = this.getMousePoint(event);
-    this._drawStart(mousePoint);
-    DrawingActionCreators.startPath(this.scaleToPercent(mousePoint));
+    this._dropPen(mousePoint);
+    DrawingActionCreators.sendPenDown(this.scaleToPercent(mousePoint));
   },
-  _drawStart(lastPoint) {
+  _dropPen(lastPoint) {
     this.setState({
       lastPoint,
       point: lastPoint,
       penDown: true
     });
   },
-  drawMove(event) {
+  movePen(event) {
     let point = this.getMousePoint(event);
     if(this.state.penDown) {
-      DrawingActionCreators.movePath(this.scaleToPercent(point));
+      DrawingActionCreators.sendPenMove(this.scaleToPercent(point));
     }
-    this._drawMove(this.state.point, point);
+    this._movePen(this.state.point, point);
   },
-  _drawMove(lastPoint, point) {
+  _movePen(lastPoint, point) {
     this.setState({
       lastPoint,
       point
@@ -132,16 +132,16 @@ var GameCanvas = React.createClass({
       ctx.stroke();
     }
   },
-  drawEnd(event) {
+  raisePen(event) {
     let lastPoint = this.state.point;
     let point = this.getMousePoint(event);
 
     if(this.state.penDown) {
-      DrawingActionCreators.endPath(this.scaleToPercent(point));
+      DrawingActionCreators.sendPenUp(this.scaleToPercent(point));
     }
-    this._drawEnd(lastPoint, point);
+    this._raisePen(lastPoint, point);
   },
-  _drawEnd(lastPoint, point) {
+  _raisePen(lastPoint, point) {
     this.setState({
       penDown: false,
       lastPoint,
