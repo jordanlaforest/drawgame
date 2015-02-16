@@ -6,16 +6,11 @@ import DrawingConstants from '../constants/DrawingConstants';
 
 import PlayersStore from './PlayersStore';
 
-import MessagesSource from '../sources/MessagesSource';
-import DrawingSource from '../sources/DrawingSource';
-import PlayerLocalSource from '../sources/PlayerLocalSource';
 
 import GameActionCreators from '../actions/GameActionCreators';
 
 import SocketWrapper from '../utils/SocketWrapper';
 
-import DrawingStore from './DrawingStore';
-import MessagesStore from './MessagesStore';
 
 import { INIT_EVENT } from '../common/EventConstants';
 
@@ -52,14 +47,6 @@ var GameStore = Marty.createStore({
 
     this.state.socket = new SocketWrapper('http://localhost:9000');
 
-    let sendPlayer = () => GameActionCreators.sendPlayer(PlayerLocalSource.player);
-    this.state.socket.on('connect', sendPlayer);
-
-    MessagesSource.open(this.state.socket);
-    DrawingSource.open(this.state.socket);
-
-    MessagesStore.setSocket(this.state.socket);
-    DrawingStore.setSocket(this.state.socket);
   },
   onQuitGame() {
     MessagesSource.close();
