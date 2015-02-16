@@ -3,8 +3,6 @@ import React from 'react';
 import Input from 'react-bootstrap/Input';
 import Button from 'react-bootstrap/Button';
 
-import Marty from 'marty';
-
 const ENTER_KEY_CODE = 13;
 
 var NameInput = React.createClass({
