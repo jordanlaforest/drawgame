@@ -18,7 +18,6 @@ import DrawingControls from './DrawingControls.jsx';
 import GameStore from '../stores/GameStore';
 import PlayersStore from '../stores/PlayersStore';
 
-import MessagesSource from '../sources/MessagesSource';
 import DrawingSource from '../sources/DrawingSource';
 
 import GameAPI from '../sources/GameAPI';
@@ -45,7 +44,6 @@ var Game = React.createClass({
   },
   componentWillUnmount() {
     PlayersStore.unloadPlayers();
-    MessagesSource.close();
     DrawingSource.close();
   },
   render() {
