@@ -1,36 +1,17 @@
-import Marty from 'marty';
 import React from 'react';
 import { ButtonLink } from 'react-router-bootstrap';
 
 import Table from 'react-bootstrap/Table';
 import Glyphicon from 'react-bootstrap/Glyphicon';
 
-import GameAPI from '../sources/GameAPI';
-import GameBrowserStore from '../stores/GameBrowserStore';
-
-var GameBrowserStateMixin = Marty.createStateMixin({
-  listenTo: GameBrowserStore,
-  getState() {
-    return {
-      games: GameBrowserStore.getGames()
-    };
-  }
-});
-
 var GameBrowser = React.createClass({
-  mixins: [GameBrowserStateMixin],
-  componentDidMount() {
-    GameAPI.loadGames();
-  },
-  componentWillUnmount() {
-    GameBrowserStore.unloadGames();
-  },
+  mixins: [],
   render() {
-    let { games } = this.state;
+    // games is passed by FluxComponent on RouteHandler in App.jsx
+    let { games } = this.props;
     return (
       <div>
         <ButtonLink to="creategame">Create Game</ButtonLink>
-        <ButtonLink to="editplayer">Edit Player</ButtonLink>
 
         <Table striped bordered condensed hover>
           <thead>

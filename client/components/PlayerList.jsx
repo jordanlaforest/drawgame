@@ -6,7 +6,9 @@ import ListGroupItem from 'react-bootstrap/ListGroupItem';
 
 var PlayerList = React.createClass({
   render: function () {
-    let { players, isDrawing } = this.props;
+    let { players, currentlyDrawing } = this.props;
+
+    let isDrawing = (id) => id === currentlyDrawing;
     return (
       <Panel header="Players">
         <ListGroup>
