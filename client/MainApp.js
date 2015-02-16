@@ -16,12 +16,15 @@ class MainApp extends Flux {
   constructor() {
     super();
 
-    // single place that owns the socket === so good
-    this.socket = new SocketWrapper('http://localhost:9000');
+    //config
+    this.host = 'http://localhost';
+
+    // TODO the lifecycle of the socket should be managed?
+    this.socket = new SocketWrapper(`${this.host}:9000`);
 
     this.createActions('messages', MessageActions, this.socket);
     this.createActions('players', PlayerActions, this.socket);
-    this.createActions('games', GameActions);
+    this.createActions('games', GameActions, this.host);
 
     this.createStore('messages', MessageStore, this);
     this.createStore('players', PlayerStore, this);
