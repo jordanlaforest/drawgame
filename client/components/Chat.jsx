@@ -5,26 +5,24 @@ import Panel from 'react-bootstrap/Panel';
 import Input from 'react-bootstrap/Input';
 import Button from 'react-bootstrap/Button';
 
-import Marty from 'marty';
-import MessagesStore from '../stores/MessagesStore';
-import MessagesActionsCreators from '../actions/MessagesActionCreators';
-
 const ENTER_KEY_CODE = 13;
 
-var ChatState = Marty.createStateMixin({
-  listenTo: MessagesStore,
-  getState() {
-    return {
-      message: '',
-      messages: MessagesStore.getMessages()
-    }
-  }
-});
-
 var Chat = React.createClass({
-  mixins: [LinkedStateMixin, ChatState],
+  mixins: [LinkedStateMixin],
+
+  getInitialState () {
+    return {
+      message: ''
+    };
+  },
+
   render() {
-    let { messages } = this.state;
+    let { message } = this.state;
+
+    // in Game.jsx FluxComponent passes down 'messages' as a prop, since we
+    // are connecting to the 'messages' store
+    let { messages } = this.props;
+    this.messageActions = this.props.flux.getActions('messages');
 
     let panelFooter = (
       <Input
@@ -44,16 +42,22 @@ var Chat = React.createClass({
       </Panel>
     );
   },
+
   onKeyDown({ keyCode }) {
     if(keyCode === ENTER_KEY_CODE) {
       this.sendMessage();
     }
   },
+
   sendMessage() {
-    MessagesActionsCreators.sendMessage(this.state.message);
+    // clear the message
+    let { message } = this.state;
     this.setState({
       message: ''
     });
+
+    // add the message to the store
+    this.messageActions.createMessage(message, this.props.player.name);
   }
 });
 
