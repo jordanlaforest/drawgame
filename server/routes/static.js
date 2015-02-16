@@ -12,13 +12,15 @@ import glob from 'glob';
 import path from 'path';
 
 export default function(app) {
-  if(app.get('env') === 'production') {
-    createBrowserify().bundle().pipe(fs.createWriteStream('../client/bundle.js'));
-  }else{
+  let production = app.get('env') === 'production';
+  let b = createBrowserify(production);
+  if(production) {
+    b.bundle().pipe(fs.createWriteStream('../client/bundle.js'));
+  } else {
     var lrPort = 35729;
     tinylr().listen(lrPort);
 
-    var watcher = watchify(createBrowserify());
+    var watcher = watchify(b);
     watcher.on('update', (ids) => tinylr.changed(...ids));
 
     // browserify on command
@@ -38,10 +40,11 @@ export default function(app) {
   app.use( express.static('../client') );
 }
 
-function createBrowserify() {
+function createBrowserify(production) {
     // start up browserify
     let b = browserify({
       basedir: '../client',
+      debug: !production,
       cache: {}, packageCache: {}, fullPaths: true //for watchifys
     });
     // add the main file
