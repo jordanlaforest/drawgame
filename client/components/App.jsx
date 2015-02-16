@@ -1,12 +1,12 @@
 import React from 'react';
-import Router from 'react-router';
+import { RouteHandler } from 'react-router';
 import NameInput from './NameInput.jsx';
 
 import Grid from 'react-bootstrap/Grid';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-let { RouteHandler } = Router;
+import FluxComponent from 'flummox/component';
 
 var App = React.createClass({
   render() {
@@ -26,7 +26,11 @@ var App = React.createClass({
         </header>
 
         <div>
-          <RouteHandler/>
+
+          <FluxComponent connectToStores={['games']}>
+            <RouteHandler/>
+          </FluxComponent>
+
         </div>
 
         <footer className="footer">

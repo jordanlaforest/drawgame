@@ -1,65 +1,34 @@
-import Marty from 'marty';
+import { Store } from 'flummox';
 
-import GameConstants from '../constants/GameConstants';
-import MessagesConstants from '../constants/MessagesConstants';
-import DrawingConstants from '../constants/DrawingConstants';
+class GameStore extends Store {
+  constructor(flux) {
+    super();
 
-import PlayersStore from './PlayersStore';
+    let gameActionIds = flux.getActionIds('games');
+    this.register(gameActionIds.getGames, this.addGames);
+    this.register(gameActionIds.getGameInfo, this.setupGame);
 
+    this.playerActions = flux.getActions('players');
 
-import GameActionCreators from '../actions/GameActionCreators';
-
-import SocketWrapper from '../utils/SocketWrapper';
-
-
-import { INIT_EVENT } from '../common/EventConstants';
-
-var GameStore = Marty.createStore({
-  handlers: {
-    onInitGame: GameConstants.INIT_GAME,
-    onSendPlayer: GameConstants.SEND_PLAYER,
-  },
-  getInitialState() {
-    return {
+    this.state = {
       currentWord: 'Dog',
       drawingPlayer: 0,
-      player: null,
-      socket: null
+      games: []
     };
-  },
-  getCurrentWord() {
-    return this.state.currentWord;
-  },
-  getDrawingPlayer() {
-    return PlayersStore.getPlayer(this.state.drawingPlayer) || { id: 0, username: '', score: 0 };
-  },
-  amIDrawing() {
-    return this.isDrawing(PlayersStore.getThePlayer().id);
-  },
-  isDrawing(id) {
-    return this.state.drawingPlayer === id;
-  },
-  onInitGame({ currentWord, currentlyDrawing }) {
-    console.log('starting game');
-    this.state.currentWord = currentWord;
-    this.state.drawingPlayer = currentlyDrawing;
-    this.hasChanged();
+  }
 
-    this.state.socket = new SocketWrapper('http://localhost:9000');
+  addGames(games) {
+    this.setState({
+      games
+    });
+  }
 
-  },
-  onQuitGame() {
-    MessagesSource.close();
-    DrawingSource.close();
-
-    this.state.socket.close();
-
-    MessagesStore.removeSocket();
-    DrawingStore.removeSocket();
-  },
-  onSendPlayer(player) {
-    this.state.socket.emit(INIT_EVENT, player);
-  },
-});
+  setupGame({ currentWord, currentlyDrawing }) {
+    this.setState({
+      currentWord,
+      currentlyDrawing
+    });
+  }
+}
 
 export default GameStore;

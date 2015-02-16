@@ -1,5 +1,5 @@
+// other stuff
 import React from 'react';
-import Marty from 'marty';
 import { State } from 'react-router';
 import { ButtonLink } from 'react-router-bootstrap';
 
@@ -15,45 +15,37 @@ import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
-import GameStore from '../stores/GameStore';
-import PlayersStore from '../stores/PlayersStore';
-
-import GameAPI from '../sources/GameAPI';
-
-var GameState = Marty.createStateMixin({
-  listenTo: [GameStore, PlayersStore],
-  getState() {
-    let { currentWord } = GameStore.state;
-    let { players, player } = PlayersStore.state;
-    return {
-      currentWord,
-      drawingPlayer: GameStore.getDrawingPlayer(),
-      players,
-      player
-    };
-  }
-});
 import FluxComponent from 'flummox/component';
 
 var Game = React.createClass({
-  mixins: [ State, GameState ],
+  mixins: [ State ],
+
   componentWillMount() {
-    GameAPI.loadGame(this.getParams().gameid);
+    this.gameActions = this.props.flux.getActions('games');
+    this.gameActions.getGameInfo(this.getParams().gameid);
   },
+
   componentWillUnmount() {
-    PlayersStore.unloadPlayers();
+    // TODO change
+    this.props.flux.getStore('players').unloadPlayers();
   },
+
   render() {
-    let { players, currentWord, drawingPlayer: { name }}  = this.state;
     return (
       <div>
+
         <ButtonLink to="app">Leave Game</ButtonLink>
         <Button> Skip Word </Button>
+
         <Grid fluid>
           <Row>
+
             <Col md={2}>
               <Row>
-                <PlayerList players={players} isDrawing={GameStore.isDrawing.bind(GameStore)} />
+                {/* all state from games and players get passed as props on PlayerList */}
+                <FluxComponent connectToStores={['players', 'games']}>
+                  <PlayerList />
+                </FluxComponent>
               </Row>
 
               <Row>

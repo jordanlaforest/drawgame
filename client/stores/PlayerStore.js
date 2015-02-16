@@ -14,7 +14,9 @@ class PlayerStore extends Store {
     super();
 
     let playerActionIds = flux.getActionIds('players');
+    let gameActionIds = flux.getActionIds('games');
     this.register(playerActionIds.initPlayer, this.initPlayer);
+    this.register(gameActionIds.getGameInfo, ({ players }) => this.addPlayers(players));
 
     this.state = {
       player: new Player({  name: '', id: 0, score: 0 }),
