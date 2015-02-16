@@ -10,20 +10,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   </head>
   <body>
-    <div class="container-fluid">
-      <header class="header">
-        <h3 className="text-muted">Draw Game</h3>
-      </header>
 
-      <div id="view"></div>
+    <div id="react-view"></div>
 
-      <footer class="footer">
-        <p>Created by Jordan Laforest and Nicholas Dujay</p>
-      </footer>
-    </div>
-
-    <!-- automatic injecting is a giant pain in the ass.... -->
-    <script>document.write('<script src="livereload.js?snipver=1&port=35729"></' + 'script>')</script>
+    <script src="bundle-vendor.js"></script>
     <script src="bundle.js"></script>
   </body>
 </html>

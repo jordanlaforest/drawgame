@@ -18,7 +18,6 @@ let server = Server(app);
 import attachAPI from './routes/api';
 attachAPI(app);
 
-app.set('env', 'development');
 import staticServe from './routes/static';
 staticServe(app);
 
