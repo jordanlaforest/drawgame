@@ -6,6 +6,11 @@ import fs from 'fs';
 import lr from 'connect-livereload';
 import pkg from '../../client/package.json';
 
+import deps from '../../common/deps';
+
+import glob from 'glob';
+import path from 'path';
+
 export default function(app) {
   if(app.get('env') === 'production') {
     createBrowserify().bundle().pipe(fs.createWriteStream('../client/bundle.js'));
@@ -43,7 +48,10 @@ function createBrowserify() {
     b.add('../client/index.jsx')
 
     // tell browserify that each library is externally requireable
-    Object.keys(pkg.dependencies).forEach((lib) => b.external(lib));
+    // this line tells browserify to NOT include all react/lib/*.js libraries
+    deps.push(...glob.sync(path.resolve(__dirname, '../../client/node_modules/react/lib/*.js')));
+
+    deps.forEach((lib) => b.external(lib));
 
     // transform using 6to5
     // this is really stupid, you must have 6to5ify installed in client side

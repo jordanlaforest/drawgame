@@ -1,11 +1,11 @@
 var browserify = require('browserify');
 var fs = require('fs');
-var pkg = require('./package.json');
+var deps = require('./common/deps');
 
-var b = browserify('./empty.js');
+var b = browserify({ debug: false });
 
 // make each dependency requireable
-Object.keys(pkg.dependencies).forEach(function(lib) {
+deps.forEach(function(lib) {
   // we can't just pass b.require as the function here because
   // forEach passes index as the second element...
   b.require(lib);
