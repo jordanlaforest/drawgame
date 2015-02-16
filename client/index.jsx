@@ -11,7 +11,7 @@ import { Flux } from 'flummox';
 let flux = new MainApp();
 flux.__proto__ = Flux.prototype;
 
-Router.run(Routes, (Handler) => {
+Router.run(Routes, Router.HistoryLocation, (Handler) => {
   React.withContext(
     { flux },
     () => React.render(<Handler />, document.getElementById('react-view'))
