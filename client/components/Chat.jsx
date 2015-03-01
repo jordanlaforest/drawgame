@@ -1,9 +1,7 @@
 import React from 'react/addons';
-let { addons : { LinkedStateMixin }} = React;
+let { addons: { LinkedStateMixin }} = React;
 
-import Panel from 'react-bootstrap/Panel';
-import Input from 'react-bootstrap/Input';
-import Button from 'react-bootstrap/Button';
+import { Panel, Input, Button } from 'react-bootstrap';
 
 const ENTER_KEY_CODE = 13;
 
@@ -24,6 +22,7 @@ var Chat = React.createClass({
     let { messages } = this.props;
     this.messageActions = this.props.flux.getActions('messages');
 
+    /*eslint-disable no-undef */
     let panelFooter = (
       <Input
         type="text"
@@ -36,10 +35,17 @@ var Chat = React.createClass({
       <Panel header="Chat" footer={panelFooter} >
         <ul className="list-unstyled">
           {
-            messages.map( ({ name, message }, idx) => <li key={idx}><strong>{name}:</strong> {message }</li>)
+            /*eslint-disable no-shadow */
+            messages.map( ({ name, message }, idx) =>
+              <li key={idx}>
+                <strong>{name}:</strong> { message }
+              </li>
+            )
+            /*eslint-enable no-shadow */
           }
         </ul>
       </Panel>
+      /*eslint-enable no-undef */
     );
   },
 

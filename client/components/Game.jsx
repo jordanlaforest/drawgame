@@ -4,10 +4,7 @@ import { State } from 'react-router';
 import { ButtonLink } from 'react-router-bootstrap';
 
 // react-bootstrap
-import Grid from 'react-bootstrap/Grid';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import { Grid, Row, Col, Button } from 'react-bootstrap';
 
 // app components
 import PlayerList from './PlayerList.jsx';
@@ -32,6 +29,7 @@ var Game = React.createClass({
 
   render() {
     return (
+      /*eslint-disable no-undef */
       <div>
 
         <ButtonLink to="app">Leave Game</ButtonLink>
@@ -70,6 +68,7 @@ var Game = React.createClass({
           </Row>
         </Grid>
       </div>
+      /*eslint-enable no-undef */
     );
   }
 });

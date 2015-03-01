@@ -3,8 +3,8 @@ import { Actions } from 'flummox';
 import Player from '../common/Player';
 import { INIT_EVENT } from '../../common/EventConstants';
 
-const PROMPT_MSG        = 'Please choose a name:';
-const INVALID_NAME_MSG  = 'Invalid name, please try again.';
+const PROMPT_MSG = 'Please choose a name:';
+const INVALID_NAME_MSG = 'Invalid name, please try again.';
 
 function isValidName(name) {
   return name !== undefined && name !== null;
@@ -22,6 +22,7 @@ class PlayerActions extends Actions {
     let name = localStorage.getItem('player.name');
 
     // is the name invalid? keep prompting
+    /*eslint-disable no-alert */
     let invalid = !isValidName(name);
     while(invalid) {
       name = prompt(PROMPT_MSG);
@@ -30,8 +31,9 @@ class PlayerActions extends Actions {
         alert(INVALID_NAME_MSG);
       }
     }
+    /*eslint-enable no-alert */
 
-    let newPlayer = new Player({  name, id: 0, score: 0 });
+    let newPlayer = new Player({ name, id: 0, score: 0 });
     this.socket.emit(INIT_EVENT, newPlayer);
 
     return newPlayer;

@@ -13,14 +13,15 @@ import DrawingStore from './stores/DrawingStore';
 import SocketWrapper from './utils/SocketWrapper';
 
 class MainApp extends Flux {
-  constructor() {
+  constructor(appPath='/') {
     super();
 
     //config
-    this.host = 'http://localhost';
+    let { origin } = window.location;
+    this.host = origin + appPath;//'http://localhost';
 
     // TODO the lifecycle of the socket should be managed?
-    this.socket = new SocketWrapper(`${this.host}:9000`);
+    this.socket = new SocketWrapper(`${this.host}`);
 
     this.createActions('messages', MessageActions, this.socket);
     this.createActions('players', PlayerActions, this.socket);

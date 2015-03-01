@@ -34,7 +34,7 @@ export default function(app) {
         currentWord = 'Cat';
         players = [
           new Player({ id: 0, name: 'Fred', score: 5 }),
-          new Player({ id: 1, name: 'Nick', score: 2 }),
+          new Player({ id: 1, name: 'Nick', score: 2 })
         ];
         break;
       case 2:

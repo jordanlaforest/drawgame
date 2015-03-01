@@ -1,8 +1,7 @@
 import React from 'react';
 import { ButtonLink } from 'react-router-bootstrap';
 
-import Table from 'react-bootstrap/Table';
-import Glyphicon from 'react-bootstrap/Glyphicon';
+import { Table, Glyphicon } from 'react-bootstrap';
 
 var GameBrowser = React.createClass({
   mixins: [],
@@ -10,6 +9,7 @@ var GameBrowser = React.createClass({
     // games is passed by FluxComponent on RouteHandler in App.jsx
     let { games } = this.props;
     return (
+      /*eslint-disable no-undef */
       <div>
         <ButtonLink to="creategame">Create Game</ButtonLink>
 
@@ -36,6 +36,7 @@ var GameBrowser = React.createClass({
           </tbody>
         </Table>
       </div>
+      /*eslint-enable no-undef */
     );
   }
 });

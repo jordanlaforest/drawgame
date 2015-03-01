@@ -14,11 +14,10 @@ class DrawingStore extends Store {
     this.state = {
       width: DEFAULT_WIDTH,
       height: DEFAULT_HEIGHT,
-
       lastPoint: { x: 0, y: 0 },
       point: { x: 0, y: 0 },
       colour: 'red'
-    }
+    };
     this.ctx = null;
   }
 
@@ -55,7 +54,7 @@ class DrawingStore extends Store {
     newPoint = this.scaleToPixels(newPoint);
     let { point, penDown, lastPoint } = this.state;
     this.setState({
-      lastPoint : point,
+      lastPoint: point,
       point: newPoint
     });
 
@@ -72,9 +71,9 @@ class DrawingStore extends Store {
     let { point, penDown } = this.state;
     if(penDown) {
       this.setState({
-        lastPoint : point,
+        lastPoint: point,
         point: newPoint,
-        penDown: false,
+        penDown: false
       });
     }
   }

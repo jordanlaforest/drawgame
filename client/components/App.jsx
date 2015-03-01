@@ -2,15 +2,14 @@ import React from 'react';
 import { RouteHandler } from 'react-router';
 import NameInput from './NameInput.jsx';
 
-import Grid from 'react-bootstrap/Grid';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 import FluxComponent from 'flummox/component';
 
 var App = React.createClass({
   render() {
     return (
+      /*eslint-disable no-undef */
       <div className="container-fluid">
         <header className="header">
           <Grid fluid>
@@ -37,6 +36,7 @@ var App = React.createClass({
           <p>Created by Jordan Laforest and Nicholas Dujay</p>
         </footer>
       </div>
+      /*eslint-enable no-undef */
     );
   }
 });

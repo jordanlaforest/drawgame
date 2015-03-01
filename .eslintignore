@@ -1,0 +1,12 @@
+client/livereload.js
+client/*bundle*.js
+client/*.html
+client/*.md
+client/package.json
+client/node_modules/
+client/styles/
+
+server/node_modules
+server/README.md
+server/package.json
+server/nodemon.json

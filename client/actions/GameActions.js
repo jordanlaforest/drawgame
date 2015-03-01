@@ -8,16 +8,16 @@ const API_PATH = 'api';
 class GameActions extends Actions {
   constructor(host) {
     super();
-    this.host = host
+    this.host = host;
   }
 
   getGameInfo(gameId) {
-    return fetch(`${this.host}/${API_PATH}/game/${gameId}/info`)
+    return fetch(`${this.host}${API_PATH}/game/${gameId}/info`)
       .then( (res) => res.json() );
   }
 
   getGames() {
-    return fetch(`${this.host}/${API_PATH}/games`)
+    return fetch(`${this.host}${API_PATH}/games`)
       .then( (res) => res.json() );
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import Panel from 'react-bootstrap/Panel';
+import { Panel } from 'react-bootstrap';
 
 var noop = () => 0;
 
@@ -18,10 +18,11 @@ var GameCanvas = React.createClass({
     let { width, height } = this.props;
 
     // other props
-    let { currentWord, currentlyDrawing, player : { id } } = this.props;
+    let { currentWord, currentlyDrawing, player: { id } } = this.props;
     let amIDrawing = id === currentlyDrawing;
 
     // change the canvas header based on who's drawing
+    /*eslint-disable no-undef */
     let yourWord = <p>Your word is <strong>{currentWord}</strong></p>;
     let someoneElseDrawing = <p><strong>{name}</strong> is currently drawing</p>;
     let canvasHeader = amIDrawing ? yourWord : someoneElseDrawing;
@@ -38,6 +39,7 @@ var GameCanvas = React.createClass({
           ref="canvas">
         </canvas>
       </Panel>
+      /*eslint-enable no-undef */
     );
   },
   getCanvas() {
@@ -53,7 +55,7 @@ var GameCanvas = React.createClass({
     return {
       x: this.getMouseX(event),
       y: this.getMouseY(event)
-    }
+    };
   },
   dropPen(event) {
     this.drawingActions.dropPen(this.getMousePoint(event), this.scaleFn);

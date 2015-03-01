@@ -1,14 +1,11 @@
 import React from 'react';
 
-import Panel from 'react-bootstrap/Panel';
-
-import Grid from 'react-bootstrap/Grid';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Panel, Grid, Row, Col } from 'react-bootstrap';
 
 var DrawingControls = React.createClass({
   render: function () {
     return (
+      /*eslint-disable no-undef */
       <Panel header="DrawingControls">
         <Grid fluid>
           <Row fluid>
@@ -18,6 +15,7 @@ var DrawingControls = React.createClass({
           </Row>
         </Grid>
       </Panel>
+      /*eslint-enable no-undef */
     );
   }
 });
