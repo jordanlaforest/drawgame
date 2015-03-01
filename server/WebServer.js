@@ -13,7 +13,9 @@ import GameServer from './GameServer';
 
 // start up the game server
 let app = express();
+/*eslint-disable new-cap */
 let server = Server(app);
+/*eslint-enable new-cap */
 
 import attachAPI from './routes/api';
 attachAPI(app);

@@ -1,19 +1,17 @@
 import express from 'express';
-import browserify from 'browserify';
 import watchify from 'watchify'
 import tinylr from 'tiny-lr';
 import fs from 'fs';
 import lr from 'connect-livereload';
-import pkg from '../../client/package.json';
 
-import deps from '../../common/deps';
-
-import glob from 'glob';
-import path from 'path';
+import { createBrowserify } from '../browserify/index.js';
 
 export default function(app) {
-  let production = app.get('env') === 'production';
-  let b = createBrowserify(production);
+  const env = app.get('env');
+  const production = env === 'production';
+
+  let b = createBrowserify(env);
+
   if(production) {
     b.bundle().pipe(fs.createWriteStream('../client/bundle.js'));
   } else {
@@ -38,29 +36,4 @@ export default function(app) {
   }
   // statically serve client
   app.use( express.static('../client') );
-}
-
-function createBrowserify(production) {
-    // start up browserify
-    let b = browserify({
-      basedir: '../client',
-      debug: !production,
-      cache: {}, packageCache: {}, fullPaths: true //for watchifys
-    });
-    // add the main file
-    b.add('../client/index.jsx')
-
-    // tell browserify that each library is externally requireable
-    // this line tells browserify to NOT include all react/lib/*.js libraries
-    deps.push(...glob.sync(path.resolve(__dirname, '../../client/node_modules/react/lib/*.js')));
-
-    deps.forEach((lib) => b.external(lib));
-
-    // transform using 6to5
-    // this is really stupid, you must have 6to5ify installed in client side
-    // also need reactify to use marty js
-    b.transform('6to5ify', {
-      sourceMapRelative: '../client'
-    });
-    return b;
 }

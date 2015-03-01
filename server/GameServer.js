@@ -83,7 +83,7 @@ export default class GameServer {
 
   listenForChatEvent(socket) {
     socket.on(CHAT_EVENT, (message) => {
-      let { player : { name }, id } = socket;
+      let { player: { name }, id } = socket;
       // player = socket.player.name;
       // id = socket.id;
       console.log(`${name}[${id}] said: ${message}`);

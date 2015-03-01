@@ -1,13 +1,14 @@
 import React from 'react';
 
-import Panel from 'react-bootstrap/Panel';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
+import { Panel, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 var PlayerList = React.createClass({
   render: function () {
-    let { players, isDrawing } = this.props;
+    let { players, currentlyDrawing } = this.props;
+
+    let isDrawing = (id) => id === currentlyDrawing;
     return (
+      /*eslint-disable no-undef */
       <Panel header="Players">
         <ListGroup>
         {
@@ -20,6 +21,7 @@ var PlayerList = React.createClass({
         }
         </ListGroup>
       </Panel>
+      /*eslint-enable no-undef */
     );
   }
 });

@@ -22,7 +22,7 @@ class SocketWrapper {
   }
 
   emit(event, data, callback = undefined) {
-    if('init' === event){ //Automatically add the uid during init
+    if(event === 'init') { //Automatically add the uid during init
       data.uid = this.uid();
     }
     if(typeof callback === 'function') {
