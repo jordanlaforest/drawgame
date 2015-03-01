@@ -7,9 +7,11 @@ import Router from 'react-router';
 import MainApp from './MainApp';
 import { Flux } from 'flummox';
 
-// hack since proto's are broken right now in babel...
-let flux = new MainApp();
+let { env: { NODE_ENV }} = process;
+let flux = new MainApp(NODE_ENV);
+
 /*eslint-disable no-proto */
+// hack since proto's are broken for some reason in babel...
 flux.__proto__ = Flux.prototype;
 /*eslint-enable no-proto */
 

@@ -12,9 +12,18 @@ import DrawingStore from './stores/DrawingStore';
 
 import SocketWrapper from './utils/SocketWrapper';
 
+// mapping from environment to paths
+const API_PATH = {
+  'development': '/',
+  'production': '/drawgame/',
+  'production.beta': '/drawgame/beta/'
+};
+
 class MainApp extends Flux {
-  constructor(appPath='/') {
+  constructor(environment) {
     super();
+
+    const appPath = API_PATH[environment];
 
     //config
     let { origin } = window.location;
