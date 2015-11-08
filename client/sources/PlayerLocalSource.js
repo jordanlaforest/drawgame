@@ -1,7 +1,7 @@
 import Marty from 'marty';
 
-import Player from '../common/Player';
-import { NAME_CHANGE_EVENT } from '../common/EventConstants';
+import Player from '../../common/Player';
+import { NAME_CHANGE_EVENT } from '../../common/EventConstants';
 
 var PlayerLocalSource = Marty.createStateSource({
   type: 'localStorage',

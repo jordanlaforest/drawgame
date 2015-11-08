@@ -17,12 +17,12 @@ import SocketWrapper from '../utils/SocketWrapper';
 import DrawingStore from './DrawingStore';
 import MessagesStore from './MessagesStore';
 
-import { INIT_EVENT } from '../common/EventConstants';
+import { INIT_EVENT } from '../../common/EventConstants';
 
 var GameStore = Marty.createStore({
   handlers: {
     onInitGame: GameConstants.INIT_GAME,
-    onSendPlayer: GameConstants.SEND_PLAYER,
+    onSendPlayer: GameConstants.SEND_PLAYER
   },
   getInitialState() {
     return {
@@ -72,7 +72,7 @@ var GameStore = Marty.createStore({
   },
   onSendPlayer(player) {
     this.state.socket.emit(INIT_EVENT, player);
-  },
+  }
 });
 
 export default GameStore;

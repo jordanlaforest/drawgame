@@ -1,7 +1,7 @@
 import {
   PATH_START_EVENT, PATH_END_EVENT, PATH_MOVE_EVENT
 }
-from '../common/EventConstants';
+from '../../common/EventConstants';
 import Marty from 'marty';
 import SocketStateSource from './socketMixin';
 import DrawingSourceActionCreators from '../actions/DrawingSourceActionCreators';

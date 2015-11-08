@@ -1,10 +1,10 @@
 import React from 'react';
 
-import Panel from 'react-bootstrap/Panel';
+import Panel from 'react-bootstrap/lib/Panel';
 
-import Grid from 'react-bootstrap/Grid';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
 
 var DrawingControls = React.createClass({
   render: function () {

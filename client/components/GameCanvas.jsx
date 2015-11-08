@@ -1,9 +1,9 @@
 import React from 'react';
 import Marty from 'marty';
-import Dispatcher from 'marty/dispatcher';
-Dispatcher = Dispatcher.getCurrent();
+import * as D from 'marty/dispatcher';
+let Dispatcher = D.getCurrent();
 
-import Panel from 'react-bootstrap/Panel';
+import Panel from 'react-bootstrap/lib/Panel';
 import DrawingActionCreators from '../actions/DrawingActionCreators';
 import DrawingConstants from '../constants/DrawingConstants';
 
@@ -97,7 +97,7 @@ var GameCanvas = React.createClass({
     return {
       x: this.getMouseX(event),
       y: this.getMouseY(event)
-    }
+    };
   },
   drawStart(event) {
     let mousePoint = this.getMousePoint(event);

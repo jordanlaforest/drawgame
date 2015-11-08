@@ -1,7 +1,0 @@
-{
-  "verbose": true,
-  "debug": true,
-  "execMap": {
-    "js": "iojs"
-  }
-}

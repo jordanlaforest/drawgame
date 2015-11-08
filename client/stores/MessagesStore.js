@@ -1,6 +1,6 @@
 import Marty from 'marty';
 import MessagesConstants from '../constants/MessagesConstants';
-import { CHAT_EVENT } from '../common/EventConstants';
+import { CHAT_EVENT } from '../../common/EventConstants';
 
 var MessagesStore = Marty.createStore({
   handlers: {

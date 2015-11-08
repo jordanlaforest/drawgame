@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Panel from 'react-bootstrap/Panel';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
+import Panel from 'react-bootstrap/lib/Panel';
+import ListGroup from 'react-bootstrap/lib/ListGroup';
+import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 
 var Main = React.createClass({
   render: function () {

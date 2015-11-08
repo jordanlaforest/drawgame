@@ -1,9 +1,9 @@
 import React from 'react/addons';
 let { addons : { LinkedStateMixin }} = React;
 
-import Panel from 'react-bootstrap/Panel';
-import Input from 'react-bootstrap/Input';
-import Button from 'react-bootstrap/Button';
+import Panel from 'react-bootstrap/lib/Panel';
+import Input from 'react-bootstrap/lib/Input';
+import Button from 'react-bootstrap/lib/Button';
 
 import Marty from 'marty';
 import MessagesStore from '../stores/MessagesStore';

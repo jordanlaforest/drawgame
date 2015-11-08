@@ -2,7 +2,7 @@
 import Marty from 'marty';
 import PlayerConstants from '../constants/PlayerConstants';
 import PlayerLocalSource from '../sources/PlayerLocalSource';
-import Player from '../common/Player';
+import Player from '../../common/Player';
 
 const PROMPT_MSG        = 'Please choose a name:';
 const INVALID_NAME_MSG  = 'Invalid name, please try again.';

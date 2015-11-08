@@ -1,7 +1,7 @@
 import Marty from 'marty';
 import DrawingConstants from '../constants/DrawingConstants';
 
-import { PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT } from '../common/EventConstants';
+import { PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT, CHAT_EVENT } from '../../common/EventConstants';
 var DrawingStore = Marty.createStore({
   handlers: {
     onSendPathStart: DrawingConstants.SEND_PATH_START,

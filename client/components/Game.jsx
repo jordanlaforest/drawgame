@@ -3,10 +3,10 @@ import Marty from 'marty';
 import { State } from 'react-router';
 import { ButtonLink } from 'react-router-bootstrap';
 
-import Grid from 'react-bootstrap/Grid';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import Button from 'react-bootstrap/lib/Button';
 
 import PlayerList from './PlayerList.jsx';
 import GameCanvas from './GameCanvas.jsx';

@@ -12,7 +12,7 @@ export default function socketStateMixin() {
       });
     },
     close() {
-       Object.keys(this.events).forEach((event) => {
+      Object.keys(this.events).forEach((event) => {
         var handler = this.events[event];
         this.socket.off(event, this[handler]);
       });

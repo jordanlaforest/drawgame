@@ -2,8 +2,8 @@ import Marty from 'marty';
 import React from 'react';
 import { ButtonLink } from 'react-router-bootstrap';
 
-import Table from 'react-bootstrap/Table';
-import Glyphicon from 'react-bootstrap/Glyphicon';
+import Table from 'react-bootstrap/lib/Table';
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 
 import GameAPI from '../sources/GameAPI';
 import MainStore from '../stores/MainStore';

@@ -2,7 +2,7 @@ import {
   SERVER_MESSAGE_EVENT,
   CHAT_EVENT
 }
-from '../common/EventConstants';
+from '../../common/EventConstants';
 import Marty from 'marty';
 import SocketStateSource from './socketMixin';
 import MessagesActionsCreators from '../actions/MessagesActionCreators';
