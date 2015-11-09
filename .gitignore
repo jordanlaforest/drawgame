@@ -12,3 +12,5 @@ dist
 # editor files
 *sublime*
 *.swp
+
+npm-debug.log*
