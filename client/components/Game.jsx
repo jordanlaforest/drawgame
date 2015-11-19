@@ -1,7 +1,7 @@
+import {Map, fromJS} from 'immutable';
 import React from 'react';
-import Marty from 'marty';
-import { State } from 'react-router';
-import { ButtonLink } from 'react-router-bootstrap';
+import { connect } from 'react-redux';
+import { IndexLinkContainer } from 'react-router-bootstrap';
 
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
@@ -12,64 +12,101 @@ import PlayerList from './PlayerList.jsx';
 import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
+import Login from './Login.jsx';
 
-import GameStore from '../stores/GameStore';
-import PlayersStore from '../stores/PlayersStore';
+import { addPointToDrawing, endPathInDrawing, addChatMessage, setState } from '../../common/actions';
+import {INIT_EVENT_GAME} from '../../common/EventConstants';
 
-import MessagesSource from '../sources/MessagesSource';
-import DrawingSource from '../sources/DrawingSource';
-
-import GameAPI from '../sources/GameAPI';
-
-var GameState = Marty.createStateMixin({
-  listenTo: [GameStore, PlayersStore],
-  getState() {
-    let { currentWord } = GameStore.state;
-    let { players, player } = PlayersStore.state;
-    return {
-      currentWord,
-      drawingPlayer: GameStore.getDrawingPlayer(),
-      players,
-      player
-    };
-  }
-});
-
-var Game = React.createClass({
-  mixins: [ State, GameState ],
-  componentWillMount() {
-    GameAPI.loadGame(this.getParams().gameid);
+let Game = React.createClass({
+  addPoint(point){
+    this.props.dispatch(addPointToDrawing(this.props.game.get('id'), point));
   },
-  componentWillUnmount() {
-    PlayersStore.unloadPlayers();
-    MessagesSource.close();
-    DrawingSource.close();
+  endPath(){
+    this.props.dispatch(endPathInDrawing(this.props.game.get('id')));
+  },
+  sendChat(message){
+    let n = 'Bob';
+    this.props.dispatch(addChatMessage(this.props.game.get('id'), Map({name: n, message: message})));
   },
   render() {
-    let { players, currentWord, drawingPlayer: { name }}  = this.state;
-    return (
-      <div>
-        <ButtonLink to="app">Leave Game</ButtonLink>
-        <Button> Skip Word </Button>
-        <Grid fluid>
-          <Row>
-            <Col md={2}>
-              <Row>
-                <PlayerList players={players} isDrawing={GameStore.isDrawing.bind(GameStore)} />
-              </Row>
-              <Row>
-                <DrawingControls />
-              </Row>
-            </Col>
-            <Col md={8}>
-              <GameCanvas amIDrawing={GameStore.amIDrawing()} currentWord={currentWord} name={name} />
-            </Col>
-            <Col md={2}> <Chat /> </Col>
-          </Row>
-        </Grid>
-      </div>
-    );
+    if(!this.props.connected){
+      return <Login submitCB={this.submitInit} />;
+    }else{
+      let game = this.props.game;
+      if(game === undefined){
+        return <div>Loading</div>;
+      }
+      let paths = game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'));
+      let chatMessages = game.get('chatMessages');
+      return (
+        <div>
+          <IndexLinkContainer to="/"><Button>Leave Game</Button></IndexLinkContainer>
+          <Button>Skip Word</Button>
+          <Grid fluid>
+            <Row>
+              <Col md={2}>
+                <Row>
+                  <PlayerList currentlyDrawing={game.get('currentlyDrawingPlayer')}
+                    gamePlayers={game.get('players')}
+                    allPlayers={this.props.allPlayers}/>
+                </Row>
+                <Row>
+                  <DrawingControls />
+                </Row>
+              </Col>
+              <Col md={8}>
+                <GameCanvas thisPlayer={0}
+                  currentlyDrawing={game.get('currentlyDrawingPlayer')}
+                  currentWord={game.get('currentWord')}
+                  allPlayers={this.props.allPlayers}
+                  canvasSize={Map({w:800, h:600})}
+                  paths={paths}
+                  addPointCB={this.addPoint}
+                  endPathCB={this.endPath}
+                  />
+              </Col>
+              <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.sendChat} /> </Col>
+            </Row>
+          </Grid>
+        </div>
+      );
+    }
+  },
+  submitInit(data){
+    if(this.props.socket.connected){
+      this.props.socket.emit(INIT_EVENT_GAME, {name: data.name, gameId: this.props.id}, res => {
+        let state = Map();
+        state = state.set('connected', true).set('players', fromJS(res.players));
+        console.log(res);
+        if(res.err){
+          console.err(res);
+        }else{
+          let gameId = res.game.id;
+          state = state.update('games', () => {
+            return Map().set(gameId, fromJS(res.game));
+          });
+        }
+        this.props.dispatch(setState(state));
+      });
+    }else{
+      console.err('Not connected to server');
+    }
   }
 });
 
-export default Game;
+let GameHandler = connect(state => {
+  return {
+    games: state.get('games'),
+    players: state.get('players'),
+    connected: state.get('connected')
+  };
+})(React.createClass({
+  render() {
+    let id = this.props.params.gameid;
+    let game = this.props.games.get(id);
+    return (<Game id={id} game={game} socket={this.props.socket}
+      allPlayers={this.props.players} connected={this.props.connected} dispatch={this.props.dispatch}/>);
+  }
+}));
+
+export default GameHandler;

@@ -1,21 +1,24 @@
 import React from 'react';
-import Router from 'react-router';
-let { Route, DefaultRoute, HistoryLocation } = Router;
+import ReactDOM from 'react-dom';
+import {Router, Route, IndexRoute} from 'react-router';
+import {Provider} from 'react-redux';
 
 import App from './components/App.jsx';
-import Game from './components/Game.jsx';
-import Main from './components/Main.jsx';
-import CreateGame from './components/CreateGame.jsx';
-import EditPlayer from './components/EditPlayer.jsx';
+import GameHandler from './components/Game.jsx';
+import Lobby from './components/Lobby.jsx';
 
-// somehow this is causing the LeaveGame button to be always active...
-var routes = (
-  <Route name="app" path="/" handler={App}>
-    <Route name="game" path="/game/:gameid" handler={Game} />
-    <Route name="creategame" path="/create" handler={CreateGame} />
-    <Route name="editplayer" path="/edit" handler={EditPlayer} />
-    <DefaultRoute handler={Main} />
-  </Route>
-);
+import makeStore from './store';
 
-Router.run(routes, (Handler) => React.render(<Handler />, document.getElementById('view')));
+const store = makeStore();
+window.store = store;
+
+ReactDOM.render((
+  <Provider store={store}>
+    <Router>
+      <Route path="/" component={App}>
+        <IndexRoute component={Lobby} />
+        <Route path="/game/:gameid" component={GameHandler} />
+      </Route>
+    </Router>
+  </Provider>
+), document.getElementById('view'));

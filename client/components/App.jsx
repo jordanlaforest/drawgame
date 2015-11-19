@@ -1,18 +1,21 @@
 import React from 'react';
-import Router from 'react-router';
-let { RouteHandler } = Router;
+import { connect } from 'react-redux';
+import io from 'socket.io-client';
 
-import Main from './Main.jsx';
-import Game from './Game.jsx';
+import {cSetConnected} from '../../common/actions';
 
 var App = React.createClass({
+  componentWillMount(){
+    this.props.dispatch(cSetConnected(false));
+    this.socket = io('http://localhost:9000');
+  },
   render() {
     return (
       <div>
-        <RouteHandler/>
+        {React.cloneElement(this.props.children, {socket: this.socket})}
       </div>
     );
   }
 });
 
-export default App;
+export default connect()(App);

@@ -1,37 +1,17 @@
 import React from 'react';
-import Marty from 'marty';
-import * as D from 'marty/dispatcher';
-let Dispatcher = D.getCurrent();
-
+import {Map} from 'immutable';
 import Panel from 'react-bootstrap/lib/Panel';
-import DrawingActionCreators from '../actions/DrawingActionCreators';
-import DrawingConstants from '../constants/DrawingConstants';
 
 var noop = () => 0;
 
 var GameCanvas = React.createClass({
-
-  getInitialState () {
-    let width = 800;
-    let height = 600;
-    return {
-      width,
-      height,
-      drawing: false,
-      lastPoint: { x: 0, y: 0 },
-      point: { x: 0, y: 0 }
-    };
-  },
-
   componentDidMount () {
-    this.listenOnDispatcher();
   },
 
   componentWillUnmount () {
-    Dispatcher.unregister(this.dispatchToken);
   },
 
-  listenOnDispatcher() {
+  /*listenOnDispatcher() {
     this.dispatchToken = Dispatcher.register( (action) => {
       let { type } = action;
       let { point: lastPoint } = this.state;
@@ -47,20 +27,27 @@ var GameCanvas = React.createClass({
         this._drawEnd(lastPoint, point);
       }
     });
+  },*/
+  componentDidUpdate() {
+    this.renderDrawing();
   },
-
   render() {
-    let { currentWord, name, amIDrawing } = this.props;
-    let { width, height } = this.state;
+    let currentWord = this.props.currentWord;
+    let amIDrawing = this.props.thisPlayer === this.props.currentlyDrawing;
+    let name = amIDrawing ? '' : this.props.allPlayers.get(this.props.currentlyDrawing);
+    let { w, h } = this.getCanvasSize();
 
-    let yourWord = <p>Your word is <strong>{currentWord}</strong></p>;
-    let someoneElseDrawing = <p><strong>{name}</strong> is currently drawing</p>;
-    let canvasHeader = amIDrawing ? yourWord : someoneElseDrawing;
+    let canvasHeader = '';
+    if(amIDrawing){
+      canvasHeader = <p>Your word is <strong>{currentWord}</strong></p>;
+    }else{
+      canvasHeader = <p><strong>{name}</strong> is currently drawing</p>;
+    }
     return (
       <Panel header={ canvasHeader }>
         <canvas
-          width={width}
-          height={height}
+          width={w}
+          height={h}
           onMouseDown={amIDrawing ? this.drawStart : noop}
           onMouseMove={amIDrawing ? this.drawMove : noop}
           onMouseLeave={amIDrawing ? this.drawEnd : noop}
@@ -70,22 +57,54 @@ var GameCanvas = React.createClass({
       </Panel>
     );
   },
+  renderDrawing(){
+    this.clearCanvas();
+    let ctx = this.getContext();
+    ctx.lineWidth = 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    let paths = this.props.paths;
+    ctx.beginPath();
+    paths.forEach(this.renderPath);
+    ctx.stroke();
+  },
+  renderPath(path){
+    let ctx = this.getContext();
+    path.forEach((point, i) => {
+      let {x, y} = this.scaleToPixels(point.toJS());
+      if(i === 0){
+        ctx.moveTo(x, y);
+      }else{
+        ctx.lineTo(x, y);
+      }
+    });
+  },
+  clearCanvas(){
+    let { w, h } = this.getCanvasSize();
+    this.getContext().clearRect(0, 0, w, h);
+  },
   scaleToPercent({ x, y }) {
-    let { width, height } = this.state;
+    let { w, h } = this.getCanvasSize();
     return {
-      x: x / width,
-      y: y / height
+      x: x / w,
+      y: y / h
     };
   },
   scaleToPixels({ x, y }) {
-    let { width, height } = this.state;
+    let { w, h } = this.getCanvasSize();
     return {
-      x: x * width,
-      y: y * height
+      x: x * w,
+      y: y * h
     };
   },
+  getCanvasSize() {
+    return this.props.canvasSize.toJS();
+  },
   getCanvas() {
-    return this.refs.canvas.getDOMNode();
+    return this.refs.canvas;
+  },
+  getContext() {
+    return this.getCanvas().getContext('2d');
   },
   getMouseX({ clientX }) {
     return clientX - this.getCanvas().getBoundingClientRect().left;
@@ -100,53 +119,22 @@ var GameCanvas = React.createClass({
     };
   },
   drawStart(event) {
-    let mousePoint = this.getMousePoint(event);
-    this._drawStart(mousePoint);
-    DrawingActionCreators.startPath(this.scaleToPercent(mousePoint));
-  },
-  _drawStart(lastPoint) {
-    this.setState({
-      lastPoint,
-      point: lastPoint,
-      drawing: true
-    });
+    let point = this.getMousePoint(event);
+    this.props.addPointCB(Map(this.scaleToPercent(point)));
   },
   drawMove(event) {
-    let point = this.getMousePoint(event);
-    if(this.state.drawing) {
-      DrawingActionCreators.movePath(this.scaleToPercent(point));
-    }
-    this._drawMove(this.state.point, point);
-  },
-  _drawMove(lastPoint, point) {
-    this.setState({
-      lastPoint,
-      point
-    });
-
-    if( this.state.drawing ) {
-      let ctx = this.getCanvas().getContext('2d');
-      ctx.beginPath();
-      ctx.moveTo(lastPoint.x, lastPoint.y);
-      ctx.lineTo(point.x, point.y);
-      ctx.stroke();
+    if(event.buttons > 0){ //any button pressed
+      let point = this.getMousePoint(event);
+      this.props.addPointCB(Map(this.scaleToPercent(point)));
     }
   },
   drawEnd(event) {
-    let lastPoint = this.state.point;
-    let point = this.getMousePoint(event);
-
-    if(this.state.drawing) {
-      DrawingActionCreators.endPath(this.scaleToPercent(point));
+    if(event.buttons > 0){
+      //the player has drawn off the canvas, send one last point so the line extends to the edge
+      let point = this.getMousePoint(event);
+      this.props.addPointCB(Map(this.scaleToPercent(point)));
     }
-    this._drawEnd(lastPoint, point);
-  },
-  _drawEnd(lastPoint, point) {
-    this.setState({
-      drawing: false,
-      lastPoint,
-      point
-    });
+    this.props.endPathCB();
   }
 });
 

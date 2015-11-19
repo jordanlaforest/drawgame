@@ -39,6 +39,6 @@ export default function(app) {
 
 let bundleData;
 function bundle(err, buf) {
-  console.log(err);
+  console.log('Bundled. Errors: ' + err);
   bundleData = buf;
 }

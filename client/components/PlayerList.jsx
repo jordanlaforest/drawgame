@@ -4,19 +4,21 @@ import Panel from 'react-bootstrap/lib/Panel';
 import ListGroup from 'react-bootstrap/lib/ListGroup';
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 
-var Main = React.createClass({
+let PlayerList = React.createClass({
   render: function () {
-    let { players, isDrawing } = this.props;
+    let { gamePlayers, allPlayers, currentlyDrawing } = this.props;
     return (
       <Panel header="Players">
         <ListGroup>
         {
-          players
-            .map((player, idx) =>
-              <ListGroupItem active={isDrawing(player.id)} key={idx}>
-                { player.name } <span className="pull-right"> { player.score }</span>
-              </ListGroupItem>
-            )
+          gamePlayers.valueSeq()
+            .map((player, idx) => {
+              let p = allPlayers.get(player.get('id'));
+              return (
+              <ListGroupItem active={currentlyDrawing === player.get('id')} key={idx}>
+                { p.get('name') } <span className="pull-right"> { player.get('score') }</span>
+              </ListGroupItem>);
+            })
         }
         </ListGroup>
       </Panel>
@@ -24,4 +26,4 @@ var Main = React.createClass({
   }
 });
 
-export default Main;
+export default PlayerList;

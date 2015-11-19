@@ -1,35 +1,21 @@
-import React from 'react/addons';
-let { addons : { LinkedStateMixin }} = React;
+import React from 'react';
 
 import Panel from 'react-bootstrap/lib/Panel';
 import Input from 'react-bootstrap/lib/Input';
 import Button from 'react-bootstrap/lib/Button';
 
-import Marty from 'marty';
-import MessagesStore from '../stores/MessagesStore';
-import MessagesActionsCreators from '../actions/MessagesActionCreators';
+import {ENTER_KEY_CODE} from '../../common/constants';
 
-const ENTER_KEY_CODE = 13;
-
-var ChatState = Marty.createStateMixin({
-  listenTo: MessagesStore,
-  getState() {
-    return {
-      message: '',
-      messages: MessagesStore.getMessages()
-    }
-  }
-});
-
-var Chat = React.createClass({
-  mixins: [LinkedStateMixin, ChatState],
+let Chat = React.createClass({
+  getInitialState: function() {
+    return {value: ''}; //Since this doesn't really affect the game state, I'm not gonna use redux for it
+  },
   render() {
-    let { messages } = this.state;
-
     let panelFooter = (
       <Input
         type="text"
-        valueLink={this.linkState('message')}
+        onChange={this.onChange}
+        value={this.state.value}
         onKeyDown={this.onKeyDown}
         buttonAfter={<Button onClick={this.sendMessage}>Send</Button>}/>
     );
@@ -38,11 +24,16 @@ var Chat = React.createClass({
       <Panel header="Chat" footer={panelFooter} >
         <ul className="list-unstyled">
           {
-            messages.map( ({ name, message }, idx) => <li key={idx}><strong>{name}:</strong> {message }</li>)
+            this.props.messages.map( (msg, idx) => {
+              return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
+            })
           }
         </ul>
       </Panel>
     );
+  },
+  onChange(event){
+    this.setState({value: event.target.value});
   },
   onKeyDown({ keyCode }) {
     if(keyCode === ENTER_KEY_CODE) {
@@ -50,10 +41,8 @@ var Chat = React.createClass({
     }
   },
   sendMessage() {
-    MessagesActionsCreators.sendMessage(this.state.message);
-    this.setState({
-      message: ''
-    });
+    this.props.sendChatCB(this.state.value);
+    this.setState({value: ''});
   }
 });
 

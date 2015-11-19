@@ -1,17 +1,30 @@
 import io from 'socket.io';
-import PlayerManager from './PlayerManager';
 import {
   SERVER_MESSAGE_EVENT,
-  INIT_EVENT, NAME_CHANGE_EVENT, CHAT_EVENT, CREATE_UID_EVENT,
-  PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT
+  NAME_CHANGE_EVENT, CHAT_EVENT,
+  PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT,
+  INIT_EVENT_LOBBY, INIT_EVENT_GAME
 }
 from '../common/EventConstants';
+
+import {addGame, addPlayer, addPlayerToGame} from '../common/actions';
+
+import makeStore from './store';
 
 export default class GameServer {
 
   constructor(httpServer) {
     this.io = io(httpServer);
-    this.playerManager = new PlayerManager();
+    this.store = makeStore();
+    
+    //Create some test data
+    this.store.dispatch(addGame('5', 'Test game'));
+    this.store.dispatch(addGame('6', 'Test game 2'));
+
+    this.store.dispatch(addPlayer('10', 'Bob'));
+    this.store.dispatch(addPlayer('11', 'Bobert'));
+    this.store.dispatch(addPlayerToGame('5', '10'));
+    this.store.dispatch(addPlayerToGame('5', '11'));
   }
 
   sendServerMessage(message) {
@@ -30,35 +43,68 @@ export default class GameServer {
   start() {
     this.io.on('connection', (socket) => {
       let { id } = socket;
-      //connection event
       console.log(`A user(${id}) is connecting...`);
 
       this.listenForInitEvent(socket);
-      this.listenForNameEvent(socket);
-      this.listenForChatEvent(socket);
-      this.listenForPathEvents(socket);
 
       // disconnect event
       socket.on('disconnect', () => {
-        if(socket.player !== undefined) {
-          let { player: { name } } = socket;
-          // name = socket.player.name;
-          let message = `${name} has disconnected`;
-          this.mirrorMessage(message);
-        }
+        //if they are in a game
+        //  remove player from socket.io room
+        //  dispatch player leave game
+        //dispatch remove player
+        let name = 'someone';
+        let message = `${name} has disconnected`;
+        console.log(message);
       });
     });
   }
 
   listenForInitEvent(socket) {
-    socket.on(INIT_EVENT, (data) => {
+    let store = this.store;
+    function initPlayer(data, cb, event){
       let { id } = socket;
-      if(this.playerManager.addPlayer(socket, data)) {
-        socket.emit(CREATE_UID_EVENT, id);
+      let { name } = data;
+      //isValidName()
+      //check if name is taken
+      //check if id is taken
+      //dispatch addPlayer
+      //add other listeners
+      //remove init listeners
+      if(event === INIT_EVENT_LOBBY){
+        let state = store.getState();
+        let data = {
+          players: state.get('players').toJS(),
+          games: state.get('games').toJS()
+        };
+        cb(data);
+      }else{
+        let state = store.getState();
+        let players = state.get('players');
+        let game = state.get('games').get(data.gameId);
+
+        if(game === undefined){
+          let res = {
+            players: players,
+            err: 'Invalid game'
+          };
+          cb(res);
+          return;
+        }
+        let res = {
+          players: players,
+          game: game
+        };
+        cb(res);
       }
-      let { player } = socket;
-      let message = `${ player.name } has connected`;
-      this.mirrorMessage(message, `[${ id }] `);
+      let message = `${ name }[${ id }] has connected`;
+      console.log(message);
+    }
+    socket.on(INIT_EVENT_LOBBY, (data, cb) => {
+      initPlayer(data, cb, INIT_EVENT_LOBBY);
+    });
+    socket.on(INIT_EVENT_GAME, (data, cb) => {
+      initPlayer(data, cb, INIT_EVENT_GAME);
     });
   }
 
@@ -95,5 +141,9 @@ export default class GameServer {
     this.relayEvent(socket, PATH_START_EVENT);
     this.relayEvent(socket, PATH_MOVE_EVENT);
     this.relayEvent(socket, PATH_END_EVENT);
+  }
+
+  isValidName(name){
+    return typeof name === 'string' && name !== '';
   }
 }
