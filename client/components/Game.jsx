@@ -14,10 +14,31 @@ import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 import Login from './Login.jsx';
 
-import { addPointToDrawing, endPathInDrawing, addChatMessage, setState } from '../../common/actions';
-import {INIT_EVENT_GAME} from '../../common/EventConstants';
+import {addPointToDrawing, endPathInDrawing, addChatMessage, setState, mergeState} from '../../common/actions';
+import {INIT_EVENT_GAME, JOIN_GAME_EVENT, JOIN_GAME_ERROR} from '../../common/EventConstants';
 
 let Game = React.createClass({
+  componentWillMount(){
+    let state = {games: {}};
+    //Remove games, will be replaced with data from server
+    this.props.dispatch(mergeState(fromJS(state)));
+  },
+  componentDidMount() {
+    if(this.props.connected){
+      this.props.socket.emit(JOIN_GAME_EVENT, {gameId: this.props.id}, res => {
+        if(res.err !== undefined){
+          console.log(res.err);
+          return;
+        }
+        let state = {games: {}};
+        state.games[this.props.id] = res.game;
+        this.props.dispatch(mergeState(fromJS(state)));
+      });
+    }
+  },
+  componentWillUnmount(){
+    //Leave game event
+  },
   addPoint(point){
     this.props.dispatch(addPointToDrawing(this.props.game.get('id'), point));
   },
@@ -58,6 +79,7 @@ let Game = React.createClass({
                 <GameCanvas thisPlayer={0}
                   currentlyDrawing={game.get('currentlyDrawingPlayer')}
                   currentWord={game.get('currentWord')}
+                  gamePlayers={game.get('players')}
                   allPlayers={this.props.allPlayers}
                   canvasSize={Map({w:800, h:600})}
                   paths={paths}
@@ -75,12 +97,13 @@ let Game = React.createClass({
   submitInit(data){
     if(this.props.socket.connected){
       this.props.socket.emit(INIT_EVENT_GAME, {name: data.name, gameId: this.props.id}, res => {
+        if(res.err && res.err !== JOIN_GAME_ERROR){
+          console.log(res.err);
+          return;
+        }
         let state = Map();
         state = state.set('connected', true).set('players', fromJS(res.players));
-        console.log(res);
-        if(res.err){
-          console.err(res);
-        }else{
+        if(!res.err){
           let gameId = res.game.id;
           state = state.update('games', () => {
             return Map().set(gameId, fromJS(res.game));

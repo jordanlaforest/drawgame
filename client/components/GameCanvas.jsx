@@ -1,5 +1,4 @@
 import React from 'react';
-import {Map} from 'immutable';
 import Panel from 'react-bootstrap/lib/Panel';
 
 var noop = () => 0;
@@ -10,31 +9,14 @@ var GameCanvas = React.createClass({
 
   componentWillUnmount () {
   },
-
-  /*listenOnDispatcher() {
-    this.dispatchToken = Dispatcher.register( (action) => {
-      let { type } = action;
-      let { point: lastPoint } = this.state;
-
-      if(type === DrawingConstants.PATH_START.toString()) {
-        let point = this.scaleToPixels(action.arguments[0]);
-        this._drawStart(point);
-      } else if(type === DrawingConstants.PATH_MOVE.toString()) {
-        let point = this.scaleToPixels(action.arguments[0]);
-        this._drawMove(lastPoint, point);
-      } else if(type === DrawingConstants.PATH_END.toString()) {
-        let point = this.scaleToPixels(action.arguments[0]);
-        this._drawEnd(lastPoint, point);
-      }
-    });
-  },*/
   componentDidUpdate() {
     this.renderDrawing();
   },
   render() {
     let currentWord = this.props.currentWord;
-    let amIDrawing = this.props.thisPlayer === this.props.currentlyDrawing;
-    let name = amIDrawing ? '' : this.props.allPlayers.get(this.props.currentlyDrawing);
+    let currentlyDrawingId = this.props.gamePlayers.get(this.props.currentlyDrawing).get('id');
+    let amIDrawing = this.props.thisPlayer === currentlyDrawingId;
+    let name = amIDrawing ? '' : this.props.allPlayers.get(currentlyDrawingId).get('name');
     let { w, h } = this.getCanvasSize();
 
     let canvasHeader = '';
@@ -120,19 +102,19 @@ var GameCanvas = React.createClass({
   },
   drawStart(event) {
     let point = this.getMousePoint(event);
-    this.props.addPointCB(Map(this.scaleToPercent(point)));
+    this.props.addPointCB(this.scaleToPercent(point));
   },
   drawMove(event) {
     if(event.buttons > 0){ //any button pressed
       let point = this.getMousePoint(event);
-      this.props.addPointCB(Map(this.scaleToPercent(point)));
+      this.props.addPointCB(this.scaleToPercent(point));
     }
   },
   drawEnd(event) {
     if(event.buttons > 0){
       //the player has drawn off the canvas, send one last point so the line extends to the edge
       let point = this.getMousePoint(event);
-      this.props.addPointCB(Map(this.scaleToPercent(point)));
+      this.props.addPointCB(this.scaleToPercent(point));
     }
     this.props.endPathCB();
   }

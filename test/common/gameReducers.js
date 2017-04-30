@@ -126,10 +126,10 @@ describe('game state logic', () => {
 
   describe('addPointToDrawing', () => {
     const state = createInitialGameState();
-    const point = Map({
+    const point = {
       x: 55.5,
       y: 66.6
-    });
+    };
     const newState = g.addPointToDrawing(state, point);
 
     it('adds a point to the drawing', () => {

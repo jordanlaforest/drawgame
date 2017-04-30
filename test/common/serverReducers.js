@@ -69,14 +69,11 @@ describe('server game/player management', () => {
   describe('addPlayerToServer', () => {
     it('adds a player to an empty player list', () => {
       const state = Map();
-      const player = Map({
-        id: 0,
-        name: 'Bob'
-      });
-      const newState = s.addPlayerToServer(state, player);
+      const newState = s.addPlayerToServer(state, 0, 'Bob');
       newState.should.equal(Map().set(0, Map({
         id: 0,
-        name: 'Bob'
+        name: 'Bob',
+        game: ''
       })));
     });
   });
@@ -85,16 +82,19 @@ describe('server game/player management', () => {
     it('removes a player from the server', () => {
       const state = Map().set(0, Map({
         id: 0,
-        name: 'Bob'
+        name: 'Bob',
+        game: ''
       })).set(1, Map({
         id: 1,
-        name: 'Bobert'
+        name: 'Bobert',
+        game: ''
       }));
       const playerId = 0;
       const newState = s.removePlayerFromServer(state, playerId);
       newState.should.equal(Map().set(1, Map({
         id: 1,
-        name: 'Bobert'
+        name: 'Bobert',
+        game: ''
       })));
     });
   });
@@ -103,20 +103,24 @@ describe('server game/player management', () => {
     it('sets a player\'s name', () => {
       const state = Map().set(0, Map({
         id: 0,
-        name: 'Bob'
+        name: 'Bob',
+        game: ''
       })).set(1, Map({
         id: 1,
-        name: 'Bobert'
+        name: 'Bobert',
+        game: ''
       }));
       const playerId = 1;
       const newName = 'Boberta';
       const newState = s.setPlayerName(state, playerId, newName);
       newState.should.equal(Map().set(0, Map({
         id: 0,
-        name: 'Bob'
+        name: 'Bob',
+        game: ''
       })).set(1, Map({
         id: 1,
-        name: 'Boberta'
+        name: 'Boberta',
+        game: ''
       })));
     });
   });

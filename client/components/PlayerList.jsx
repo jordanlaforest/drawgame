@@ -15,7 +15,7 @@ let PlayerList = React.createClass({
             .map((player, idx) => {
               let p = allPlayers.get(player.get('id'));
               return (
-              <ListGroupItem active={currentlyDrawing === player.get('id')} key={idx}>
+              <ListGroupItem active={currentlyDrawing === idx} key={idx}>
                 { p.get('name') } <span className="pull-right"> { player.get('score') }</span>
               </ListGroupItem>);
             })

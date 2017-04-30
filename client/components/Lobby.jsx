@@ -9,10 +9,16 @@ import Button from 'react-bootstrap/lib/Button';
 
 import Login from './Login.jsx';
 
-import {INIT_EVENT_LOBBY} from '../../common/EventConstants';
-import {setState} from '../../common/actions';
+import {INIT_EVENT_LOBBY, REQUEST_GAMES} from '../../common/EventConstants';
+import {setState, mergeState} from '../../common/actions';
 
 let Lobby = React.createClass({
+  componentDidMount() {
+    this.props.socket.emit(REQUEST_GAMES, {}, res => {
+      let state = {games: res.games};
+      this.props.dispatch(mergeState(fromJS(state)));
+    });
+  },
   render() {
     if(!this.props.connected){
       return <Login submitCB={this.submitInit} />;
@@ -51,13 +57,14 @@ let Lobby = React.createClass({
   submitInit(data){
     if(this.props.socket.connected){
       this.props.socket.emit(INIT_EVENT_LOBBY, {name: data.name}, res => {
+        if(res.err){
+          console.log(res.err);
+          return;
+        }
         let state = Map();
         state = state.set('connected', true)
                 .set('players', fromJS(res.players))
                 .set('games', fromJS(res.games));
-        if(res.err){
-          console.log(res);
-        }
         this.props.dispatch(setState(state));
       });
     }else{

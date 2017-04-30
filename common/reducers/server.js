@@ -1,7 +1,7 @@
 import {Map, List} from 'immutable';
 
 export function addPlayerToServer(state = Map(), playerId, name){
-  let player = Map({id: playerId, name: name});
+  let player = Map({id: playerId, name: name, game: ''});
   return state.set(playerId, player);
 }
 
@@ -31,4 +31,8 @@ export function removeGame(state = Map(), gameId){
 
 export function setPlayerName(state = Map(), playerId, name){
   return state.update(playerId, player => player.set('name', name));
+}
+
+export function setPlayerGame(state = Map(), playerId, gameId){
+  return state.update(playerId, player => player.set('game', gameId));
 }

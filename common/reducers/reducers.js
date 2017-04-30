@@ -1,4 +1,4 @@
-import {Map} from 'immutable';
+import {Map, fromJS} from 'immutable';
 
 import * as types from '../ActionTypes';
 import * as g from './game';
@@ -41,16 +41,22 @@ export default function reducer(state = initialState(), action){
       return games.update(action.gameId, gameState => g.setGameName(gameState, action.name));
     });
   case types.ADD_PLAYER_TO_GAME:
-    return state.update('games', games => {
+    let addState = state.update('games', games => {
       return games.update(action.gameId, gameState => g.addPlayerToGame(gameState, action.playerId));
     });
+    return addState.update('players', players => {
+      return s.setPlayerGame(players, action.playerId, action.gameId);
+    });
   case types.REMOVE_PLAYER_FROM_GAME:
-    return state.update('games', games => {
+    let removeState = state.update('games', games => {
       return games.update(action.gameId, gameState => g.removePlayerFromGame(gameState, action.playerId));
+    });
+    return removeState.update('players', players => {
+      return s.setPlayerGame(players, action.playerId, '');
     });
   case types.ADD_POINT_TO_DRAWING:
     return state.update('games', games => {
-      return games.update(action.gameId, gameState => g.addPointToDrawing(gameState, action.point));
+      return games.update(action.gameId, gameState => g.addPointToDrawing(gameState, fromJS(action.point)));
     });
   case types.END_PATH_IN_DRAWING:
     return state.update('games', games => {

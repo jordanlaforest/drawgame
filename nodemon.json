@@ -1,4 +1,5 @@
 {
+  "ignore": ["test/*", "client/*", "public/*"],
   "verbose": true,
   "debug": true
 }

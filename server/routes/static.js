@@ -3,6 +3,17 @@ import browserify from 'browserify';
 import watchify from 'watchify';
 import tinylr from 'tiny-lr';
 
+let changedIds;
+let bundleData;
+function bundle(err, buf) {
+  console.log('Bundled. Errors: ' + err);
+  bundleData = buf;
+  if(changedIds !== undefined){
+    tinylr.changed(...changedIds);
+    changedIds = undefined;
+  }
+}
+
 export default function(app) {
   if(app.get('env') === 'development') {
     app.use( express.static('public') );
@@ -11,8 +22,8 @@ export default function(app) {
 
     let b = browserify({
       cache: {},
-      packageCache: {}//,
-      //plugin: [watchify]
+      packageCache: {},
+      plugin: [watchify]
     });
 
     b.add('client/index.jsx');
@@ -24,8 +35,8 @@ export default function(app) {
     b.bundle(bundle);
 
     b.on('update', (ids) => {
-      tinylr.changed(...ids);
       b.bundle(bundle);
+      changedIds = ids;
     });
 
     // browserify on command
@@ -35,10 +46,4 @@ export default function(app) {
       res.end();
     });
   }
-}
-
-let bundleData;
-function bundle(err, buf) {
-  console.log('Bundled. Errors: ' + err);
-  bundleData = buf;
 }
