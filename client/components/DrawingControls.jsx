@@ -6,8 +6,8 @@ import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 
-var DrawingControls = React.createClass({
-  render: function () {
+class DrawingControls extends React.Component {
+  render() {
     return (
       <Panel header="DrawingControls">
         <Grid fluid>
@@ -20,6 +20,6 @@ var DrawingControls = React.createClass({
       </Panel>
     );
   }
-});
+}
 
 export default DrawingControls;

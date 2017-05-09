@@ -1,4 +1,7 @@
 import React from 'react';
 window.React = React;
+import ReactDOM from 'react-dom';
 
-import Router from './router.jsx';
+import App from './components/App.jsx';
+
+ReactDOM.render((<App/>), document.getElementById('view'));

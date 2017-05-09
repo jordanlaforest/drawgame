@@ -35,8 +35,8 @@ export default function(app) {
     b.bundle(bundle);
 
     b.on('update', (ids) => {
-      b.bundle(bundle);
       changedIds = ids;
+      b.bundle(bundle);
     });
 
     // browserify on command

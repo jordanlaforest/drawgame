@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import {Map, fromJS} from 'immutable';
 
 import Table from 'react-bootstrap/lib/Table';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
@@ -9,16 +7,11 @@ import Button from 'react-bootstrap/lib/Button';
 
 import Login from './Login.jsx';
 
-import {INIT_EVENT_LOBBY, REQUEST_GAMES} from '../../common/EventConstants';
-import {setState, mergeState} from '../../common/actions';
-
-let Lobby = React.createClass({
+class Lobby extends React.Component {
   componentDidMount() {
-    this.props.socket.emit(REQUEST_GAMES, {}, res => {
-      let state = {games: res.games};
-      this.props.dispatch(mergeState(fromJS(state)));
-    });
-  },
+    this.props.callbacks.requestGames();
+  }
+
   render() {
     if(!this.props.connected){
       return <Login submitCB={this.submitInit} />;
@@ -39,9 +32,9 @@ let Lobby = React.createClass({
             </thead>
             <tbody>
               {
-                games.valueSeq().map( game =>
+                games.valueSeq().map(game =>
                   <tr key={game.get('id')}>
-                    <td>{ game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }</td>
+                    <td>{game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }</td>
                     <td>{game.get('name')}</td>
                     <td>?/?</td>
                     <td> <LinkContainer to={`/game/${game.get('id')}`}><Button>Join</Button></LinkContainer> </td>
@@ -53,29 +46,15 @@ let Lobby = React.createClass({
         </div>
       );
     }
-  },
-  submitInit(data){
+  }
+
+  submitInit = (data) => {
     if(this.props.socket.connected){
-      this.props.socket.emit(INIT_EVENT_LOBBY, {name: data.name}, res => {
-        if(res.err){
-          console.log(res.err);
-          return;
-        }
-        let state = Map();
-        state = state.set('connected', true)
-                .set('players', fromJS(res.players))
-                .set('games', fromJS(res.games));
-        this.props.dispatch(setState(state));
-      });
+      this.props.callbacks.lobbyInit(data.name);
     }else{
       console.err('Not connected to server');
     }
   }
-});
+}
 
-export default connect(state => {
-  return {
-    games: state.get('games'),
-    connected: state.get('connected')
-  };
-})(Lobby);
+export default Lobby;

@@ -1,4 +1,8 @@
 import io from 'socket.io';
+import AppState from '../common/AppState';
+import createGame from '../common/Game';
+import createPlayer from '../common/Player';
+
 import {
   SERVER_MESSAGE_EVENT, REQUEST_GAMES,
   NAME_CHANGE_EVENT, JOIN_GAME_EVENT, CHAT_EVENT,
@@ -9,25 +13,24 @@ import {
 }
 from '../common/EventConstants';
 
-import {addGame, addPlayer, addPlayerToGame, setPlayerName,
-  addPointToDrawing, endPathInDrawing} from '../common/actions';
-
-import makeStore from './store';
-
 export default class GameServer {
 
   constructor(httpServer) {
     this.io = io(httpServer);
-    this.store = makeStore();
+    this.state = new AppState();
     
     //Create some test data
-    this.store.dispatch(addGame('5', 'Test game'));
-    this.store.dispatch(addGame('6', 'Test game 2'));
-
-    this.store.dispatch(addPlayer('10', 'Bob'));
-    this.store.dispatch(addPlayer('11', 'Bobert'));
-    this.store.dispatch(addPlayerToGame('5', '10'));
-    this.store.dispatch(addPlayerToGame('5', '11'));
+    let g1 = createGame('5', 'Test game');
+    let g2 = createGame('6', 'Test game 2');
+    g2.password = 'test';
+    this.state.addGame(g1);
+    this.state.addGame(g2);
+    let p1 = createPlayer('10', 'Bob');
+    let p2 = createPlayer('11', 'Bobert');
+    this.state.addPlayer(p1);
+    this.state.addPlayer(p2);
+    this.state.addPlayerToGame(g1.get('id'), p1.get('id'));
+    this.state.addPlayerToGame(g1.get('id'), p2.get('id'));
   }
 
   sendServerMessage(message) {
@@ -49,6 +52,7 @@ export default class GameServer {
       console.log(`A user(${id}) is connecting...`);
 
       this.listenForInitEvent(socket);
+      this.listenForGamesRequest(socket);
 
       // disconnect event
       socket.on('disconnect', () => {
@@ -64,7 +68,7 @@ export default class GameServer {
   }
 
   listenForInitEvent(socket) {
-    let store = this.store;
+    //let store = this.store;
     let _this = this;
     function initPlayer(data, cb, event){
       let playerId = socket.id;
@@ -75,40 +79,42 @@ export default class GameServer {
         return;
       }
       //TODO: It should be very very unlikely but this should be updated to give the client a new unique id
-      if(_this.getPlayer(playerId) != undefined){
+      if(_this.state.getPlayer(playerId) != undefined){
         cb({err: _this.createError(UNEXPECTED_ERROR, 'Unexpected Error', 'Please refresh you\'re browser.')});
         return;
       }
-      store.dispatch(addPlayer(playerId, name));
+      let p = createPlayer(playerId, name, 0);
+      _this.state.addPlayer(p);
 
       socket.removeAllListeners(INIT_EVENT_LOBBY);
       socket.removeAllListeners(INIT_EVENT_GAME);
 
       _this.listenForNameEvent(socket);
       _this.listenForJoinEvent(socket);
-      _this.listenForGamesRequest(socket);
+      //_this.listenForGamesRequest(socket);
 
-      let state = store.getState();
+      const players = _this.state.players.toJS();
+      const games = _this.state.games.toJS();
       if(event === INIT_EVENT_LOBBY){
         let res = {
-          players: state.get('players').toJS(),
-          games: state.get('games').toJS()
+          id: playerId,
+          players: players,
+          games: games
         };
         cb(res);
       }else{
-        let players = state.get('players');
-
         let joinError = _this.joinGame(data.gameId, playerId);
         if(joinError !== undefined){
-          joinError.players = players.toJS(); //Send the player list anyway
+          joinError.players = players; //Send the player list anyway
           cb(joinError);
           return;
         }
 
-        let game = state.get('games').get(data.gameId);
+        let game = _this.state.getGame(data.gameId).toJS();
         let res = {
-          players: players.toJS(),
-          game: game.toJS()
+          id: playerId,
+          players: players,
+          game: game
         };
         cb(res);
       }
@@ -125,14 +131,14 @@ export default class GameServer {
 
   listenForGamesRequest(socket){
     socket.on(REQUEST_GAMES, (data, cb) => {
-      cb({games: this.store.getState().get('games').toJS()});
+      cb({games: this.state.games.toJS()});
     });
   }
 
   listenForNameEvent(socket) {
     socket.on(NAME_CHANGE_EVENT, (name, cb) => {
       let playerId = socket.id;
-      let player = this.getPlayer(playerId);
+      let player = this.state.getPlayer(playerId);
       if(player != undefined){
         console.log(`${player.get('name')} wants to change name to ${name} ...`);
 
@@ -141,8 +147,8 @@ export default class GameServer {
           cb(nameError);
           return;
         }
-        let oldName = player.get('name');
-        this.store.dispatch(setPlayerName(playerId, name));
+        let oldName = player.name;
+        player.name = name;
 
         //Tell the players a name change occurred
         console.log(`${oldName} has changed their name to ${name}`);
@@ -164,9 +170,9 @@ export default class GameServer {
         return;
       }
 
-      let game = this.store.getState().get('games').get(data.gameId);
-      console.log(game.get('players'));
-      cb({game: game.toJS()});
+      let game = this.state.getGame(data.gameId);
+      console.log(game.players);
+      cb({game: game});
 
     });
   }
@@ -174,7 +180,8 @@ export default class GameServer {
   listenForChatEvent(socket) {
     socket.on(CHAT_EVENT, (message) => {
       let playerId = socket.id;
-      let gameId = this.getPlayer(playerId).get('game');
+      let gameId = this.state.getPlayer(playerId).game;
+      //TODO: Check if defined, also allow global chat
       socket.broadcast.to(gameId).emit(CHAT_EVENT, { 
         id: playerId,
         message: message
@@ -189,19 +196,15 @@ export default class GameServer {
   }
 
   joinGame(gameId, socket){
-    let game = this.store.getState().get('games').get(gameId);
+    let game = this.state.getGame(gameId);
     if(game === undefined){
       return {err: this.createError(JOIN_GAME_ERROR, 'Error joining game', 'Could not find the game requested')};
     }
 
     let action = addPlayerToGame(gameId, socket.id);
     this.store.dispatch(action);
-    socket.broadcast.to(gameId).emit(ACTION, [action]);
+    socket.broadcast.to(gameId).emit(ACTION, [action]); //TODO: Fix protocol
     return undefined; //No errors
-  }
-
-  getPlayer(playerId){
-    return this.store.getState().get('players').get(playerId);
   }
 
   checkNameError(name){
@@ -225,9 +228,14 @@ export default class GameServer {
   }
 
   isNameAvailable(name){
-    let players = this.store.getState().get('players');
-    let player = players.find(p => p.get('name') === name);
-    return player === undefined;
+    let players = this.state.players;
+    let nameTaken = false;
+    players.forEach(p => {
+      if(p.name === name){
+        nameTaken = true; //TODO: Stop the loop if we find a match
+      }
+    })
+    return !nameTaken;
   }
 
   createError(errType, title, msg){

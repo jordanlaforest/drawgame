@@ -1,23 +1,28 @@
 import React from 'react';
 
-import Panel from 'react-bootstrap/lib/Panel';
-import Input from 'react-bootstrap/lib/Input';
-import Button from 'react-bootstrap/lib/Button';
+import {Panel, FormControl, Button} from 'react-bootstrap';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
-let Chat = React.createClass({
-  getInitialState: function() {
-    return {value: ''}; //Since this doesn't really affect the game state, I'm not gonna use redux for it
-  },
+class Chat extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+  }
+
   render() {
     let panelFooter = (
-      <Input
-        type="text"
-        onChange={this.onChange}
-        value={this.state.value}
-        onKeyDown={this.onKeyDown}
-        buttonAfter={<Button onClick={this.sendMessage}>Send</Button>}/>
+      <div>
+        <FormControl
+          type="text"
+          onChange={this.onChange}
+          value={this.state.value}
+          onKeyDown={this.onKeyDown}
+        />
+        <span className="input-group-btn">
+          <Button onClick={this.sendMessage}>Send</Button>
+        </span>
+      </div>
     );
 
     return (
@@ -31,19 +36,22 @@ let Chat = React.createClass({
         </ul>
       </Panel>
     );
-  },
+  }
+
   onChange(event){
     this.setState({value: event.target.value});
-  },
+  }
+
   onKeyDown({ keyCode }) {
     if(keyCode === ENTER_KEY_CODE) {
       this.sendMessage();
     }
-  },
+  }
+
   sendMessage() {
     this.props.sendChatCB(this.state.value);
     this.setState({value: ''});
   }
-});
+}
 
 export default Chat;

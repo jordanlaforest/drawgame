@@ -1,6 +1,4 @@
-import {Map, fromJS} from 'immutable';
 import React from 'react';
-import { connect } from 'react-redux';
 import { IndexLinkContainer } from 'react-router-bootstrap';
 
 import Grid from 'react-bootstrap/lib/Grid';
@@ -14,15 +12,15 @@ import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 import Login from './Login.jsx';
 
-import {addPointToDrawing, endPathInDrawing, addChatMessage, setState, mergeState} from '../../common/actions';
 import {INIT_EVENT_GAME, JOIN_GAME_EVENT, JOIN_GAME_ERROR} from '../../common/EventConstants';
 
-let Game = React.createClass({
+class Game extends React.Component {
   componentWillMount(){
     let state = {games: {}};
     //Remove games, will be replaced with data from server
     this.props.dispatch(mergeState(fromJS(state)));
-  },
+  }
+
   componentDidMount() {
     if(this.props.connected){
       this.props.socket.emit(JOIN_GAME_EVENT, {gameId: this.props.id}, res => {
@@ -35,20 +33,25 @@ let Game = React.createClass({
         this.props.dispatch(mergeState(fromJS(state)));
       });
     }
-  },
+  }
+
   componentWillUnmount(){
     //Leave game event
-  },
-  addPoint(point){
+  }
+
+  addPoint = (point) => {
     this.props.dispatch(addPointToDrawing(this.props.game.get('id'), point));
-  },
-  endPath(){
+  }
+
+  endPath = () => {
     this.props.dispatch(endPathInDrawing(this.props.game.get('id')));
-  },
-  sendChat(message){
+  }
+
+  sendChat (message) => {
     let n = 'Bob';
     this.props.dispatch(addChatMessage(this.props.game.get('id'), Map({name: n, message: message})));
-  },
+  }
+
   render() {
     if(!this.props.connected){
       return <Login submitCB={this.submitInit} />;
@@ -93,8 +96,9 @@ let Game = React.createClass({
         </div>
       );
     }
-  },
-  submitInit(data){
+  }
+
+  submitInit = (data) => {
     if(this.props.socket.connected){
       this.props.socket.emit(INIT_EVENT_GAME, {name: data.name, gameId: this.props.id}, res => {
         if(res.err && res.err !== JOIN_GAME_ERROR){
@@ -115,21 +119,14 @@ let Game = React.createClass({
       console.err('Not connected to server');
     }
   }
-});
-
-let GameHandler = connect(state => {
-  return {
-    games: state.get('games'),
-    players: state.get('players'),
-    connected: state.get('connected')
-  };
-})(React.createClass({
+}
+class GameHandler extends React.Component {
   render() {
-    let id = this.props.params.gameid;
+    let id = this.props.match.params.gameid;
     let game = this.props.games.get(id);
     return (<Game id={id} game={game} socket={this.props.socket}
-      allPlayers={this.props.players} connected={this.props.connected} dispatch={this.props.dispatch}/>);
+      allPlayers={this.props.players} connected={this.props.connected}/>);
   }
-}));
+}
 
 export default GameHandler;
