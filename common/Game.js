@@ -9,8 +9,9 @@ export default function createGame (id, name){
 	    currentlyDrawingPlayer: 0,
 	    players: [],
 	    currentWord: '',
-	    drawingData: {},
-	    inIntermission: false
+	    drawingData: {paths: [], curPath: []},
+	    inIntermission: false,
+	    chatMessages: []
 	};
 	return fromJS(g);
 }

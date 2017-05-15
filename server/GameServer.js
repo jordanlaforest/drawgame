@@ -3,6 +3,8 @@ import AppState from '../common/AppState';
 import createGame from '../common/Game';
 import createPlayer from '../common/Player';
 
+import {addPlayerToGame} from '../common/actions';
+
 import {
   SERVER_MESSAGE_EVENT, REQUEST_GAMES,
   NAME_CHANGE_EVENT, JOIN_GAME_EVENT, CHAT_EVENT,
@@ -202,7 +204,8 @@ export default class GameServer {
     }
 
     let action = addPlayerToGame(gameId, socket.id);
-    this.store.dispatch(action);
+    this.state.addPlayerToGame(gameId, socket.id);
+    //this.store.dispatch(action);
     socket.broadcast.to(gameId).emit(ACTION, [action]); //TODO: Fix protocol
     return undefined; //No errors
   }

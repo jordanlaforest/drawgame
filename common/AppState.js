@@ -26,7 +26,8 @@ export default class AppState {
 
 	addPlayerToGame(gameId, playerId){
 		//Remove player from game he's already in, if needed
-		this.games = this.games.updateIn([gameId, 'players'], playerList => playerList.push(playerId));
+		let player = Map({id: playerId, score: 0});
+		this.games = this.games.updateIn([gameId, 'players'], playerList => playerList.push(player));
 	}
 
 }

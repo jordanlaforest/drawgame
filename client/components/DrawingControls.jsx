@@ -10,13 +10,7 @@ class DrawingControls extends React.Component {
   render() {
     return (
       <Panel header="DrawingControls">
-        <Grid fluid>
-          <Row fluid>
-            <Col className="lopadding" md={4}> <div className="colour-box red"> </div> </Col>
-            <Col className="lopadding" md={4}> <div className="colour-box blue"> </div> </Col>
-            <Col className="lopadding" md={4}> <div className="colour-box green"> </div> </Col>
-          </Row>
-        </Grid>
+        <h2>Drawing Controls</h2>
       </Panel>
     );
   }

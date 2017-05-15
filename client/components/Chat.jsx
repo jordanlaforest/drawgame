@@ -38,17 +38,17 @@ class Chat extends React.Component {
     );
   }
 
-  onChange(event){
+  onChange = (event) => {
     this.setState({value: event.target.value});
   }
 
-  onKeyDown({ keyCode }) {
+  onKeyDown = ({ keyCode }) => {
     if(keyCode === ENTER_KEY_CODE) {
       this.sendMessage();
     }
   }
 
-  sendMessage() {
+  sendMessage = () => {
     this.props.sendChatCB(this.state.value);
     this.setState({value: ''});
   }

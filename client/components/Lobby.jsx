@@ -1,4 +1,6 @@
 import React from 'react';
+import {Map, fromJS} from 'immutable';
+import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 
 import Table from 'react-bootstrap/lib/Table';
@@ -6,6 +8,9 @@ import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Button from 'react-bootstrap/lib/Button';
 
 import Login from './Login.jsx';
+
+import {INIT_EVENT_LOBBY, REQUEST_GAMES} from '../../common/EventConstants';
+import {setState, mergeState} from '../../common/actions';
 
 class Lobby extends React.Component {
   componentDidMount() {
@@ -57,4 +62,9 @@ class Lobby extends React.Component {
   }
 }
 
-export default Lobby;
+export default connect(state => {
+  return {
+    games: state.get('games'),
+    connected: state.get('connected')
+  }
+})(Lobby);

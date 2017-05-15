@@ -11,7 +11,7 @@ class GameCanvas extends React.Component {
   render() {
     let currentWord = this.props.currentWord;
     let currentlyDrawingId = this.props.gamePlayers.get(this.props.currentlyDrawing).get('id');
-    let amIDrawing = this.props.thisPlayer === currentlyDrawingId;
+    let amIDrawing = this.props.thisPlayer === this.props.currentlyDrawing;
     let name = amIDrawing ? '' : this.props.allPlayers.get(currentlyDrawingId).get('name');
     let { w, h } = this.getCanvasSize();
 
@@ -48,7 +48,7 @@ class GameCanvas extends React.Component {
     ctx.stroke();
   }
 
-  renderPath(path){
+  renderPath = (path) => {
     let ctx = this.getContext();
     path.forEach((point, i) => {
       let {x, y} = this.scaleToPixels(point.toJS());
@@ -108,19 +108,19 @@ class GameCanvas extends React.Component {
     };
   }
 
-  drawStart(event) {
+  drawStart = event => {
     let point = this.getMousePoint(event);
     this.props.addPointCB(this.scaleToPercent(point));
   }
 
-  drawMove(event) {
+  drawMove = event => {
     if(event.buttons > 0){ //any button pressed
       let point = this.getMousePoint(event);
       this.props.addPointCB(this.scaleToPercent(point));
     }
   }
 
-  drawEnd(event) {
+  drawEnd = event => {
     if(event.buttons > 0){
       //the player has drawn off the canvas, send one last point so the line extends to the edge
       let point = this.getMousePoint(event);
