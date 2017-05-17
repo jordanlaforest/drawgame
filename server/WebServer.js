@@ -15,7 +15,7 @@ app.set('env', 'development');
 staticServe(app);
 
 server.listen(port, () => {
-  console.log(`Started game server on port: ${port}`);
+  console.log(`Started server on port: ${port}`);
 });
 
 let gameServer = new GameServer(server);

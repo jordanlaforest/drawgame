@@ -45,5 +45,8 @@ export default function(app) {
       res.write(bundleData);
       res.end();
     });
+    app.get('/game/:gameid', (req, res) => {
+      res.sendFile('index.html', {root: __dirname + '/../../public/'});
+    });
   }
 }
