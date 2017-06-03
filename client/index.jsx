@@ -9,15 +9,17 @@ import {Provider} from 'react-redux';
 import {fromJS} from 'immutable';
 
 import App from './components/App.jsx';
-import reducer from '../common/reducers/reducers';
+import reducer from './modules/reducer';
+import wsConnect from './modules/wsConnection';
 import rootSaga from './sagas';
 
-const initialState = {players: {}, games: {}, connected: false};
 const sagaMiddleware = createSagaMiddleware();
 const enhancer = composeWithDevTools(applyMiddleware(sagaMiddleware));
 
-const store = createStore(reducer, fromJS(initialState), enhancer);
+const store = createStore(reducer, undefined, enhancer);
 
 sagaMiddleware.run(rootSaga);
+
+store.dispatch(wsConnect()); //Automatically connect to websocket
 
 ReactDOM.render((<Provider store={store}><App/></Provider>), document.getElementById('view'));

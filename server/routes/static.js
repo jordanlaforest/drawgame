@@ -39,7 +39,6 @@ export default function(app) {
       b.bundle(bundle);
     });
 
-    // browserify on command
     app.get('/bundle.js', (req, res) => {
       res.set('Content-Type', 'application/javascript');
       res.write(bundleData);

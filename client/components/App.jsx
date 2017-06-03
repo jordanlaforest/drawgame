@@ -4,62 +4,38 @@ import {BrowserRouter, Route, IndexRoute} from 'react-router-dom';
 import Lobby from './Lobby.jsx';
 import GameContainer from './GameContainer.jsx';
 
-import {mergeState} from '../../common/actions';
 import {Map, fromJS} from 'immutable';
 
+import {isConnected} from '../modules/wsConnection';
+import {isLoggedIn, login} from '../modules/auth';
+
 class App extends React.Component {
-  componentWillMount(){
-    
-  }
-
   render(){
-    let extraProps = {
-          thisPlayer: this.props.thisPlayer,
-          callbacks: {
-            requestGames: this.requestGames,
-            lobbyInit: this.lobbyInit
-          }
-        };
-    return (
-      <BrowserRouter>
-        <div>
-          <Route exact path="/" render={routeProps => <Lobby {...routeProps} {...extraProps}/>} />
-          <Route path="/game/:gameid" render={routeProps => <GameContainer {...routeProps} {...extraProps}/>} />
-        </div>
-      </BrowserRouter>
-    )
-  }
-
-  requestGames = () => {
-    console.log('Requesting list of games');
-    /*this.socket.emit(REQUEST_GAMES, {}, res => {
-      let state = {games: res.games};
-      this.props.dispatch(mergeState(fromJS(state)));
-    });*/
-  }
-
-  lobbyInit = (playerName) => {
-   /*this.socket.emit(INIT_EVENT_LOBBY, {name: playerName}, res => {
-      if(res.err){
-        console.log(res.err);
-        return;
-      }
-      let newState = {
-        connected: true,
-        thisPlayerId: res.id,
-        players: fromJS(res.players),
-        games: fromJS(res.games)
-      };
-      this.props.dispatch(mergeState(fromJS(newState)));
-    });*/
+    if(!this.props.connected){
+      return (<div><h2>Not Connected to Server</h2></div>);
+    }else if(!this.props.loggedIn){
+      return <Login submitCB={this.props.submitLogin} />;
+    }else{
+      return (
+        <BrowserRouter>
+          <div>
+            <Route exact path="/" component={Lobby} />
+            <Route path="/game/:gameid" component={GameContainer}/>
+          </div>
+        </BrowserRouter>
+      )
+    }
   }
 }
 
-export default connect((state) => {
+export default connect(state => {
   return {
-    connected: state.get('connected'),
-    thisPlayer: state.get('thisPlayerId'),
-    players: state.get('players'),
-    games: state.get('games')
+    connected: isConnected(state.wsConnection),
+    loggedIn: isLoggedIn(state.auth)
+  };
+},
+dispatch => {
+  return {
+    submitLogin: name => dispatch(login(name)),
   };
 })(App);

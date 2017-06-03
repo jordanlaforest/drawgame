@@ -54,7 +54,6 @@ export default class GameServer {
       console.log(`A user(${id}) is connecting...`);
 
       this.listenForInitEvent(socket);
-      this.listenForGamesRequest(socket);
 
       // disconnect event
       socket.on('disconnect', () => {
@@ -72,7 +71,7 @@ export default class GameServer {
   listenForInitEvent(socket) {
     //let store = this.store;
     let _this = this;
-    function initPlayer(data, cb, event){
+    function initPlayer(data, cb){
       let playerId = socket.id;
       let { name } = data;
       let nameError = _this.checkNameError(name);
@@ -88,52 +87,47 @@ export default class GameServer {
       let p = createPlayer(playerId, name, 0);
       _this.state.addPlayer(p);
 
-      socket.removeAllListeners(INIT_EVENT_LOBBY);
-      socket.removeAllListeners(INIT_EVENT_GAME);
+      socket.removeAllListeners('LOGIN');
 
       _this.listenForNameEvent(socket);
       _this.listenForJoinEvent(socket);
-      //_this.listenForGamesRequest(socket);
+      _this.listenForGamesRequest(socket);
 
-      const players = _this.state.players.toJS();
-      const games = _this.state.games.toJS();
-      if(event === INIT_EVENT_LOBBY){
+      const games = _this.state.games.valueSeq().toJS();
+      if(data.gameId === undefined){
         let res = {
-          id: playerId,
-          players: players,
-          games: games
+          playerId,
+          games
         };
         cb(res);
       }else{
         let joinError = _this.joinGame(data.gameId, playerId);
         if(joinError !== undefined){
-          joinError.players = players; //Send the player list anyway
           cb(joinError);
           return;
         }
 
         let game = _this.state.getGame(data.gameId).toJS();
+        let players = {};
+        game.players.forEach(id => players[id] = _this.state.players.get(id).toJS());
         let res = {
-          id: playerId,
-          players: players,
-          game: game
+          playerId,
+          players,
+          game
         };
         cb(res);
       }
       let message = `${ name }[${ playerId }] has connected`;
       console.log(message);
     }
-    socket.on(INIT_EVENT_LOBBY, (data, cb) => {
-      initPlayer(data, cb, INIT_EVENT_LOBBY);
-    });
-    socket.on(INIT_EVENT_GAME, (data, cb) => {
-      initPlayer(data, cb, INIT_EVENT_GAME);
+    socket.on('LOGIN', (data, cb) => {
+      initPlayer(data, cb);
     });
   }
 
   listenForGamesRequest(socket){
     socket.on(REQUEST_GAMES, (data, cb) => {
-      cb({games: this.state.games.toJS()});
+      cb({games: this.state.games.valueSeq().toJS()});
     });
   }
 
@@ -159,7 +153,7 @@ export default class GameServer {
           newName: name
         });
       }else{
-        console.err('Player not found in NAME_CHANGE_EVENT');
+        console.error('Player not found in NAME_CHANGE_EVENT');
       }
     });
   }
@@ -182,9 +176,9 @@ export default class GameServer {
   listenForChatEvent(socket) {
     socket.on(CHAT_EVENT, (message) => {
       let playerId = socket.id;
-      let gameId = this.state.getPlayer(playerId).game;
+      //let gameId = this.state.getPlayer(playerId).game;
       //TODO: Check if defined, also allow global chat
-      socket.broadcast.to(gameId).emit(CHAT_EVENT, { 
+      socket.broadcast.emit(CHAT_EVENT, { //.to(gameId)
         id: playerId,
         message: message
       });

@@ -43,9 +43,7 @@ class Login extends React.Component {
   }
 
   submit = () => {
-    this.props.submitCB({
-      name: this.state.name
-    });
+    this.props.submitCB(this.state.name);
     this.setState({name: ''});
   }
 }
