@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {BrowserRouter, Route, IndexRoute} from 'react-router-dom';
+
 import Lobby from './Lobby.jsx';
 import GameContainer from './GameContainer.jsx';
-
-import {Map, fromJS} from 'immutable';
+import Login from './Login.jsx';
 
 import {isConnected} from '../modules/wsConnection';
 import {isLoggedIn, login} from '../modules/auth';

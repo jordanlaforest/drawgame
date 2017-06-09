@@ -6,15 +6,15 @@ import wsConnection from './wsConnection';
 import auth from './auth';
 //import players from '../../common/modules/players';
 import gameList from './gameList';
-//import game from '../../common/modules/game';
+import game from '../../common/modules/game';
 
 const StateRecord = Record({
   //routing: routerReducer,
   auth: undefined,
   wsConnection: undefined,
   //players: undefined,
-  gameList: undefined
-  //game: undefined
+  gameList: undefined,
+  game: undefined
 });
 
 export default combineReducers({
@@ -22,6 +22,6 @@ export default combineReducers({
   auth,
   wsConnection,
   //players,
-  gameList
-  //game
+  gameList,
+  game
 }, StateRecord);

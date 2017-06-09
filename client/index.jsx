@@ -10,7 +10,7 @@ import {fromJS} from 'immutable';
 
 import App from './components/App.jsx';
 import reducer from './modules/reducer';
-import wsConnect from './modules/wsConnection';
+import {wsConnect} from './modules/wsConnection';
 import rootSaga from './sagas';
 
 const sagaMiddleware = createSagaMiddleware();

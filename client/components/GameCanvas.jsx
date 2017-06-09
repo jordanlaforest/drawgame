@@ -4,8 +4,12 @@ import Panel from 'react-bootstrap/lib/Panel';
 var noop = () => 0;
 
 class GameCanvas extends React.Component {
-  componentDidUpdate() {
-    this.renderDrawing();
+  componentDidUpdate(prevProps) {
+    if(prevProps.paths != this.props.paths){
+      this.renderDrawing();
+    }else{
+      console.log('Skipped path rendering.');
+    }
   }
 
   render() {
