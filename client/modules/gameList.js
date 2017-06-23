@@ -1,5 +1,5 @@
 import {createActions, handleActions} from 'redux-actions';
-import {Record, List, fromJS} from 'immutable';
+import {Record, List} from 'immutable';
 import {loginSuccess} from './auth';
 
 //Actions

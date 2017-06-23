@@ -23,8 +23,7 @@ export default class GameServer {
     
     //Create some test data
     let g1 = createGame('5', 'Test game');
-    let g2 = createGame('6', 'Test game 2');
-    g2.password = 'test';
+    let g2 = createGame('6', 'Test game 2').set('password', 'test');
     this.state.addGame(g1);
     this.state.addGame(g2);
     let p1 = createPlayer('10', 'Bob');
@@ -94,9 +93,11 @@ export default class GameServer {
       _this.listenForGamesRequest(socket);
 
       const games = _this.state.games.valueSeq().toJS();
+      const players = _this.state.players.toJS();
       if(data.gameId === undefined){
         let res = {
           playerId,
+          players,
           games
         };
         cb(res);
@@ -108,8 +109,6 @@ export default class GameServer {
         }
 
         let game = _this.state.getGame(data.gameId).toJS();
-        let players = {};
-        game.players.forEach(id => players[id] = _this.state.players.get(id).toJS());
         let res = {
           playerId,
           players,

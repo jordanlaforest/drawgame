@@ -32,13 +32,13 @@ function connect(){
 function handleLogin(loginAction, socket){
   return new Promise((resolve, reject) => {
     socket.emit('LOGIN', {name: loginAction.payload.name}, res => {
-      let {err, playerId, games} = res;
+      let {err, playerId, games, players} = res;
       if(err){
         reject(err);
       }else if(games){
-        resolve({playerId, games})
+        resolve({playerId, players, games})
       }else{
-        resolve({playerId});
+        resolve({playerId, players});
       }
     })
   }).then(res => res, error => ({error}));
@@ -53,7 +53,7 @@ function* handleAuth(socket){
       yield put(loginFailure(response.error));
     }
   }
-  yield put(loginSuccess(response.playerId, response.games));
+  yield put(loginSuccess(response.playerId, response.players, response.games));
   yield take('LOGOUT');
   console.log('Logout here');
 }

@@ -4,7 +4,7 @@ import {Record} from 'immutable';
 //Actions
 export const {login, loginSuccess, loginFailure} = createActions({
 	 LOGIN: (name) => ({name}),
-   LOGIN_SUCCESS: (playerId, gameList) => ({playerId, gameList})
+   LOGIN_SUCCESS: (playerId, players, gameList) => ({playerId, players, gameList})
   },
   'LOGIN_FAILURE');
 

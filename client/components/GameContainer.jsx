@@ -13,7 +13,7 @@ import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
-import {addPointToDrawing, endPathInDrawing, addChatMessage} from '../../common/actions';
+import {addPointToDrawing, endPathInDrawing, sendChatMessage} from '../../common/modules/game';
 import {INIT_EVENT_GAME, JOIN_GAME_EVENT, JOIN_GAME_ERROR} from '../../common/EventConstants';
 
 class GameContainer extends React.Component {
@@ -40,8 +40,8 @@ class GameContainer extends React.Component {
   }
 
   sendChat = (message) => {
-    let n = 'Bob';
-    this.props.dispatch(addChatMessage(this.props.game.get('id'), Map({name: n, message: message})));
+    let name = 'Bob';
+    this.props.dispatch(sendChatMessage(name, message));
   }
 
   render() {
