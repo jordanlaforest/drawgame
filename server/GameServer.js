@@ -3,13 +3,13 @@ import AppState from '../common/AppState';
 import createGame from '../common/Game';
 import createPlayer from '../common/Player';
 
-import {addPlayerToGame, removePlayerFromGame, addChatMessage} from '../common/modules/game';
+import {addPlayerToGame, removePlayerFromGame, addChatMessage,
+        addPointToDrawing, endPathInDrawing} from '../common/modules/game';
 import {addPlayer, removePlayer} from '../common/modules/players';
 
 import {
   REQUEST_GAMES,
   NAME_CHANGE_EVENT, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT,
-  PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT,
   ACTION,
   NAME_ERROR, JOIN_GAME_ERROR, UNEXPECTED_ERROR
 }
@@ -82,6 +82,7 @@ export default class GameServer {
       _this.listenForGamesRequest(socket);
       _this.listenForChatEvent(socket);
       _this.listenForLeaveEvent(socket);
+      _this.listenForPathEvents(socket);
 
       const games = _this.state.games.valueSeq().toJS();
       const players = _this.state.players.toJS();
@@ -185,7 +186,20 @@ export default class GameServer {
   }
 
   listenForPathEvents(socket) {
-    
+    socket.on('ADD_POINT_TO_DRAWING', point => {
+      this.handlePathEvent(socket, addPointToDrawing(point));
+    });
+    socket.on('END_PATH_IN_DRAWING', () => {
+      this.handlePathEvent(socket, endPathInDrawing());
+    });
+  }
+
+  handlePathEvent(socket, pathAction){
+    let gameId = this.state.getPlayer(socket.id).get('gameId');
+    if(gameId !== undefined){
+      //TODO: Check if player is currently drawing
+      socket.to(gameId).emit(ACTION, [pathAction]);
+    }
   }
 
   joinGame(gameId, socket){

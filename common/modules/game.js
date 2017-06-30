@@ -4,14 +4,14 @@ import {Map, Record, List} from 'immutable';
 //Actions
 export const {
   addPlayerToGame, removePlayerFromGame, addPointToDrawing,
-  endPathInDrawing, sendChatMessage, addChatMessage, leaveGame} = createActions({
+  endPathInDrawing, sendAddPoint, sendEndPath, sendChatMessage, addChatMessage, leaveGame} = createActions({
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message})
   },
   'SEND_CHAT_MESSAGE',
   'ADD_PLAYER_TO_GAME',
   'REMOVE_PLAYER_FROM_GAME',
-  'ADD_POINT_TO_DRAWING',
-  'END_PATH_IN_DRAWING',
+  'ADD_POINT_TO_DRAWING', 'SEND_ADD_POINT',
+  'END_PATH_IN_DRAWING', 'SEND_END_PATH',
   'LEAVE_GAME'
 );
 
@@ -67,8 +67,8 @@ const reducer = handleActions({
         return drawingData;
       }
       return drawingData.withMutations(drawing => {
-        drawing.get('paths').push(curPath);
-        drawing.get('curPath').clear();
+        drawing.update('paths', paths => paths.push(curPath));
+        drawing.set('curPath', List());
       });
     });
   }

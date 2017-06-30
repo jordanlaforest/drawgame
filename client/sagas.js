@@ -10,9 +10,11 @@ import {ACTION, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} fr
 import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './modules/wsConnection';
 import {login, loginSuccess, loginFailure} from './modules/auth';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
+import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
 
 function connect(){
-  const socket = io('http://localhost:9000', {
+  const host = window.location.host;
+  const socket = io(host, {
     'reconnection': true,
     'reconnectionDelay': 1000,
     'reconnectionDelayMax': 5000,
@@ -128,9 +130,19 @@ function* handleLeaveGame(socket){
   yield put(push('/'));
 }
 
+function* handleSendAddPoint(socket, action){
+  yield put(addPointToDrawing(action.payload));
+  socket.emit('ADD_POINT_TO_DRAWING', action.payload);
+}
+
+function* handleSendEndPath(socket){
+  yield put(endPathInDrawing());
+  socket.emit('END_PATH_IN_DRAWING');
+}
+
 function* watchStoreActions(socket){
-  //yield takeEvery('ADD_POINT_TO_DRAWING', (socket, action) => console.log(action), socket);
-  //yield takeEvery('END_PATH_IN_DRAWING', (socket, action) => console.log(action), socket);
+  yield takeEvery(sendAddPoint, handleSendAddPoint, socket);
+  yield takeEvery(sendEndPath, handleSendEndPath, socket);
   yield takeEvery('SEND_CHAT_MESSAGE', (socket, action) => {
     socket.emit(CHAT_EVENT, action.payload);
   }, socket);

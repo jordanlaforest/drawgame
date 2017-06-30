@@ -13,7 +13,7 @@ import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
-import {addPointToDrawing, endPathInDrawing, sendChatMessage, leaveGame} from '../../common/modules/game';
+import {sendAddPoint, sendEndPath, sendChatMessage, leaveGame} from '../../common/modules/game';
 import {INIT_EVENT_GAME, JOIN_GAME_EVENT, JOIN_GAME_ERROR} from '../../common/EventConstants';
 
 class GameContainer extends React.Component {
@@ -69,8 +69,8 @@ export default connect(
   },
   dispatch => {
     return {
-      addPoint: point => dispatch(addPointToDrawing(fromJS(point))),
-      endPath: () => dispatch(endPathInDrawing()),
+      addPoint: point => dispatch(sendAddPoint(fromJS(point))),
+      endPath: () => dispatch(sendEndPath()),
       sendChat: message => dispatch(sendChatMessage(message)),
       leaveGame: () => dispatch(leaveGame())
     };

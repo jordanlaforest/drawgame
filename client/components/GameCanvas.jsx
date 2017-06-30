@@ -32,7 +32,7 @@ class GameCanvas extends React.Component {
           height={h}
           onMouseDown={amIDrawing ? this.drawStart : noop}
           onMouseMove={amIDrawing ? this.drawMove : noop}
-          onMouseLeave={amIDrawing ? this.drawEnd : noop}
+          onMouseLeave={amIDrawing ? this.drawLeave : noop}
           onMouseUp={amIDrawing ? this.drawEnd : noop}
           ref="canvas">
         </canvas>
@@ -124,12 +124,16 @@ class GameCanvas extends React.Component {
     }
   }
 
-  drawEnd = event => {
+  drawLeave = event => {
     if(event.buttons > 0){
       //the player has drawn off the canvas, send one last point so the line extends to the edge
       let point = this.getMousePoint(event);
       this.props.addPointCB(this.scaleToPercent(point));
+      this.props.endPathCB();
     }
+  }
+
+  drawEnd = event => {
     this.props.endPathCB();
   }
 }
