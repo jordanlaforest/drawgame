@@ -15,37 +15,42 @@ function bundle(err, buf) {
 }
 
 export default function(app) {
+  app.use( express.static('public') );
+  let b;
   if(app.get('env') === 'development') {
-    app.use( express.static('public') );
-
     tinylr().listen(35729);
 
-    let b = browserify({
+    b = browserify({
       cache: {},
       packageCache: {},
       plugin: [watchify]
     });
 
-    b.add('client/index.jsx');
-    
-    b.transform('babelify', {
-      sourceMapRelative: '.'
-    });
-
-    b.bundle(bundle);
-
     b.on('update', (ids) => {
       changedIds = ids;
       b.bundle(bundle);
     });
-
-    app.get('/bundle.js', (req, res) => {
-      res.set('Content-Type', 'application/javascript');
-      res.write(bundleData);
-      res.end();
-    });
-    app.get('/game/:gameid', (req, res) => {
-      res.sendFile('index.html', {root: __dirname + '/../../public/'});
+  }else{
+    b = browserify({
+      cache: {},
+      packageCache: {}
     });
   }
+
+  b.add('client/index.jsx');
+  
+  b.transform('babelify', {
+    sourceMapRelative: '.'
+  });
+
+  b.bundle(bundle);
+  app.get('/bundle.js', (req, res) => {
+    res.set('Content-Type', 'application/javascript');
+    res.write(bundleData);
+    res.end();
+  });
+  app.get('/game/:gameid', (req, res) => {
+    res.sendFile('index.html', {root: __dirname + '/../../public/'});
+  });
+
 }

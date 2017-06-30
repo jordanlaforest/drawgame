@@ -5,7 +5,7 @@
   "main": "server/main.js",
   "scripts": {
     "start": "node server/main.js --port=9000",
-    "dev-start": "node_modules/.bin/nodemon  --exec \"npm start\"",
+    "dev-start": "node_modules/.bin/nodemon  --exec \"npm start -- --env=development\"",
     "lint": "node_modules/.bin/eslint .",
     "test": "mocha --compilers js:babel-core/register --recursive --require ./test/testHelper.js"
   },
@@ -57,8 +57,8 @@
     "babel-eslint": "^7.2.3",
     "chai": "^3.4.1",
     "chai-immutable": "^1.5.2",
-    "eslint": "^3.19.0",
-    "eslint-plugin-react": "^6.10.3",
+    "eslint": "^4.1.1",
+    "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.3.0",
     "nodemon": "^1.8.1",
     "redux-devtools-extension": "^2.13.2",
