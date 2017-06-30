@@ -2,7 +2,6 @@ import {Map} from 'immutable';
 
 export default class AppState {
 	constructor() {
-		//thisPlayer (client), connected (client)
 		this.players = Map();
 		this.games = Map();
 
@@ -20,14 +19,23 @@ export default class AppState {
 		this.players = this.players.set(player.get('id'), player);
 	}
 
+	removePlayer(playerId){
+		this.players = this.players.delete(playerId);
+	}
+
 	getPlayer(playerId){
 		return this.players.get(playerId);
 	}
 
 	addPlayerToGame(gameId, playerId){
-		//Remove player from game he's already in, if needed
 		let player = Map({id: playerId, score: 0});
 		this.games = this.games.updateIn([gameId, 'players'], playerList => playerList.push(player));
+		this.players = this.players.update(playerId, player => player.set('gameId', gameId));
+	}
+
+	removePlayerFromGame(gameId, playerId){
+		this.games = this.games.updateIn([gameId, 'players'], playerList => playerList.delete(playerList.indexOf(playerId)));
+		this.players = this.players.update(playerId, player => player.delete('gameId'));
 	}
 
 }

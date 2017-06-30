@@ -4,7 +4,7 @@ import {Map, Record, List, fromJS} from 'immutable';
 //Actions
 export const {
   addPlayerToGame, removePlayerFromGame, addPointToDrawing,
-  endPathInDrawing, sendChatMessage, addChatMessage} = createActions({
+  endPathInDrawing, sendChatMessage, addChatMessage, leaveGame} = createActions({
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message})
   },
   'SEND_CHAT_MESSAGE',
@@ -12,6 +12,7 @@ export const {
   'REMOVE_PLAYER_FROM_GAME',
   'ADD_POINT_TO_DRAWING',
   'END_PATH_IN_DRAWING',
+  'LEAVE_GAME'
 );
 
 //Selectors
@@ -37,19 +38,20 @@ const initialState = new GameRecord();
 
 //Reducers
 const reducer = handleActions({
+  'JOIN_GAME': (state, action) => {
+    return action.payload;
+  },
   [addPlayerToGame]: (state, action) => {
     return state.update('players', (players) => {
       return players.push(Map({
-        id: action.payload.playerId,
+        id: action.payload,
         score: 0
       }));
     });
   },
   [removePlayerFromGame]: (state, action) => {
     return state.update('players', (players) => {
-      return players.remove(players.findIndex((player) => {
-        return player.get('id') === playerId;
-      }));
+      return players.remove(players.indexOf(action.payload));
     });
   },
   [addChatMessage]: (state, action) => {

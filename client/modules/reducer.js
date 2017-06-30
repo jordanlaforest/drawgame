@@ -1,6 +1,6 @@
 import { Record } from 'immutable';
 import { combineReducers } from 'redux-immutable';
-//import { routerReducer } from 'react-router-redux'; //TODO
+import { routerReducer as routing } from 'react-router-redux';
 
 import wsConnection from './wsConnection';
 import auth from './auth';
@@ -9,7 +9,7 @@ import gameList from './gameList';
 import game from '../../common/modules/game';
 
 const StateRecord = Record({
-  //routing: routerReducer,
+  routing: undefined,
   auth: undefined,
   wsConnection: undefined,
   players: undefined,
@@ -18,7 +18,7 @@ const StateRecord = Record({
 });
 
 export default combineReducers({
-  //routing: routerReducer,
+  routing,
   auth,
   wsConnection,
   players,

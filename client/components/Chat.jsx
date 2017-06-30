@@ -29,7 +29,7 @@ class Chat extends React.Component {
       <Panel header="Chat" footer={panelFooter} >
         <ul className="list-unstyled">
           {
-            this.props.messages.map( (msg, idx) => {
+            this.props.messages.valueSeq().map( (msg, idx) => {
               return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
             })
           }

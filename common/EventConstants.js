@@ -3,6 +3,7 @@ export const INIT_EVENT_LOBBY      = 'init:lobby';
 export const INIT_EVENT_GAME       = 'init:game';
 export const NAME_CHANGE_EVENT     = 'name';
 export const JOIN_GAME_EVENT       = 'joinGame';
+export const LEAVE_GAME_EVENT      = 'leaveGame';
 export const CHAT_EVENT            = 'chat';
 
 export const REQUEST_GAMES         = 'request:games';

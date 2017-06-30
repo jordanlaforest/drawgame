@@ -3,11 +3,12 @@ import AppState from '../common/AppState';
 import createGame from '../common/Game';
 import createPlayer from '../common/Player';
 
-import {addPlayerToGame} from '../common/actions';
+import {addPlayerToGame, removePlayerFromGame, addChatMessage} from '../common/modules/game';
+import {addPlayer, removePlayer} from '../common/modules/players';
 
 import {
   SERVER_MESSAGE_EVENT, REQUEST_GAMES,
-  NAME_CHANGE_EVENT, JOIN_GAME_EVENT, CHAT_EVENT,
+  NAME_CHANGE_EVENT, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT,
   PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT,
   INIT_EVENT_LOBBY, INIT_EVENT_GAME,
   ACTION,
@@ -34,23 +35,10 @@ export default class GameServer {
     this.state.addPlayerToGame(g1.get('id'), p2.get('id'));
   }
 
-  sendServerMessage(message) {
-    this.io.emit(SERVER_MESSAGE_EVENT, { message });
-  }
-
-  mirrorMessage(message, consolePrefix) {
-    console.log(`${ consolePrefix || ''}${message}`);
-    this.sendServerMessage(message);
-  }
-
-  relayEvent(socket, event) {
-    socket.on(event, (data) => socket.broadcast.emit(event, data));
-  }
-
   start() {
     this.io.on('connection', (socket) => {
       let { id } = socket;
-      console.log(`A user(${id}) is connecting...`);
+      console.log(`A user[${id}] is connecting...`);
 
       this.listenForInitEvent(socket);
 
@@ -60,7 +48,8 @@ export default class GameServer {
         //  remove player from socket.io room
         //  dispatch player leave game
         //dispatch remove player
-        let name = 'someone';
+        let player = this.state.getPlayer(socket.id);
+        let name = player !== undefined ? player.get('name') : 'someone';
         let message = `${name} has disconnected`;
         console.log(message);
       });
@@ -68,7 +57,6 @@ export default class GameServer {
   }
 
   listenForInitEvent(socket) {
-    //let store = this.store;
     let _this = this;
     function initPlayer(data, cb){
       let playerId = socket.id;
@@ -83,14 +71,18 @@ export default class GameServer {
         cb({err: _this.createError(UNEXPECTED_ERROR, 'Unexpected Error', 'Please refresh you\'re browser.')});
         return;
       }
-      let p = createPlayer(playerId, name, 0);
+      let p = createPlayer(playerId, name);
       _this.state.addPlayer(p);
+      let action = addPlayer(p.toJS());
+      socket.broadcast.emit(ACTION, [action]);
 
       socket.removeAllListeners('LOGIN');
 
       _this.listenForNameEvent(socket);
       _this.listenForJoinEvent(socket);
       _this.listenForGamesRequest(socket);
+      _this.listenForChatEvent(socket);
+      _this.listenForLeaveEvent(socket);
 
       const games = _this.state.games.valueSeq().toJS();
       const players = _this.state.players.toJS();
@@ -166,28 +158,35 @@ export default class GameServer {
       }
 
       let game = this.state.getGame(data.gameId);
-      console.log(game.players);
       cb({game: game});
 
+    });
+  }
+
+  listenForLeaveEvent(socket) {
+    socket.on(LEAVE_GAME_EVENT, () => {
+      let gameId = this.state.getPlayer(socket.id).get('gameId');
+      if(gameId !== undefined){
+        let action = removePlayerFromGame(socket.id);
+        this.state.removePlayerFromGame(gameId, socket.id);
+        socket.to(gameId).emit(ACTION, [action]);
+      }
     });
   }
 
   listenForChatEvent(socket) {
     socket.on(CHAT_EVENT, (message) => {
       let playerId = socket.id;
-      //let gameId = this.state.getPlayer(playerId).game;
-      //TODO: Check if defined, also allow global chat
-      socket.broadcast.emit(CHAT_EVENT, { //.to(gameId)
-        id: playerId,
-        message: message
-      });
+      let gameId = this.state.getPlayer(playerId).get('gameId');
+      if(gameId !== undefined){
+        let action = addChatMessage(this.state.getPlayer(playerId).get('name'), message);
+        this.io.to(gameId).emit(ACTION, [action]);
+      }
     });
   }
 
   listenForPathEvents(socket) {
-    this.relayEvent(socket, PATH_START_EVENT);
-    this.relayEvent(socket, PATH_MOVE_EVENT);
-    this.relayEvent(socket, PATH_END_EVENT);
+    
   }
 
   joinGame(gameId, socket){
@@ -196,12 +195,20 @@ export default class GameServer {
       return {err: this.createError(JOIN_GAME_ERROR, 'Error joining game', 'Could not find the game requested')};
     }
 
-    let action = addPlayerToGame(gameId, socket.id);
+    let oldGameId = this.state.getPlayer(socket.id).get('gameId');
+    if(oldGameId != undefined){
+      let a = removePlayerFromGame(socket.id);
+      this.state.removePlayerFromGame(oldGameId, socket.id);
+      socket.to(oldGameId).emit(ACTION, [a]);
+    }
+    let action = addPlayerToGame(socket.id);
     this.state.addPlayerToGame(gameId, socket.id);
-    //this.store.dispatch(action);
-    socket.broadcast.to(gameId).emit(ACTION, [action]); //TODO: Fix protocol
+    socket.join(gameId);
+    socket.to(gameId).emit(ACTION, [action]);
     return undefined; //No errors
   }
+
+  // Error Checking
 
   checkNameError(name){
     if(!this.isValidName(name)){

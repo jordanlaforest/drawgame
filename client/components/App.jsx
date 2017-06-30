@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {BrowserRouter, Route, IndexRoute} from 'react-router-dom';
+import {Router, Route, IndexRoute} from 'react-router-dom';
+import {ConnectedRouter} from 'react-router-redux';
 
 import Lobby from './Lobby.jsx';
 import GameContainer from './GameContainer.jsx';
@@ -17,12 +18,12 @@ class App extends React.Component {
       return <Login submitCB={this.props.submitLogin} />;
     }else{
       return (
-        <BrowserRouter>
+        <ConnectedRouter history={this.props.history}>
           <div>
             <Route exact path="/" component={Lobby} />
             <Route path="/game/:gameid" component={GameContainer}/>
           </div>
-        </BrowserRouter>
+        </ConnectedRouter>
       )
     }
   }

@@ -13,47 +13,20 @@ import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
-import {addPointToDrawing, endPathInDrawing, sendChatMessage} from '../../common/modules/game';
+import {addPointToDrawing, endPathInDrawing, sendChatMessage, leaveGame} from '../../common/modules/game';
 import {INIT_EVENT_GAME, JOIN_GAME_EVENT, JOIN_GAME_ERROR} from '../../common/EventConstants';
 
 class GameContainer extends React.Component {
-  componentDidMount() {
-    if(this.props.connected){
-      this.props.socket.emit(JOIN_GAME_EVENT, {gameId: this.props.game.get('id')}, res => {
-        if(res.err !== undefined){
-          console.log(res.err);
-          return;
-        }
-        let state = {games: {}};
-        state.games[this.props.game.get('id')] = res.game;
-        //this.props.dispatch(mergeState(fromJS(state)));
-      });
-    }
-  }
-
-  addPoint = (point) => {
-    this.props.dispatch(addPointToDrawing(this.props.game.get('id'), point));
-  }
-
-  endPath = () => {
-    this.props.dispatch(endPathInDrawing(this.props.game.get('id')));
-  }
-
-  sendChat = (message) => {
-    let name = 'Bob';
-    this.props.dispatch(sendChatMessage(name, message));
-  }
-
   render() {
     let game = this.props.game;
-    if(game === undefined){
+    if(game.get('id') === undefined){
       return <div>Loading</div>;
     }
     let paths = game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'));
     let chatMessages = game.get('chatMessages');
     return (
       <div>
-        <IndexLinkContainer to="/"><Button>Leave Game</Button></IndexLinkContainer>
+        <Button onClick={this.props.leaveGame}>Leave Game</Button>
         <Button>Skip Word</Button>
         <Grid fluid>
           <Row>
@@ -75,11 +48,11 @@ class GameContainer extends React.Component {
                 allPlayers={this.props.allPlayers}
                 canvasSize={Map({w:800, h:600})}
                 paths={paths}
-                addPointCB={this.addPoint}
-                endPathCB={this.endPath}
+                addPointCB={this.props.addPoint}
+                endPathCB={this.props.endPath}
                 />
             </Col>
-            <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.sendChat} /> </Col>
+            <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.props.sendChat} /> </Col>
           </Row>
         </Grid>
       </div>
@@ -96,9 +69,10 @@ export default connect(
   },
   dispatch => {
     return {
-      addPoint: point => dispatch(addPointToDrawing(point)),
+      addPoint: point => dispatch(addPointToDrawing(fromJS(point))),
       endPath: () => dispatch(endPathInDrawing()),
-      sendChat: message => dispatch(addChatMessage(message))
+      sendChat: message => dispatch(sendChatMessage(message)),
+      leaveGame: () => dispatch(leaveGame())
     };
   }
 )(GameContainer);
