@@ -50,6 +50,7 @@
     "redux-immutable": "^4.0.0",
     "redux-saga": "^0.15.3",
     "reselect": "^3.0.1",
+    "redux-devtools-extension": "^2.13.2",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3"
   },
@@ -61,7 +62,6 @@
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.3.0",
     "nodemon": "^1.8.1",
-    "redux-devtools-extension": "^2.13.2",
     "tiny-lr": "^1.0.4",
     "watchify": "^3.6.0"
   }
