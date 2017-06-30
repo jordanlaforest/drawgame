@@ -4,7 +4,7 @@
   "description": " A game similar to pictionary.",
   "main": "server/main.js",
   "scripts": {
-    "start": "node server/main.js --port=9000",
+    "start": "node server/main.js",
     "dev-start": "node_modules/.bin/nodemon  --exec \"npm start -- --env=development\"",
     "lint": "node_modules/.bin/eslint .",
     "test": "mocha --compilers js:babel-core/register --recursive --require ./test/testHelper.js"

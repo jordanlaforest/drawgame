@@ -4,8 +4,8 @@ import { Server } from 'http';
 import GameServer from './GameServer';
 import staticServe from './routes/static';
 
-let { port, env } = parseArgs(process.argv.slice(2));
-port = port || 3000;
+let { env } = parseArgs(process.argv.slice(2));
+let port = env === 'production' ? 80 : 9000;
 env = env || 'production';
 
 // start up the game server
