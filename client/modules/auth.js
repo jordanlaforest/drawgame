@@ -3,9 +3,8 @@ import {Record} from 'immutable';
 
 //Actions
 export const {login, loginSuccess, loginFailure} = createActions({
-	 LOGIN: (name) => ({name}),
-   LOGIN_SUCCESS: (playerId, players, gameList) => ({playerId, players, gameList})
-  },
+  LOGIN: (name) => ({name}),
+  LOGIN_SUCCESS: (playerId, players, gameList) => ({playerId, players, gameList})},
   'LOGIN_FAILURE');
 
 export function isLoggedIn(state){
@@ -13,7 +12,7 @@ export function isLoggedIn(state){
 }
 
 export function getPlayerId(state){
-	return state.playerId;
+  return state.playerId;
 }
 
 //Default State
@@ -27,7 +26,7 @@ const initialState = new StateRecord();
 
 //Reducers
 const reducer = handleActions({
-  [login]: (state, action) => state.merge({
+  [login]: (state) => state.merge({
     loggingIn: true
   }),
   [loginSuccess]: (state, action) => state.merge({

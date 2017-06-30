@@ -7,10 +7,9 @@ import {addPlayerToGame, removePlayerFromGame, addChatMessage} from '../common/m
 import {addPlayer, removePlayer} from '../common/modules/players';
 
 import {
-  SERVER_MESSAGE_EVENT, REQUEST_GAMES,
+  REQUEST_GAMES,
   NAME_CHANGE_EVENT, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT,
   PATH_START_EVENT, PATH_MOVE_EVENT, PATH_END_EVENT,
-  INIT_EVENT_LOBBY, INIT_EVENT_GAME,
   ACTION,
   NAME_ERROR, JOIN_GAME_ERROR, UNEXPECTED_ERROR
 }
@@ -237,7 +236,7 @@ export default class GameServer {
       if(p.name === name){
         nameTaken = true; //TODO: Stop the loop if we find a match
       }
-    })
+    });
     return !nameTaken;
   }
 

@@ -1,5 +1,5 @@
 import {createActions, handleActions} from 'redux-actions';
-import {Map, List} from 'immutable';
+import {Map} from 'immutable';
 
 import {loginSuccess} from '../../client/modules/auth';
 
@@ -12,7 +12,7 @@ export const {addPlayer, removePlayer} = createActions(
 const initialState = Map();
 
 const reducer = handleActions({
-	[loginSuccess]: (state, action) => {
+  [loginSuccess]: (state, action) => {
     if(action.payload.players !== undefined){
       return action.payload.players;
     }else{

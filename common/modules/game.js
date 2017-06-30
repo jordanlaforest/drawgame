@@ -1,5 +1,5 @@
 import {createActions, handleActions} from 'redux-actions';
-import {Map, Record, List, fromJS} from 'immutable';
+import {Map, Record, List} from 'immutable';
 
 //Actions
 export const {
@@ -29,7 +29,7 @@ const GameRecord = Record({
   currentlyDrawingPlayer: 0,
   players: List(),
   currentWord: '',
-  drawingData: Map({paths: [], curPath: []}),
+  drawingData: Map({paths: List(), curPath: List()}),
   inIntermission: false,
   chatMessages: List()
 });
@@ -60,7 +60,7 @@ const reducer = handleActions({
   [addPointToDrawing]: (state, action) => {
     return state.updateIn(['drawingData', 'curPath'], path => path.push(action.payload));
   },
-  [endPathInDrawing]: (state, action) => {
+  [endPathInDrawing]: (state) => {
     return state.update('drawingData', drawingData => {
       let curPath = drawingData.get('curPath');
       if(curPath.isEmpty()){
@@ -69,7 +69,7 @@ const reducer = handleActions({
       return drawingData.withMutations(drawing => {
         drawing.get('paths').push(curPath);
         drawing.get('curPath').clear();
-      })
+      });
     });
   }
 }, initialState);

@@ -1,18 +1,17 @@
 import {push} from 'react-router-redux';
-import {take, put, fork, call, race} from 'redux-saga/effects';
+import {take, put, call, race} from 'redux-saga/effects';
 import {eventChannel, END, takeEvery, takeLatest} from 'redux-saga';
 import {fromJS} from 'immutable';
 
 import io from 'socket.io-client';
 
-import {ACTION, INIT_EVENT_LOBBY, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} from '../common/EventConstants';
+import {ACTION, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} from '../common/EventConstants';
 
 import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './modules/wsConnection';
 import {login, loginSuccess, loginFailure} from './modules/auth';
-import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList'
+import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
 
 function connect(){
-  console.log('Connecting to server...');
   const socket = io('http://localhost:9000', {
     'reconnection': true,
     'reconnectionDelay': 1000,
@@ -23,7 +22,7 @@ function connect(){
   return new Promise((resolve, reject) => {
     socket.on('connect', () => resolve(socket));
     socket.on('connect_timeout', () => reject('timeout'));
-    socket.on('reconnect_failed', () => reject('reconnect_failed'))
+    socket.on('reconnect_failed', () => reject('reconnect_failed'));
   }).then(socket => ({socket}), error => ({error}));
 }
 
@@ -34,18 +33,18 @@ function handleLogin(loginAction, socket){
       if(err){
         reject(err);
       }else if(games){
-        resolve({playerId, players, games})
+        resolve({playerId, players, games});
       }else{
         resolve({playerId, players});
       }
-    })
+    });
   }).then(res => res, error => ({error}));
 }
 
 function* handleAuth(socket){
   let response;
   while(response === undefined || response.playerId === undefined){
-    const loginAction = yield take('LOGIN');
+    const loginAction = yield take(login);
     response = yield call(handleLogin, loginAction, socket);
     if(response.error){
       yield put(loginFailure(response.error));
@@ -70,7 +69,7 @@ function subscribe(socket){
     socket.on('reconnect_failed', () => {
       console.log('reconnect_failed');
       emit(END);
-    })
+    });
 
     return () => {};
   });
@@ -81,11 +80,11 @@ function* readFromSocket(socket){
   while(true){
     let action = yield take(channel);
     action.payload = fromJS(action.payload);
-    yield put(action)
+    yield put(action);
   }
 }
 
-function* handleRequestGames(socket, action){
+function* handleRequestGames(socket){
   let promise = new Promise((resolve, reject) => {
     socket.emit(REQUEST_GAMES, {}, res => {
       if(res.err){
@@ -124,7 +123,7 @@ function* handleLocationChange(socket, action){
   }
 }
 
-function* handleLeaveGame(socket, action){
+function* handleLeaveGame(socket){
   socket.emit(LEAVE_GAME_EVENT);
   yield put(push('/'));
 }
@@ -135,7 +134,7 @@ function* watchStoreActions(socket){
   yield takeEvery('SEND_CHAT_MESSAGE', (socket, action) => {
     socket.emit(CHAT_EVENT, action.payload);
   }, socket);
-  yield takeLatest('REFRESH_GAMES', handleRequestGames, socket);
+  yield takeLatest(refreshGames, handleRequestGames, socket);
   yield takeLatest('@@router/LOCATION_CHANGE', handleLocationChange, socket);
   yield takeLatest('LEAVE_GAME', handleLeaveGame, socket);
 }
@@ -151,7 +150,7 @@ function* handleSocket(socket){
 function* socketSaga() {
   while(true){
     try{
-      yield take('WS_CONNECT');
+      yield take(wsConnect);
       const {socket, error} = yield call(connect);
       if(error){
         console.error(`Error, could not connect (${error})`);
@@ -160,7 +159,7 @@ function* socketSaga() {
         yield put(wsConnectSuccess());
         yield call(handleSocket, socket);
         yield put(wsDisconnected());
-         socket.destroy();
+        socket.destroy();
       }
 
     }catch(e){

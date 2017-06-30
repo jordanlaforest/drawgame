@@ -25,12 +25,12 @@ const initialState = new StateRecord();
 
 //Reducers
 const reducer = handleActions({
-  [wsConnect]: (state, action) => state.merge({
+  [wsConnect]: (state) => state.merge({
     connected: false,
     connecting: true,
     error: undefined
   }),
-  [wsConnectSuccess]: (state, action) => state.merge({
+  [wsConnectSuccess]: (state) => state.merge({
     connected: true,
     connecting: false
   }),
@@ -39,7 +39,7 @@ const reducer = handleActions({
     connecting: false,
     error: action.payload
   }),
-  [wsDisconnected]: (state, action) => state.merge({
+  [wsDisconnected]: (state) => state.merge({
     connected: false,
     connecting: false
   })

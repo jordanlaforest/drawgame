@@ -25,7 +25,7 @@ const initialState = new StateRecord();
 
 //Reducers
 const reducer = handleActions({
-  [refreshGames]: (state, action) => state.merge({
+  [refreshGames]: (state) => state.merge({
     refreshing: true,
     error: undefined
   }),
