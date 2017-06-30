@@ -4,9 +4,15 @@ import Panel from 'react-bootstrap/lib/Panel';
 var noop = () => 0;
 
 class GameCanvas extends React.Component {
+  constructor(props) {
+    super(props);
+    this.renderCallbackId = 0;
+  }
   componentDidUpdate(prevProps) {
     if(prevProps.paths != this.props.paths){
-      this.renderDrawing();
+      if(this.renderCallbackId == 0){
+        this.renderCallbackId = window.requestAnimationFrame(this.renderDrawing.bind(this));
+      }
     }else{
       console.log('Skipped path rendering.');
     }
@@ -41,6 +47,7 @@ class GameCanvas extends React.Component {
   }
 
   renderDrawing(){
+    this.renderCallbackId = 0;
     this.clearCanvas();
     let ctx = this.getContext();
     ctx.lineWidth = 5;

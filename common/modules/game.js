@@ -61,6 +61,7 @@ const reducer = handleActions({
     return state.updateIn(['drawingData', 'curPath'], path => path.push(action.payload));
   },
   [endPathInDrawing]: (state) => {
+    state = state.update('chatMessages', chat => chat.push(Map({name: '[debug]', message:'Added new path'})));
     return state.update('drawingData', drawingData => {
       let curPath = drawingData.get('curPath');
       if(curPath.isEmpty()){
