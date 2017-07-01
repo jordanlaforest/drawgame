@@ -3,22 +3,19 @@ import express from 'express';
 import { Server } from 'http';
 import GameServer from './GameServer';
 
-let { env } = parseArgs(process.argv.slice(2));
-let port = process.env.PORT || 9000;
-env = env || 'production';
-
+let { port } = parseArgs(process.argv.slice(2));
+port = port || process.env.PORT || 9000;
 // start up the game server
 let app = express();
 let server = Server(app);
-
-app.set('env', env);
-let staticServe;
+let env = app.get('env');
+let configureServer;
 if(env === 'production'){
-  staticServe = require('./webServerConfig/prod').default;
+  configureServer = require('./webServerConfig/prod').default;
 }else{
-  staticServe = require('./webServerConfig/dev').default;
+  configureServer = require('./webServerConfig/dev').default;
 }
-staticServe(app);
+configureServer(app);
 
 server.listen(port, () => {
   console.log(`Started server on port: ${port} [${env}]`);

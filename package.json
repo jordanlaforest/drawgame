@@ -5,7 +5,7 @@
   "main": "server/main.js",
   "scripts": {
     "start": "node server/main.js",
-    "dev-start": "node_modules/.bin/nodemon  --exec \"npm start -- --env=development\"",
+    "dev-start": "node_modules/.bin/nodemon  --exec \"npm start\"",
     "lint": "node_modules/.bin/eslint .",
     "test": "mocha --compilers js:babel-core/register --recursive --require ./test/testHelper.js"
   },
