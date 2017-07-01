@@ -1,5 +1,5 @@
 {
-  "name": "DrawGame",
+  "name": "drawgame",
   "version": "0.1.0",
   "description": " A game similar to pictionary.",
   "main": "server/main.js",

@@ -18,7 +18,6 @@ if(env === 'production'){
 }else{
   staticServe = require('./webServerConfig/dev').default;
 }
-console.log(staticServe);
 staticServe(app);
 
 server.listen(port, () => {
