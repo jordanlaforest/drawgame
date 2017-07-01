@@ -4,7 +4,7 @@ import { Server } from 'http';
 import GameServer from './GameServer';
 
 let { env } = parseArgs(process.argv.slice(2));
-let port = env === 'production' ? 80 : 9000;
+let port = process.env.PORT || 9000;
 env = env || 'production';
 
 // start up the game server
