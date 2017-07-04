@@ -1,5 +1,4 @@
 import React from 'react';
-import {Map, fromJS} from 'immutable';
 import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import {Map, fromJS} from 'immutable';
 import { connect } from 'react-redux';
-import { IndexLinkContainer } from 'react-router-bootstrap';
 
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
@@ -14,7 +13,6 @@ import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
 import {sendAddPoint, sendEndPath, sendChatMessage, leaveGame} from '../../common/modules/game';
-import {INIT_EVENT_GAME, JOIN_GAME_EVENT, JOIN_GAME_ERROR} from '../../common/EventConstants';
 
 class GameContainer extends React.Component {
   render() {

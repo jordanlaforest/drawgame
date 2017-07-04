@@ -18,7 +18,7 @@ import rootSaga from './sagas';
 const history = createHistory();
 
 const sagaMiddleware = createSagaMiddleware();
-const reduxRouterMiddleware = routerMiddleware(history)
+const reduxRouterMiddleware = routerMiddleware(history);
 const enhancer = composeWithDevTools(applyMiddleware(sagaMiddleware, reduxRouterMiddleware));
 
 const store = createStore(reducer, undefined, enhancer);

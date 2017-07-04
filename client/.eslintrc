@@ -9,7 +9,10 @@
     "browser": true,
     "node": false
   },
-  "ecmaFeatures": {
-    "jsx": true
-  }
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }  
+  },
+  "extends": ["eslint:recommended", "plugin:react/recommended"]
 }

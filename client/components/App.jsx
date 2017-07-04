@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {Router, Route, IndexRoute} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import {ConnectedRouter} from 'react-router-redux';
 
 import Lobby from './Lobby.jsx';
