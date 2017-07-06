@@ -12,7 +12,7 @@ let server = Server(app);
 let env = app.get('env');
 app.use(express.static('public'));
 app.get('/game/:gameid', (req, res) => {
-  res.sendFile('index.html', {root: __dirname + '/../../public/'});
+  res.sendFile('index.html', {root: __dirname + '/../public/'});
 });
 configureServer(app);
 
