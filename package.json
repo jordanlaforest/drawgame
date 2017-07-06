@@ -55,7 +55,8 @@
     "redux-saga": "^0.15.3",
     "reselect": "^3.0.1",
     "socket.io": "^2.0.3",
-    "socket.io-client": "^2.0.3"
+    "socket.io-client": "^2.0.3",
+    "webpack": "^3.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -66,7 +67,6 @@
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.3.0",
     "nodemon": "^1.8.1",
-    "webpack": "^3.0.0",
     "webpack-dev-middleware": "^1.11.0",
     "webpack-hot-middleware": "^2.18.1"
   }
