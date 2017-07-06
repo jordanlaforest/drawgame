@@ -10,6 +10,10 @@ port = port || process.env.PORT || 9000;
 let app = express();
 let server = Server(app);
 let env = app.get('env');
+app.use(express.static('public'));
+app.get('/game/:gameid', (req, res) => {
+  res.sendFile('index.html', {root: __dirname + '/../../public/'});
+});
 configureServer(app);
 
 server.listen(port, () => {

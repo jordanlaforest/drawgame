@@ -4,9 +4,11 @@
   "description": " A game similar to pictionary.",
   "main": "server/main.js",
   "scripts": {
+    "postinstall": "npm run build",
+    "build": "webpack -p",
     "start": "node server/main.js",
-    "dev-start": "node_modules/.bin/nodemon  --exec \"npm start\"",
-    "lint": "node_modules/.bin/eslint .",
+    "dev-start": "nodemon --exec \"npm start\"",
+    "lint": "eslint .",
     "test": "mocha --compilers js:babel-core/register --recursive --require ./test/testHelper.js"
   },
   "engines": {
@@ -33,12 +35,11 @@
     "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.4.0",
     "babel-preset-react": "^6.1.2",
-    "babelify": "^7.2.0",
-    "browserify": "^14.3.0",
     "express": "^4.13.3",
     "history": "^4.6.1",
     "immutable": "^3.7.5",
     "minimist": "^1.2.0",
+    "pug": "^2.0.0-rc.2",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
@@ -47,25 +48,26 @@
     "react-router-bootstrap": "^0.24.2",
     "react-router-dom": "^4.1.1",
     "react-router-redux": "^5.0.0-alpha.6",
-    "reactify": "^1.1.1",
     "redux": "^3.6.0",
     "redux-actions": "^2.0.3",
+    "redux-devtools-extension": "^2.13.2",
     "redux-immutable": "^4.0.0",
     "redux-saga": "^0.15.3",
     "reselect": "^3.0.1",
-    "redux-devtools-extension": "^2.13.2",
     "socket.io": "^2.0.3",
     "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
     "chai": "^3.4.1",
     "chai-immutable": "^1.5.2",
     "eslint": "^4.1.1",
     "eslint-plugin-react": "^7.1.0",
     "mocha": "^3.3.0",
     "nodemon": "^1.8.1",
-    "tiny-lr": "^1.0.4",
-    "watchify": "^3.6.0"
+    "webpack": "^3.0.0",
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-hot-middleware": "^2.18.1"
   }
 }

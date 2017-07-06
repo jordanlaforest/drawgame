@@ -1,49 +1,23 @@
-import express from 'express';
-import browserify from 'browserify';
-import watchify from 'watchify';
-import tinylr from 'tiny-lr';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import webpackConfig from '../../webpack.config';
 
-let changedIds;
-let bundleData;
-function bundle(err, buf) {
-  console.log('Bundled. Errors: ' + err);
-  bundleData = buf;
-  if(changedIds !== undefined){
-    tinylr.changed(...changedIds);
-    changedIds = undefined;
-  }
-}
-
+//TODO: Enable actual HMR instead of just reloading
 export default function(app) {
-  app.use( express.static('public') );
-  
-  tinylr().listen(35729);
-
-  let b = browserify({
-    cache: {},
-    packageCache: {},
-    plugin: [watchify]
-  });
-
-  b.on('update', (ids) => {
-    changedIds = ids;
-    b.bundle(bundle);
-  });
-
-  b.add('client/index.jsx');
-  
-  b.transform('babelify', {
-    sourceMapRelative: '.'
-  });
-
-  b.bundle(bundle);
-  app.get('/bundle.js', (req, res) => {
-    res.set('Content-Type', 'application/javascript');
-    res.write(bundleData);
-    res.end();
-  });
-  app.get('/game/:gameid', (req, res) => {
-    res.sendFile('index.html', {root: __dirname + '/../../public/'});
-  });
-
+  webpackConfig.entry = [
+    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true',
+    './client/index.jsx'
+  ];
+  webpackConfig.plugins = [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ];
+  const compiler = webpack(webpackConfig);
+  app.use(webpackDevMiddleware(compiler, {
+    noInfo: true, publicPath: webpackConfig.output.publicPath
+  }));
+  app.use(webpackHotMiddleware(compiler, {
+    log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000
+  }));
 }
