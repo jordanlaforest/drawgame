@@ -11,10 +11,13 @@ let app = express();
 let server = Server(app);
 let env = app.get('env');
 app.use(express.static('public'));
-app.get('/game/:gameid', (req, res) => {
-  res.sendFile('index.html', {root: __dirname + '/../public/'});
-});
+app.set('view engine', 'pug');
+
 configureServer(app);
+
+app.get('/*', (req, res) => {
+  res.render('index', { password: false });
+});
 
 server.listen(port, () => {
   console.log(`Started server on port: ${port} [${env}]`);
