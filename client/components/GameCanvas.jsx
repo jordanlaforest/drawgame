@@ -19,17 +19,24 @@ class GameCanvas extends React.Component {
   }
 
   render() {
-    let currentWord = this.props.currentWord;
-    let currentlyDrawingId = this.props.gamePlayers.get(this.props.currentlyDrawing).get('id');
-    let amIDrawing = this.props.thisPlayer === this.props.currentlyDrawing;
+    let game = this.props.game;
+    let currentWord = game.currentWord;
+    let currentlyDrawingId = game.players.get(game.currentlyDrawingPlayer).get('id');
+    let amIDrawing = this.props.thisPlayer === game.currentlyDrawingPlayer;
     let name = amIDrawing ? '' : this.props.allPlayers.get(currentlyDrawingId).get('name');
     let { w, h } = this.getCanvasSize();
 
-    let canvasHeader = '';
-    if(amIDrawing){
-      canvasHeader = <p>Your word is <strong>{currentWord}</strong></p>;
+    let canvasHeader;
+    if(!game.isStarted){
+      canvasHeader = <p>Please wait for the game to start.</p>;
+    }else if(game.inIntermission){
+      canvasHeader = <p>The correct answer was <strong>{currentWord}</strong></p>;
     }else{
-      canvasHeader = <p><strong>{name}</strong> is currently drawing</p>;
+      if(amIDrawing){
+        canvasHeader = <p>Your word is <strong>{currentWord}</strong></p>;
+      }else{
+        canvasHeader = <p><strong>{name}</strong> is currently drawing</p>;
+      }
     }
     return (
       <Panel header={ canvasHeader }>
@@ -140,7 +147,7 @@ class GameCanvas extends React.Component {
     }
   }
 
-  drawEnd = event => {
+  drawEnd = () => {
     this.props.endPathCB();
   }
 }

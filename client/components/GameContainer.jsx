@@ -40,9 +40,7 @@ class GameContainer extends React.Component {
             </Col>
             <Col md={8}>
               <GameCanvas thisPlayer={0}
-                currentlyDrawing={game.get('currentlyDrawingPlayer')}
-                currentWord={game.get('currentWord')}
-                gamePlayers={game.get('players')}
+                game={game}
                 allPlayers={this.props.allPlayers}
                 canvasSize={Map({w:800, h:600})}
                 paths={paths}

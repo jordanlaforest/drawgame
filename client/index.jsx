@@ -12,19 +12,32 @@ import {routerMiddleware} from 'react-router-redux';
 
 import App from './components/App.jsx';
 import reducer from './modules/reducer';
-import {wsConnect} from './modules/wsConnection';
 import rootSaga from './sagas';
+
+import * as auth from './modules/auth';
+import * as gameList from './modules/gameList';
+import * as wsConnection from './modules/wsConnection';
+import * as game from '../common/modules/game';
+import * as players from '../common/modules/players';
 
 const history = createHistory();
 
 const sagaMiddleware = createSagaMiddleware();
 const reduxRouterMiddleware = routerMiddleware(history);
-const enhancer = composeWithDevTools(applyMiddleware(sagaMiddleware, reduxRouterMiddleware));
+const enhancer = composeWithDevTools({
+  actionCreators: {
+    auth,
+    gameList,
+    wsConnection,
+    game,
+    players
+  }
+});
 
-const store = createStore(reducer, undefined, enhancer);
+const store = createStore(reducer, undefined, enhancer(applyMiddleware(sagaMiddleware, reduxRouterMiddleware)));
 
 sagaMiddleware.run(rootSaga);
 
-store.dispatch(wsConnect()); //Automatically connect to websocket
+store.dispatch(wsConnection.wsConnect()); //Automatically connect to websocket
 
 ReactDOM.render((<Provider store={store}><App history={history}/></Provider>), document.getElementById('view'));

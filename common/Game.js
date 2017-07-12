@@ -11,6 +11,7 @@ export default function createGame (id, name){
     currentWord: '',
     drawingData: {paths: [], curPath: []},
     inIntermission: false,
+    isStarted: false,
     chatMessages: []
   };
   return fromJS(g);

@@ -3,15 +3,21 @@ import {Map, Record, List} from 'immutable';
 
 //Actions
 export const {
-  addPlayerToGame, removePlayerFromGame, addPointToDrawing,
-  endPathInDrawing, sendAddPoint, sendEndPath, sendChatMessage, addChatMessage, leaveGame} = createActions({
-    ADD_CHAT_MESSAGE: (name, message) => Map({name, message})
+  addPlayerToGame, removePlayerFromGame,
+  addPointToDrawing, endPathInDrawing,
+  sendAddPoint, sendEndPath,
+  sendChatMessage, addChatMessage,
+  gameStart, correctGuess, outOfTime, intermissionOver,
+  leaveGame} = createActions({
+    ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
+    CORRECT_GUESS: (guesser, word) => ({guesser, word})
   },
   'SEND_CHAT_MESSAGE',
   'ADD_PLAYER_TO_GAME',
   'REMOVE_PLAYER_FROM_GAME',
   'ADD_POINT_TO_DRAWING', 'SEND_ADD_POINT',
   'END_PATH_IN_DRAWING', 'SEND_END_PATH',
+  'GAME_START', 'OUT_OF_TIME', 'INTERMISSION_OVER',
   'LEAVE_GAME'
 );
 
@@ -31,6 +37,8 @@ const GameRecord = Record({
   currentWord: '',
   drawingData: Map({paths: List(), curPath: List()}),
   inIntermission: false,
+  isStarted: false,
+  winner: undefined,
   chatMessages: List()
 });
 
@@ -39,7 +47,7 @@ const initialState = new GameRecord();
 //Reducers
 const reducer = handleActions({
   'JOIN_GAME': (state, action) => {
-    return action.payload;
+    return new GameRecord(action.payload);
   },
   [addPlayerToGame]: (state, action) => {
     return state.update('players', (players) => {
@@ -61,7 +69,6 @@ const reducer = handleActions({
     return state.updateIn(['drawingData', 'curPath'], path => path.push(action.payload));
   },
   [endPathInDrawing]: (state) => {
-    state = state.update('chatMessages', chat => chat.push(Map({name: '[debug]', message:'Added new path'})));
     return state.update('drawingData', drawingData => {
       let curPath = drawingData.get('curPath');
       if(curPath.isEmpty()){
@@ -71,6 +78,49 @@ const reducer = handleActions({
         drawing.update('paths', paths => paths.push(curPath));
         drawing.set('curPath', List());
       });
+    });
+  },
+  [gameStart]: (state, action) => {
+    return state.merge({
+      isStarted: true,
+      inIntermission: false,
+      currentWord: action.payload
+    });
+  },
+  [correctGuess]: (state, action) => {
+    let s = state.merge({
+      inIntermission: true,
+      currentWord: action.payload.word
+    });
+    let drawingPlayer = s.get('currentlyDrawingPlayer');
+    s = s.updateIn(['players', action.payload.guesser] , guesser => {
+      return guesser.set('score', guesser.get('score') + 3);
+    });
+    s = s.updateIn(['players', drawingPlayer], drawer => {
+      return drawer.set('score', drawer.get('score') + 1);
+    });
+    let scoreLimit = 10; //TODO: Move to game settings
+    let guesserScore = s.players.get(action.payload.guesser).get('score');
+    let drawerScore = s.players.get(drawingPlayer).get('score');
+    if(guesserScore >= scoreLimit || drawerScore >= scoreLimit){
+      if(drawerScore > guesserScore){
+        s = s.set('winner', drawingPlayer);
+      }else{ //Tie goes to the guesser
+        s = s.set('winner', action.payload.guesser);
+      }
+    }
+    return s;
+  },
+  [outOfTime]: (state, action) => {
+    return state.merge({
+      inIntermission: true,
+      currentWord: action.payload,
+    });
+  },
+  [intermissionOver]: (state, action) => {
+    return state.merge({
+      inIntermission: false,
+      currentlyDrawingPlayer: action.payload
     });
   }
 }, initialState);
