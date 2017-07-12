@@ -1,6 +1,7 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import {Panel, FormControl, Button} from 'react-bootstrap';
+import {List} from 'immutable';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
@@ -52,6 +53,11 @@ class Chat extends React.Component {
     this.props.sendChatCB(this.state.value);
     this.setState({value: ''});
   }
+}
+
+Chat.propTypes = {
+  messages: PropTypes.instanceOf(List).isRequired,
+  sendChatCB: PropTypes.func.isRequired
 }
 
 export default Chat;

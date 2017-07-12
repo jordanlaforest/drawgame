@@ -8,7 +8,7 @@
     "build": "webpack -p",
     "start": "node server/main.js",
     "dev-start": "nodemon --exec \"npm start\"",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .js,.jsx",
     "test": "mocha --compilers js:babel-core/register --recursive --require ./test/testHelper.js"
   },
   "engines": {
@@ -40,6 +40,7 @@
     "history": "^4.6.1",
     "immutable": "^3.7.5",
     "minimist": "^1.2.0",
+    "prop-types": "^15.5.10",
     "pug": "^2.0.0-rc.2",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",

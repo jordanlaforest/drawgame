@@ -4,16 +4,15 @@ import createGame from '../common/Game';
 import createPlayer from '../common/Player';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage,
-        addPointToDrawing, endPathInDrawing} from '../common/modules/game';
-import {addPlayer, removePlayer} from '../common/modules/players';
+  addPointToDrawing, endPathInDrawing} from '../common/modules/game';
+import {addPlayer} from '../common/modules/players';
 
 import {
   REQUEST_GAMES,
   NAME_CHANGE_EVENT, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT,
   ACTION,
   NAME_ERROR, JOIN_GAME_ERROR, UNEXPECTED_ERROR
-}
-from '../common/EventConstants';
+} from '../common/EventConstants';
 
 export default class GameServer {
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {Map, fromJS} from 'immutable';
 import { connect } from 'react-redux';
 
@@ -12,7 +13,7 @@ import GameCanvas from './GameCanvas.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
-import {sendAddPoint, sendEndPath, sendChatMessage, leaveGame} from '../../common/modules/game';
+import {GameRecord, sendAddPoint, sendEndPath, sendChatMessage, leaveGame} from '../../common/modules/game';
 
 class GameContainer extends React.Component {
   render() {
@@ -54,6 +55,15 @@ class GameContainer extends React.Component {
       </div>
     );
   }
+}
+
+GameContainer.propTypes = {
+  game: PropTypes.instanceOf(GameRecord).isRequired,
+  leaveGame: PropTypes.func.isRequired,
+  allPlayers: PropTypes.instanceOf(Map).isRequired,
+  addPoint: PropTypes.func.isRequired,
+  endPath: PropTypes.func.isRequired,
+  sendChat: PropTypes.func.isRequired
 }
 
 export default connect(

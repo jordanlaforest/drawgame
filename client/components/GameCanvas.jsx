@@ -1,5 +1,9 @@
 import React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
+import PropTypes from 'prop-types';
+import {List, Map} from 'immutable';
+
+import GameRecord from '../../common/modules/game';
 
 var noop = () => 0;
 
@@ -47,7 +51,7 @@ class GameCanvas extends React.Component {
           onMouseMove={amIDrawing ? this.drawMove : noop}
           onMouseLeave={amIDrawing ? this.drawLeave : noop}
           onMouseUp={amIDrawing ? this.drawEnd : noop}
-          ref="canvas">
+          ref={ref => this.canvasRef = ref}>
         </canvas>
       </Panel>
     );
@@ -104,7 +108,7 @@ class GameCanvas extends React.Component {
   }
 
   getCanvas() {
-    return this.refs.canvas;
+    return this.canvasRef;
   }
 
   getContext() {
@@ -151,5 +155,15 @@ class GameCanvas extends React.Component {
     this.props.endPathCB();
   }
 }
+
+GameCanvas.propTypes = {
+  game: PropTypes.instanceOf(GameRecord).isRequired,
+  paths: PropTypes.instanceOf(List).isRequired,
+  thisPlayer: PropTypes.number.isRequired,
+  allPlayers: PropTypes.instanceOf(List).isRequired,
+  canvasSize: PropTypes.instanceOf(Map).isRequired,
+  addPointCB: PropTypes.func.isRequired,
+  endPathCB: PropTypes.func.isRequired
+};
 
 export default GameCanvas;

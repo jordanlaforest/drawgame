@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {Map, List} from 'immutable';
 
 import Panel from 'react-bootstrap/lib/Panel';
 import ListGroup from 'react-bootstrap/lib/ListGroup';
@@ -24,6 +26,12 @@ class PlayerList extends React.Component {
       </Panel>
     );
   }
+}
+
+PlayerList.propTypes = {
+  gamePlayers: PropTypes.instanceOf(List).isRequired,
+  allPlayers: PropTypes.instanceOf(Map).isRequired,
+  currentlyDrawing: PropTypes.number.isRequired
 }
 
 export default PlayerList;

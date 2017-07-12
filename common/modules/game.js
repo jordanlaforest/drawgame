@@ -8,7 +8,8 @@ export const {
   sendAddPoint, sendEndPath,
   sendChatMessage, addChatMessage,
   gameStart, correctGuess, outOfTime, intermissionOver,
-  leaveGame} = createActions({
+  leaveGame} = createActions(
+  {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
     CORRECT_GUESS: (guesser, word) => ({guesser, word})
   },
@@ -27,7 +28,7 @@ export function getChatMessages(state){
 }
 
 //Default State
-const GameRecord = Record({
+export const GameRecord = Record({
   id: undefined,
   name: '',
   password: undefined,

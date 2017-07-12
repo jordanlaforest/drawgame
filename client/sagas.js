@@ -11,7 +11,7 @@ import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './m
 import {login, loginSuccess, loginFailure} from './modules/auth';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
 import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
-
+/* eslint no-constant-condition: 0, no-console: 0*/ //TODO: Remove console statements
 function connect(){
   const host = window.location.host;
   const socket = io(host, {

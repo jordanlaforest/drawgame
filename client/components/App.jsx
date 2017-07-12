@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {Route} from 'react-router-dom';
 import {ConnectedRouter} from 'react-router-redux';
+import PropTypes from 'prop-types';
 
 import Lobby from './Lobby.jsx';
 import GameContainer from './GameContainer.jsx';
@@ -27,6 +28,13 @@ class App extends React.Component {
       )
     }
   }
+}
+
+App.propTypes = {
+  connected: PropTypes.bool.isRequired,
+  loggedIn: PropTypes.bool.isRequired,
+  submitLogin: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 export default connect(state => {
