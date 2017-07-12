@@ -1,13 +1,14 @@
 import React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
 import PropTypes from 'prop-types';
-import {List, Map} from 'immutable';
+import {List, Map, fromJS} from 'immutable';
+import {connect} from 'react-redux';
 
-import GameRecord from '../../common/modules/game';
+import {GameRecord, sendAddPoint, sendEndPath} from '../../common/modules/game';
 
 var noop = () => 0;
 
-class GameCanvas extends React.Component {
+class GameCanvasContainer extends React.Component {
   constructor(props) {
     super(props);
     this.renderCallbackId = 0;
@@ -26,7 +27,7 @@ class GameCanvas extends React.Component {
     let game = this.props.game;
     let currentWord = game.currentWord;
     let currentlyDrawingId = game.players.get(game.currentlyDrawingPlayer).get('id');
-    let amIDrawing = this.props.thisPlayer === game.currentlyDrawingPlayer;
+    let amIDrawing = this.props.playerId === currentlyDrawingId;
     let name = amIDrawing ? '' : this.props.allPlayers.get(currentlyDrawingId).get('name');
     let { w, h } = this.getCanvasSize();
 
@@ -132,13 +133,13 @@ class GameCanvas extends React.Component {
 
   drawStart = event => {
     let point = this.getMousePoint(event);
-    this.props.addPointCB(this.scaleToPercent(point));
+    this.props.addPoint(this.scaleToPercent(point));
   }
 
   drawMove = event => {
     if(event.buttons > 0){ //any button pressed
       let point = this.getMousePoint(event);
-      this.props.addPointCB(this.scaleToPercent(point));
+      this.props.addPoint(this.scaleToPercent(point));
     }
   }
 
@@ -146,24 +147,39 @@ class GameCanvas extends React.Component {
     if(event.buttons > 0){
       //the player has drawn off the canvas, send one last point so the line extends to the edge
       let point = this.getMousePoint(event);
-      this.props.addPointCB(this.scaleToPercent(point));
-      this.props.endPathCB();
+      this.props.addPoint(this.scaleToPercent(point));
+      this.props.endPath();
     }
   }
 
   drawEnd = () => {
-    this.props.endPathCB();
+    this.props.endPath();
   }
 }
 
-GameCanvas.propTypes = {
+GameCanvasContainer.propTypes = {
   game: PropTypes.instanceOf(GameRecord).isRequired,
   paths: PropTypes.instanceOf(List).isRequired,
-  thisPlayer: PropTypes.number.isRequired,
-  allPlayers: PropTypes.instanceOf(List).isRequired,
+  allPlayers: PropTypes.instanceOf(Map).isRequired,
+  playerId: PropTypes.string.isRequired,
   canvasSize: PropTypes.instanceOf(Map).isRequired,
-  addPointCB: PropTypes.func.isRequired,
-  endPathCB: PropTypes.func.isRequired
+  addPoint: PropTypes.func.isRequired,
+  endPath: PropTypes.func.isRequired
 };
 
-export default GameCanvas;
+export default connect(
+  state => {
+    return {
+      allPlayers: state.players,
+      game: state.game,
+      playerId: state.auth.playerId,
+      paths: state.game.get('drawingData').get('paths').push(state.game.get('drawingData').get('curPath'))
+    }
+  },
+  dispatch => {
+    return {
+      addPoint: point => dispatch(sendAddPoint(fromJS(point))),
+      endPath: () => dispatch(sendEndPath())
+    }
+  }
+)(GameCanvasContainer);

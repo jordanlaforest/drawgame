@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Map, fromJS} from 'immutable';
-import { connect } from 'react-redux';
+import {Map} from 'immutable';
+import {connect} from 'react-redux';
 
 import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
@@ -9,11 +9,11 @@ import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
 
 import PlayerList from './PlayerList.jsx';
-import GameCanvas from './GameCanvas.jsx';
+import GameCanvasContainer from './GameCanvasContainer.jsx';
 import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
-import {GameRecord, sendAddPoint, sendEndPath, sendChatMessage, leaveGame} from '../../common/modules/game';
+import {GameRecord, sendChatMessage, leaveGame} from '../../common/modules/game';
 
 class GameContainer extends React.Component {
   render() {
@@ -21,7 +21,6 @@ class GameContainer extends React.Component {
     if(game.get('id') === undefined){
       return <div>Loading</div>;
     }
-    let paths = game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'));
     let chatMessages = game.get('chatMessages');
     return (
       <div>
@@ -40,13 +39,7 @@ class GameContainer extends React.Component {
               </Row>
             </Col>
             <Col md={8}>
-              <GameCanvas thisPlayer={0}
-                game={game}
-                allPlayers={this.props.allPlayers}
-                canvasSize={Map({w:800, h:600})}
-                paths={paths}
-                addPointCB={this.props.addPoint}
-                endPathCB={this.props.endPath}
+              <GameCanvasContainer canvasSize={Map({w:800, h:600})}
                 />
             </Col>
             <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.props.sendChat} /> </Col>
@@ -61,8 +54,6 @@ GameContainer.propTypes = {
   game: PropTypes.instanceOf(GameRecord).isRequired,
   leaveGame: PropTypes.func.isRequired,
   allPlayers: PropTypes.instanceOf(Map).isRequired,
-  addPoint: PropTypes.func.isRequired,
-  endPath: PropTypes.func.isRequired,
   sendChat: PropTypes.func.isRequired
 }
 
@@ -75,8 +66,6 @@ export default connect(
   },
   dispatch => {
     return {
-      addPoint: point => dispatch(sendAddPoint(fromJS(point))),
-      endPath: () => dispatch(sendEndPath()),
       sendChat: message => dispatch(sendChatMessage(message)),
       leaveGame: () => dispatch(leaveGame())
     };
