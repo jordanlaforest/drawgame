@@ -13,6 +13,7 @@ export const PATH_MOVE_EVENT       = 'path:move';
 export const PATH_END_EVENT        = 'path:end';
 
 export const ACTION                = 'action';
+export const ACTION_FROMJS         = 'actionFromJS';
 
 //Event errors
 export const NAME_ERROR            = 'NAME_ERROR';

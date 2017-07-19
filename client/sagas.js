@@ -5,7 +5,7 @@ import {fromJS} from 'immutable';
 
 import io from 'socket.io-client';
 
-import {ACTION, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} from '../common/EventConstants';
+import {ACTION, ACTION_FROMJS, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} from '../common/EventConstants';
 
 import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './modules/wsConnection';
 import {login, loginSuccess, loginFailure} from './modules/auth';
@@ -63,6 +63,13 @@ function subscribe(socket){
       actions.forEach(action => emit(action));
     });
 
+    socket.on(ACTION_FROMJS, actions => {
+      actions.forEach(action => {
+        action.payload = fromJS(action.payload);
+        emit(action);
+      });
+    })
+
     socket.on('disconnect', () => {
       console.log('disconnect');
       //update state
@@ -81,7 +88,6 @@ function* readFromSocket(socket){
   const channel = yield call(subscribe, socket);
   while(true){
     let action = yield take(channel);
-    action.payload = fromJS(action.payload);
     yield put(action);
   }
 }
@@ -131,13 +137,13 @@ function* handleLeaveGame(socket){
 }
 
 function* handleSendAddPoint(socket, action){
-  yield put(addPointToDrawing(action.payload));
   socket.emit('ADD_POINT_TO_DRAWING', action.payload);
+  yield put(addPointToDrawing(action.payload));
 }
 
 function* handleSendEndPath(socket){
-  yield put(endPathInDrawing());
   socket.emit('END_PATH_IN_DRAWING');
+  yield put(endPathInDrawing());
 }
 
 function* watchStoreActions(socket){

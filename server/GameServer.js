@@ -10,7 +10,7 @@ import {addPlayer} from '../common/modules/players';
 import {
   REQUEST_GAMES,
   NAME_CHANGE_EVENT, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT,
-  ACTION,
+  ACTION, ACTION_FROMJS,
   NAME_ERROR, JOIN_GAME_ERROR, UNEXPECTED_ERROR
 } from '../common/EventConstants';
 
@@ -72,7 +72,7 @@ export default class GameServer {
       let p = createPlayer(playerId, name);
       _this.state.addPlayer(p);
       let action = addPlayer(p.toJS());
-      socket.broadcast.emit(ACTION, [action]);
+      socket.broadcast.emit(ACTION_FROMJS, [action]);
 
       socket.removeAllListeners('LOGIN');
 
@@ -179,7 +179,7 @@ export default class GameServer {
       let gameId = this.state.getPlayer(playerId).get('gameId');
       if(gameId !== undefined){
         let action = addChatMessage(this.state.getPlayer(playerId).get('name'), message);
-        this.io.to(gameId).emit(ACTION, [action]);
+        this.io.to(gameId).emit(ACTION_FROMJS, [action]);
       }
     });
   }
@@ -195,8 +195,8 @@ export default class GameServer {
 
   handlePathEvent(socket, pathAction){
     let gameId = this.state.getPlayer(socket.id).get('gameId');
-    if(gameId !== undefined){
-      //TODO: Check if player is currently drawing
+    let isPlayerDrawing = this.state.checkPlayerDrawing(socket.id);
+    if(gameId !== undefined && isPlayerDrawing){
       socket.to(gameId).emit(ACTION, [pathAction]);
     }
   }
