@@ -37,4 +37,9 @@ export default class AppState {
     this.players = this.players.update(playerId, player => player.delete('gameId'));
   }
 
+  checkPlayerDrawing(playerId){
+    let game = this.getGame(this.getPlayer(playerId).get('gameId'));
+    return game.get('isStarted') && !game.get('inIntermission')
+      && game.get('players').get(game.get('currentlyDrawingPlayer')).get('id') === playerId;
+  }
 }
