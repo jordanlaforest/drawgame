@@ -39,8 +39,7 @@ class GameContainer extends React.Component {
               </Row>
             </Col>
             <Col md={8}>
-              <GameCanvasContainer canvasSize={Map({w:800, h:600})}
-                />
+              <GameCanvasContainer/>
             </Col>
             <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.props.sendChat} /> </Col>
           </Row>

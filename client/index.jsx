@@ -31,7 +31,8 @@ const enhancer = composeWithDevTools({
     wsConnection,
     game,
     players
-  }
+  },
+  maxAge: 2
 });
 
 const store = createStore(reducer, undefined, enhancer(applyMiddleware(sagaMiddleware, reduxRouterMiddleware)));
@@ -39,5 +40,19 @@ const store = createStore(reducer, undefined, enhancer(applyMiddleware(sagaMiddl
 sagaMiddleware.run(rootSaga);
 
 store.dispatch(wsConnection.wsConnect()); //Automatically connect to websocket
+
+//Calculate dispatches per second
+var dispatches = 0;
+var time = new Date().getTime();
+setInterval(() => {
+  var now = new Date().getTime();
+  var dps = dispatches/(now-time) * 1000;
+  time = now;
+  dispatches = 0;
+  console.log(dps);
+}, 1000);
+store.subscribe(() =>{
+  dispatches++;
+});
 
 ReactDOM.render((<Provider store={store}><App history={history}/></Provider>), document.getElementById('view'));

@@ -9,6 +9,7 @@ body {
 
 canvas {
   border: 1px solid grey;
+  width: 100%;
 }
 footer.footer {
   text-align: center;

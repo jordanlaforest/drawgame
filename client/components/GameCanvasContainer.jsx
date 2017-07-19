@@ -1,40 +1,22 @@
 import React from 'react';
 import Panel from 'react-bootstrap/lib/Panel';
 import PropTypes from 'prop-types';
-import {List, Map, fromJS} from 'immutable';
+import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 
-import {GameRecord, sendAddPoint, sendEndPath} from '../../common/modules/game';
-
-var noop = () => 0;
+import {sendAddPoint, sendEndPath} from '../../common/modules/game';
+import Canvas from './Canvas.jsx';
 
 class GameCanvasContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.renderCallbackId = 0;
-  }
-  componentDidUpdate(prevProps) {
-    if(prevProps.paths != this.props.paths){
-      if(this.renderCallbackId == 0){
-        this.renderCallbackId = window.requestAnimationFrame(this.renderDrawing.bind(this));
-      }
-    }else{
-      console.log('Skipped path rendering.');
-    }
-  }
-
   render() {
-    let game = this.props.game;
-    let currentWord = game.currentWord;
-    let currentlyDrawingId = game.players.get(game.currentlyDrawingPlayer).get('id');
-    let amIDrawing = this.props.playerId === currentlyDrawingId;
-    let name = amIDrawing ? '' : this.props.allPlayers.get(currentlyDrawingId).get('name');
-    let { w, h } = this.getCanvasSize();
+    let currentWord = this.props.currentWord;
+    let amIDrawing = this.props.playerId === this.props.currentlyDrawing.get('id');
+    let name = amIDrawing ? '' : this.props.currentlyDrawing.get('name');
 
     let canvasHeader;
-    if(!game.isStarted){
+    if(!this.props.gameHasStarted){
       canvasHeader = <p>Please wait for the game to start.</p>;
-    }else if(game.inIntermission){
+    }else if(this.props.gameInIntermission){
       canvasHeader = <p>The correct answer was <strong>{currentWord}</strong></p>;
     }else{
       if(amIDrawing){
@@ -45,140 +27,42 @@ class GameCanvasContainer extends React.Component {
     }
     return (
       <Panel header={ canvasHeader }>
-        <canvas
-          width={w}
-          height={h}
-          onMouseDown={amIDrawing ? this.drawStart : noop}
-          onMouseMove={amIDrawing ? this.drawMove : noop}
-          onMouseLeave={amIDrawing ? this.drawLeave : noop}
-          onMouseUp={amIDrawing ? this.drawEnd : noop}
-          ref={ref => this.canvasRef = ref}>
-        </canvas>
+        <Canvas
+          paths={this.props.paths}
+          addPoint={this.props.addPoint}
+          endPath={this.props.endPath}>
+        </Canvas>
       </Panel>
     );
-  }
-
-  renderDrawing(){
-    this.renderCallbackId = 0;
-    this.clearCanvas();
-    let ctx = this.getContext();
-    ctx.lineWidth = 5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    let paths = this.props.paths;
-    ctx.beginPath();
-    paths.forEach(this.renderPath);
-    ctx.stroke();
-  }
-
-  renderPath = (path) => {
-    let ctx = this.getContext();
-    path.forEach((point, i) => {
-      let {x, y} = this.scaleToPixels(point.toJS());
-      if(i === 0){
-        ctx.moveTo(x, y);
-      }else{
-        ctx.lineTo(x, y);
-      }
-    });
-  }
-
-  clearCanvas(){
-    let { w, h } = this.getCanvasSize();
-    this.getContext().clearRect(0, 0, w, h);
-  }
-
-  scaleToPercent({ x, y }) {
-    let { w, h } = this.getCanvasSize();
-    return {
-      x: x / w,
-      y: y / h
-    };
-  }
-
-  scaleToPixels({ x, y }) {
-    let { w, h } = this.getCanvasSize();
-    return {
-      x: x * w,
-      y: y * h
-    };
-  }
-
-  getCanvasSize() {
-    return this.props.canvasSize.toJS();
-  }
-
-  getCanvas() {
-    return this.canvasRef;
-  }
-
-  getContext() {
-    return this.getCanvas().getContext('2d');
-  }
-
-  getMouseX({ clientX }) {
-    return clientX - this.getCanvas().getBoundingClientRect().left;
-  }
-
-  getMouseY({ clientY }) {
-    return clientY - this.getCanvas().getBoundingClientRect().top;
-  }
-
-  getMousePoint(event) {
-    return {
-      x: this.getMouseX(event),
-      y: this.getMouseY(event)
-    };
-  }
-
-  drawStart = event => {
-    let point = this.getMousePoint(event);
-    this.props.addPoint(this.scaleToPercent(point));
-  }
-
-  drawMove = event => {
-    if(event.buttons > 0){ //any button pressed
-      let point = this.getMousePoint(event);
-      this.props.addPoint(this.scaleToPercent(point));
-    }
-  }
-
-  drawLeave = event => {
-    if(event.buttons > 0){
-      //the player has drawn off the canvas, send one last point so the line extends to the edge
-      let point = this.getMousePoint(event);
-      this.props.addPoint(this.scaleToPercent(point));
-      this.props.endPath();
-    }
-  }
-
-  drawEnd = () => {
-    this.props.endPath();
   }
 }
 
 GameCanvasContainer.propTypes = {
-  game: PropTypes.instanceOf(GameRecord).isRequired,
+  currentlyDrawing: PropTypes.instanceOf(Map).isRequired,
+  currentWord: PropTypes.string.isRequired,
+  gameHasStarted: PropTypes.bool.isRequired,
+  gameInIntermission: PropTypes.bool.isRequired,
   paths: PropTypes.instanceOf(List).isRequired,
-  allPlayers: PropTypes.instanceOf(Map).isRequired,
   playerId: PropTypes.string.isRequired,
-  canvasSize: PropTypes.instanceOf(Map).isRequired,
   addPoint: PropTypes.func.isRequired,
   endPath: PropTypes.func.isRequired
 };
 
 export default connect(
   state => {
+    let game = state.game;
     return {
-      allPlayers: state.players,
-      game: state.game,
+      currentlyDrawing: state.players.get(game.players.get(game.currentlyDrawingPlayer).get('id')),
+      currentWord: game.currentWord,
+      gameHasStarted: game.isStarted,
+      gameInIntermission: game.inIntermission,
       playerId: state.auth.playerId,
-      paths: state.game.get('drawingData').get('paths').push(state.game.get('drawingData').get('curPath'))
+      paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'))
     }
   },
   dispatch => {
     return {
-      addPoint: point => dispatch(sendAddPoint(fromJS(point))),
+      addPoint: point => dispatch(sendAddPoint(point)),
       endPath: () => dispatch(sendEndPath())
     }
   }
