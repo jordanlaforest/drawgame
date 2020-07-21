@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {List} from 'immutable';
 import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -44,7 +45,7 @@ class Lobby extends React.Component {
 }
 
 Lobby.propTypes = {
-  games: PropTypes.instanceOf(Map).isRequired,
+  games: PropTypes.instanceOf(List).isRequired,
   refreshGames: PropTypes.func.isRequired
 }
 

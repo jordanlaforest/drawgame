@@ -49,7 +49,7 @@ setInterval(() => {
   var dps = dispatches/(now-time) * 1000;
   time = now;
   dispatches = 0;
-  console.log(dps);
+  console.log("Dispatches/sec: " + dps);
 }, 1000);
 store.subscribe(() =>{
   dispatches++;
