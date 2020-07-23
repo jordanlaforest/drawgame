@@ -5,7 +5,7 @@ import createPlayer from '../common/Player';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage,
   addPointToDrawing, endPathInDrawing} from '../common/modules/game';
-import {addPlayer} from '../common/modules/players';
+import {addPlayer, removePlayer} from '../common/modules/players';
 
 import {
   REQUEST_GAMES,
@@ -40,13 +40,17 @@ export default class GameServer {
 
       this.listenForInitEvent(socket);
 
-      // disconnect event
       socket.on('disconnect', () => {
-        //if they are in a game
-        //  remove player from socket.io room
-        //  dispatch player leave game
-        //dispatch remove player
         let player = this.state.getPlayer(socket.id);
+        if(player != undefined && player.has('gameId')){
+          let gameId = player.get('gameId');
+          let a = removePlayerFromGame(socket.id);
+          this.state.removePlayerFromGame(gameId, socket.id);
+          socket.to(gameId).emit(ACTION, [a]);
+        }
+        let action = removePlayer(socket.id);
+        this.state.removePlayer(socket.id);
+        socket.broadcast.emit(ACTION, [action]);
         let name = player !== undefined ? player.get('name') : 'someone';
         let message = `${name} has disconnected`;
         console.log(message);
