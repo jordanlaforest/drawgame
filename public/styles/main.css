@@ -11,6 +11,11 @@ canvas {
   border: 1px solid grey;
   width: 100%;
 }
+
+.server-message {
+  text-align: center;
+}
+
 footer.footer {
   text-align: center;
   position: absolute;

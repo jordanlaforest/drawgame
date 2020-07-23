@@ -6,13 +6,14 @@ export const {
   addPlayerToGame, removePlayerFromGame,
   addPointToDrawing, endPathInDrawing,
   sendAddPoint, sendEndPath,
-  sendChatMessage, addChatMessage,
+  sendChatMessage, addChatMessage, addServerMessage,
   gameStart, correctGuess, outOfTime, intermissionOver,
   leaveGame} = createActions(
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
     CORRECT_GUESS: (guesser, word) => ({guesser, word})
   },
+  'ADD_SERVER_MESSAGE',
   'SEND_CHAT_MESSAGE',
   'ADD_PLAYER_TO_GAME',
   'REMOVE_PLAYER_FROM_GAME',
@@ -66,6 +67,9 @@ const reducer = handleActions({
   [addChatMessage]: (state, action) => {
     return state.update('chatMessages', chat => chat.push(action.payload));
   },
+  [addServerMessage]: (state, action) => {
+    return state.update('chatMessages', chat => chat.push(Map({message: action.payload})));
+  },
   [addPointToDrawing]: (state, action) => {
     return state.updateIn(['drawingData', 'curPath'], path => path.push(action.payload));
   },
@@ -95,7 +99,7 @@ const reducer = handleActions({
     });
     let drawingPlayer = s.get('currentlyDrawingPlayer');
     s = s.updateIn(['players', action.payload.guesser] , guesser => {
-      return guesser.set('score', guesser.get('score') + 3);
+      return guesser.set('score', guesser.get('score') + 3); //TODO: Move scoring values to some config
     });
     s = s.updateIn(['players', drawingPlayer], drawer => {
       return drawer.set('score', drawer.get('score') + 1);

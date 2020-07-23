@@ -31,7 +31,11 @@ class Chat extends React.Component {
         <ul className="list-unstyled">
           {
             this.props.messages.valueSeq().map( (msg, idx) => {
-              return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
+              if(msg.has('name')){
+                return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
+              }else{
+                return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>
+              }
             })
           }
         </ul>

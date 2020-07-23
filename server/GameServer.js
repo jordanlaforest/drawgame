@@ -3,7 +3,7 @@ import AppState from '../common/AppState';
 import createGame from '../common/Game';
 import createPlayer from '../common/Player';
 
-import {addPlayerToGame, removePlayerFromGame, addChatMessage,
+import {addPlayerToGame, removePlayerFromGame, addChatMessage, addServerMessage,
   addPointToDrawing, endPathInDrawing} from '../common/modules/game';
 import {addPlayer, removePlayer} from '../common/modules/players';
 
@@ -42,12 +42,7 @@ export default class GameServer {
 
       socket.on('disconnect', () => {
         let player = this.state.getPlayer(socket.id);
-        if(player != undefined && player.has('gameId')){
-          let gameId = player.get('gameId');
-          let a = removePlayerFromGame(socket.id);
-          this.state.removePlayerFromGame(gameId, socket.id);
-          socket.to(gameId).emit(ACTION, [a]);
-        }
+        this.leaveGame(socket);
         let action = removePlayer(socket.id);
         this.state.removePlayer(socket.id);
         socket.broadcast.emit(ACTION, [action]);
@@ -168,12 +163,7 @@ export default class GameServer {
 
   listenForLeaveEvent(socket) {
     socket.on(LEAVE_GAME_EVENT, () => {
-      let gameId = this.state.getPlayer(socket.id).get('gameId');
-      if(gameId !== undefined){
-        let action = removePlayerFromGame(socket.id);
-        this.state.removePlayerFromGame(gameId, socket.id);
-        socket.to(gameId).emit(ACTION, [action]);
-      }
+      this.leaveGame(socket);
     });
   }
 
@@ -211,17 +201,24 @@ export default class GameServer {
       return {err: this.createError(JOIN_GAME_ERROR, 'Error joining game', 'Could not find the game requested')};
     }
 
-    let oldGameId = this.state.getPlayer(socket.id).get('gameId');
-    if(oldGameId != undefined){
-      let a = removePlayerFromGame(socket.id);
-      this.state.removePlayerFromGame(oldGameId, socket.id);
-      socket.to(oldGameId).emit(ACTION, [a]);
-    }
+    this.leaveGame(socket); //Leave game if currently in one
+
     let action = addPlayerToGame(socket.id);
     this.state.addPlayerToGame(gameId, socket.id);
     socket.join(gameId);
     socket.to(gameId).emit(ACTION, [action]);
     return undefined; //No errors
+  }
+
+  leaveGame(socket){
+    let player = this.state.getPlayer(socket.id);
+    if(player != undefined && player.has('gameId')){
+      let gameId = player.get('gameId');
+      let a = removePlayerFromGame(socket.id);
+      this.state.removePlayerFromGame(gameId, socket.id);
+      let msgAction = addServerMessage(player.get('name') + ' has left the game');
+      socket.to(gameId).emit(ACTION_FROMJS, [a, msgAction]);
+    }
   }
 
   // Error Checking
