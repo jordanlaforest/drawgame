@@ -206,7 +206,8 @@ export default class GameServer {
     let action = addPlayerToGame(socket.id);
     this.state.addPlayerToGame(gameId, socket.id);
     socket.join(gameId);
-    socket.to(gameId).emit(ACTION, [action]);
+    let msgAction = addServerMessage(this.state.getPlayer(socket.id).get('name') + ' has joined the game');
+    socket.to(gameId).emit(ACTION, [action, msgAction]);
     return undefined; //No errors
   }
 
@@ -214,10 +215,11 @@ export default class GameServer {
     let player = this.state.getPlayer(socket.id);
     if(player != undefined && player.has('gameId')){
       let gameId = player.get('gameId');
+      socket.leave(gameId);
       let a = removePlayerFromGame(socket.id);
       this.state.removePlayerFromGame(gameId, socket.id);
       let msgAction = addServerMessage(player.get('name') + ' has left the game');
-      socket.to(gameId).emit(ACTION_FROMJS, [a, msgAction]);
+      socket.to(gameId).emit(ACTION, [a, msgAction]);
     }
   }
 
