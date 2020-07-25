@@ -195,7 +195,6 @@ export default class GameServer {
         console.log('Unknown command');
       }
     }
-    console.log('Got cmd ' + cmd + ' with arg: ' + args);
   }
 
   listenForPathEvents(socket) {
