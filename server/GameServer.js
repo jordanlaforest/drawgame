@@ -172,10 +172,30 @@ export default class GameServer {
       let playerId = socket.id;
       let gameId = this.state.getPlayer(playerId).get('gameId');
       if(gameId !== undefined){
-        let action = addChatMessage(this.state.getPlayer(playerId).get('name'), message);
-        this.io.to(gameId).emit(ACTION_FROMJS, [action]);
+        if(message.startsWith('\\')){
+          this.serverCommand(message.substring(1));
+        }else{
+          let action = addChatMessage(this.state.getPlayer(playerId).get('name'), message);
+          this.io.to(gameId).emit(ACTION_FROMJS, [action]);
+        }
       }
     });
+  }
+
+  serverCommand(command){
+    let cmd = command.split(' ')[0];
+    let args = command.substring(cmd.length + 1);
+    switch(cmd){
+      case 'broadcast': {
+        let msgAction = addServerMessage(args);
+        this.io.emit(ACTION, [msgAction]);
+        break;
+      }
+      default: {
+        console.log('Unknown command');
+      }
+    }
+    console.log('Got cmd ' + cmd + ' with arg: ' + args);
   }
 
   listenForPathEvents(socket) {
