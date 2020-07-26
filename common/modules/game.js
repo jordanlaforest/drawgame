@@ -46,6 +46,10 @@ export const GameRecord = Record({
 
 const initialState = new GameRecord();
 
+export function createGame (id, name){
+  return initialState.set('id', id).set('name', name);
+}
+
 //Reducers
 const reducer = handleActions({
   'JOIN_GAME': (state, action) => {

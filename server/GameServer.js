@@ -1,11 +1,9 @@
 import io from 'socket.io';
 import AppState from '../common/AppState';
-import createGame from '../common/Game';
-import createPlayer from '../common/Player';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage, addServerMessage,
-  addPointToDrawing, endPathInDrawing} from '../common/modules/game';
-import {addPlayer, removePlayer} from '../common/modules/players';
+  addPointToDrawing, endPathInDrawing, createGame} from '../common/modules/game';
+import {addPlayer, removePlayer, createPlayer} from '../common/modules/players';
 
 import {
   REQUEST_GAMES,

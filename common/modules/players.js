@@ -11,6 +11,14 @@ export const {addPlayer, removePlayer} = createActions(
 
 const initialState = Map();
 
+export function createPlayer(id, name){
+  let p = {
+    id: id,
+    name: name
+  };
+  return Map(p);
+}
+
 const reducer = handleActions({
   [loginSuccess]: (state, action) => {
     if(action.payload.players !== undefined){
