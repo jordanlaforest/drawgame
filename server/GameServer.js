@@ -266,7 +266,7 @@ export default class GameServer {
     let players = this.state.players;
     let nameTaken = false;
     players.forEach(p => {
-      if(p.name === name){
+      if(p.get('name') === name){
         nameTaken = true; //TODO: Stop the loop if we find a match
       }
     });
