@@ -32,7 +32,7 @@ class Lobby extends React.Component {
                 <tr key={game.get('id')}>
                   <td>{game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }</td>
                   <td>{game.get('name')}</td>
-                  <td>?/?</td>
+                  <td>{game.get('players').size + '/' + game.get('maxPlayers')}</td>
                   <td> <LinkContainer to={`/game/${game.get('id')}`}><Button>Join</Button></LinkContainer> </td>
                 </tr>
               )
