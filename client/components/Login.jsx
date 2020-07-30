@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel, FormControl, Button, Grid, Row, Col} from 'react-bootstrap';
+import {Card, FormControl, Button, Container, Row, Col} from 'react-bootstrap';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
@@ -12,10 +12,10 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Grid fluid>
+      <Container fluid>
         <Row>
           <Col md={2} className="center-block gridClearfix">
-            <Panel header="Choose a name">
+            <Card header="Choose a name">
               <FormControl
                 type="text"
                 onChange={this.onChange}
@@ -25,10 +25,10 @@ class Login extends React.Component {
               <span className="input-group-btn">
                 <Button onClick={this.submit}>Submit</Button>
               </span>
-            </Panel>
+            </Card>
           </Col>
         </Row>
-      </Grid>
+      </Container>
     );
   }
 
@@ -50,6 +50,6 @@ class Login extends React.Component {
 
 Login.propTypes = {
   submitCB: PropTypes.func.isRequired
-}
+};
 
 export default Login;

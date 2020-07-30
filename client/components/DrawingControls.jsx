@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Panel from 'react-bootstrap/lib/Panel';
+import Card from 'react-bootstrap/Card';
 
 class DrawingControls extends React.Component {
   render() {
     return (
-      <Panel header="Drawing Controls">
+      <Card header="Drawing Controls">
         <h2>Drawing Controls</h2>
-      </Panel>
+      </Card>
     );
   }
 }

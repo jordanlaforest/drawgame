@@ -147,6 +147,7 @@ export default class GameServer {
 
   listenForJoinEvent(socket){
     socket.on(JOIN_GAME_EVENT, (data, cb) => {
+      console.log('Joining with data: ', data.gameId);
       let joinError = this.joinGame(data.gameId, socket);
       if(joinError !== undefined){
         cb(joinError);
@@ -215,6 +216,7 @@ export default class GameServer {
   joinGame(gameId, socket){
     let game = this.state.getGame(gameId);
     if(game === undefined){
+      console.log('Could not join gameId: ');
       return {err: this.createError(JOIN_GAME_ERROR, 'Error joining game', 'Could not find the game requested')};
     }
 

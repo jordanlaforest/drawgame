@@ -1,14 +1,16 @@
-import {push} from 'react-router-redux';
-import {take, put, call, race} from 'redux-saga/effects';
-import {eventChannel, END, takeEvery, takeLatest} from 'redux-saga';
+import {take, put, call, race, all, takeEvery, takeLatest} from 'redux-saga/effects';
+import {eventChannel, END} from 'redux-saga';
 import {fromJS} from 'immutable';
 
 import io from 'socket.io-client';
+
+import {historySingleton as history} from './historySingleton';
 
 import {ACTION, ACTION_FROMJS, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} from '../common/EventConstants';
 
 import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './modules/wsConnection';
 import {login, loginSuccess, loginFailure} from './modules/auth';
+import {joinGame, joinGameSuccess, joinGameFailure} from './modules/joinGame';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
 import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
 /* eslint no-constant-condition: 0, no-console: 0*/ //TODO: Remove console statements
@@ -68,7 +70,7 @@ function subscribe(socket){
         action.payload = fromJS(action.payload);
         emit(action);
       });
-    })
+    });
 
     socket.on('disconnect', () => {
       console.log('disconnect');
@@ -110,30 +112,29 @@ function* handleRequestGames(socket){
   }
 }
 
-function* handleLocationChange(socket, action){
-  if(action.payload.pathname.startsWith('/game/')){
-    let gameId = action.payload.pathname.substring(6);
-    let promise = new Promise((resolve, reject) => {
-      socket.emit(JOIN_GAME_EVENT, {gameId}, res => {
-        if(res.err){
-          reject(res.err);
-        }else{
-          resolve(res.game);
-        }
-      });
-    }).then(game => ({game}), error => ({error}));
-    const {game, error} = yield promise;
-    if(game){
-      yield put({type: 'JOIN_GAME', payload: fromJS(game)});
-    }else{
-      console.log('Join error: ', error);
-    }
+function* handleJoinGame(socket, action){
+  let gameId = action.payload.gameId;
+  let promise = new Promise((resolve, reject) => {
+    socket.emit(JOIN_GAME_EVENT, {gameId}, res => {
+      if(res.err){
+        reject(res.err);
+      }else{
+        resolve(res.game);
+      }
+    });
+  }).then(game => ({game}), error => ({error}));
+  const {game, error} = yield promise;
+  if(game){
+    //yield put({type: 'JOIN_GAME_SUCCESS', payload: fromJS(game)});
+    yield put(joinGameSuccess(fromJS(game)));
+  }else{
+    console.log('Join error: ', error);
   }
 }
 
-function* handleLeaveGame(socket){
+function handleLeaveGame(socket){
   socket.emit(LEAVE_GAME_EVENT);
-  yield put(push('/'));
+  history.push('/');
 }
 
 function* handleSendAddPoint(socket, action){
@@ -153,7 +154,7 @@ function* watchStoreActions(socket){
     socket.emit(CHAT_EVENT, action.payload);
   }, socket);
   yield takeLatest(refreshGames, handleRequestGames, socket);
-  yield takeLatest('@@router/LOCATION_CHANGE', handleLocationChange, socket);
+  yield takeLatest(joinGame, handleJoinGame, socket);
   yield takeLatest('LEAVE_GAME', handleLeaveGame, socket);
 }
 
@@ -189,7 +190,7 @@ function* socketSaga() {
 }
 
 export default function* rootSaga(){
-  yield [
+  yield all([
     socketSaga()
-  ];
+  ]);
 }

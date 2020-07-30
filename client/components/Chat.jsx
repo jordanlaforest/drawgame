@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel, FormControl, Button} from 'react-bootstrap';
+import {Card, FormControl, Button} from 'react-bootstrap';
 import {List} from 'immutable';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
@@ -27,19 +27,19 @@ class Chat extends React.Component {
     );
 
     return (
-      <Panel header="Chat" footer={panelFooter} >
+      <Card header="Chat" footer={panelFooter} >
         <ul className="list-unstyled">
           {
             this.props.messages.valueSeq().map( (msg, idx) => {
               if(msg.has('name')){
                 return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
               }else{
-                return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>
+                return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>;
               }
             })
           }
         </ul>
-      </Panel>
+      </Card>
     );
   }
 
@@ -62,6 +62,6 @@ class Chat extends React.Component {
 Chat.propTypes = {
   messages: PropTypes.instanceOf(List).isRequired,
   sendChatCB: PropTypes.func.isRequired
-}
+};
 
 export default Chat;

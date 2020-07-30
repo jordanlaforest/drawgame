@@ -52,8 +52,9 @@ export function createGame (id, name){
 
 //Reducers
 const reducer = handleActions({
-  'JOIN_GAME': (state, action) => {
-    return new GameRecord(action.payload);
+  'JOIN_GAME_SUCCESS': (state, action) => {
+    console.log(action);
+    return new GameRecord(action.payload.game);
   },
   [addPlayerToGame]: (state, action) => {
     return state.update('players', (players) => {

@@ -1,4 +1,4 @@
-import 'babel-polyfill';
+import '@babel/polyfill';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -7,27 +7,24 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import {Provider} from 'react-redux';
 
-import createHistory from 'history/createBrowserHistory';
-import {routerMiddleware} from 'react-router-redux';
-
 import App from './components/App.jsx';
 import reducer from './modules/reducer';
 import rootSaga from './sagas';
+import {historySingleton as history} from './historySingleton';
 
 import * as auth from './modules/auth';
 import * as gameList from './modules/gameList';
+import * as joinGame from './modules/joinGame';
 import * as wsConnection from './modules/wsConnection';
 import * as game from '../common/modules/game';
 import * as players from '../common/modules/players';
 
-const history = createHistory();
-
 const sagaMiddleware = createSagaMiddleware();
-const reduxRouterMiddleware = routerMiddleware(history);
 const enhancer = composeWithDevTools({
   actionCreators: {
     auth,
     gameList,
+    joinGame,
     wsConnection,
     game,
     players
@@ -35,7 +32,7 @@ const enhancer = composeWithDevTools({
   maxAge: 2
 });
 
-const store = createStore(reducer, undefined, enhancer(applyMiddleware(sagaMiddleware, reduxRouterMiddleware)));
+const store = createStore(reducer, undefined, enhancer(applyMiddleware(sagaMiddleware)));
 
 sagaMiddleware.run(rootSaga);
 
@@ -49,7 +46,7 @@ setInterval(() => {
   var dps = dispatches/(now-time) * 1000;
   time = now;
   dispatches = 0;
-  console.log("Dispatches/sec: " + dps);
+  console.log('Dispatches/sec: ' + dps);
 }, 1000);
 store.subscribe(() =>{
   dispatches++;

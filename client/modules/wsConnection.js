@@ -2,8 +2,7 @@ import {createActions, handleActions} from 'redux-actions';
 import {Record} from 'immutable';
 
 //Actions
-export const {wsConnect, wsConnectSuccess, wsConnectFailure,
-              wsDisconnected} = createActions(
+export const {wsConnect, wsConnectSuccess, wsConnectFailure, wsDisconnected} = createActions(
   'WS_CONNECT',
   'WS_CONNECT_SUCCESS',
   'WS_CONNECT_FAILURE',

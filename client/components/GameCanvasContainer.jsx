@@ -1,5 +1,5 @@
 import React from 'react';
-import Panel from 'react-bootstrap/lib/Panel';
+import Card from 'react-bootstrap/Card';
 import PropTypes from 'prop-types';
 import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
@@ -26,13 +26,13 @@ class GameCanvasContainer extends React.Component {
       }
     }
     return (
-      <Panel header={ canvasHeader }>
+      <Card header={ canvasHeader }>
         <Canvas
           paths={this.props.paths}
           addPoint={this.props.addPoint}
           endPath={this.props.endPath}>
         </Canvas>
-      </Panel>
+      </Card>
     );
   }
 }
@@ -58,12 +58,12 @@ export default connect(
       gameInIntermission: game.inIntermission,
       playerId: state.auth.playerId,
       paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'))
-    }
+    };
   },
   dispatch => {
     return {
       addPoint: point => dispatch(sendAddPoint(point)),
       endPath: () => dispatch(sendEndPath())
-    }
+    };
   }
 )(GameCanvasContainer);

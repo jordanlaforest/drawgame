@@ -17,10 +17,10 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['env', { modules: false }],
-              'react'
+              ['@babel/preset-env', { modules: false }],
+              '@babel/preset-react'
             ],
-            plugins: ['transform-class-properties', 'transform-regenerator'],
+            plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-transform-regenerator'],
             cacheDirectory: true
           }
         }
