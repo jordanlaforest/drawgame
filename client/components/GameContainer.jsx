@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import {Map} from 'immutable';
 import {connect} from 'react-redux';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import {Grid, Row, Col, Button} from 'react-bootstrap';
 
 import PlayerList from './PlayerList.jsx';
 import GameCanvasContainer from './GameCanvasContainer.jsx';
@@ -26,7 +23,7 @@ class GameContainer extends React.Component {
       <div>
         <Button onClick={this.props.leaveGame}>Leave Game</Button>
         <Button>Skip Word</Button>
-        <Container fluid>
+        <Grid fluid>
           <Row>
             <Col md={2}>
               <Row>
@@ -43,7 +40,7 @@ class GameContainer extends React.Component {
             </Col>
             <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.props.sendChat} /> </Col>
           </Row>
-        </Container>
+        </Grid>
       </div>
     );
   }

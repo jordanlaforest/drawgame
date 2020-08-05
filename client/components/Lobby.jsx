@@ -4,9 +4,7 @@ import {List} from 'immutable';
 import { connect } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 
-import Table from 'react-bootstrap/Table';
-//import Glyphicon from 'react-bootstrap/Glyphicon';
-import Button from 'react-bootstrap/Button';
+import {Table, Glyphicon, Button} from 'react-bootstrap';
 
 import {getGameList, refreshGames} from '../modules/gameList';
 
@@ -16,7 +14,7 @@ class Lobby extends React.Component {
     return (
       <div>
         {/*<ButtonLink to="creategame">Create Game</ButtonLink>*/}
-        <Button onClick={this.props.refreshGames}>R{/*<Glyphicon glyph="refresh" />*/}</Button>
+        <Button onClick={this.props.refreshGames}><Glyphicon glyph="refresh" /></Button>
         <Table striped bordered condensed hover>
           <thead>
             <tr>
@@ -30,7 +28,7 @@ class Lobby extends React.Component {
             {
               games.map(game =>
                 <tr key={game.get('id')}>
-                  <td>{game.get('password') ? 'L'/*<Glyphicon glyph="lock" />*/ : <div></div> }</td>
+                  <td>{game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }</td>
                   <td>{game.get('name')}</td>
                   <td>{game.get('players').size + '/' + game.get('maxPlayers')}</td>
                   <td> <LinkContainer to={`/game/${game.get('id')}`}><Button>Join</Button></LinkContainer> </td>

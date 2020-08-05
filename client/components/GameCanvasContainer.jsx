@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from 'react-bootstrap/Card';
+import {Panel} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
@@ -26,13 +26,13 @@ class GameCanvasContainer extends React.Component {
       }
     }
     return (
-      <Card header={ canvasHeader }>
+      <Panel header={ canvasHeader }>
         <Canvas
           paths={this.props.paths}
           addPoint={this.props.addPoint}
           endPath={this.props.endPath}>
         </Canvas>
-      </Card>
+      </Panel>
     );
   }
 }

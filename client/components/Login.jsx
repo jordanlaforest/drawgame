@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, FormControl, Button, Container, Row, Col} from 'react-bootstrap';
+import {Panel, FormControl, Button, Grid, Row, Col} from 'react-bootstrap';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
@@ -12,10 +12,10 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Container fluid>
+      <Grid fluid>
         <Row>
           <Col md={2} className="center-block gridClearfix">
-            <Card header="Choose a name">
+            <Panel header="Choose a name">
               <FormControl
                 type="text"
                 onChange={this.onChange}
@@ -25,10 +25,10 @@ class Login extends React.Component {
               <span className="input-group-btn">
                 <Button onClick={this.submit}>Submit</Button>
               </span>
-            </Card>
+            </Panel>
           </Col>
         </Row>
-      </Container>
+      </Grid>
     );
   }
 

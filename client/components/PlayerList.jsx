@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Map, List} from 'immutable';
 
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
+import {Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 
 class PlayerList extends React.Component {
   render() {
     let { gamePlayers, allPlayers, currentlyDrawing } = this.props;
     return (
-      <Card header="Players">
+      <Panel header="Players">
         <ListGroup>
           {
             gamePlayers.valueSeq()
@@ -23,7 +21,7 @@ class PlayerList extends React.Component {
               })
           }
         </ListGroup>
-      </Card>
+      </Panel>
     );
   }
 }

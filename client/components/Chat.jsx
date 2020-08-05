@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, FormControl, Button} from 'react-bootstrap';
+import {Panel, FormControl, Button} from 'react-bootstrap';
 import {List} from 'immutable';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
@@ -27,7 +27,7 @@ class Chat extends React.Component {
     );
 
     return (
-      <Card header="Chat" footer={panelFooter} >
+      <Panel header="Chat" footer={panelFooter} >
         <ul className="list-unstyled">
           {
             this.props.messages.valueSeq().map( (msg, idx) => {
@@ -39,7 +39,7 @@ class Chat extends React.Component {
             })
           }
         </ul>
-      </Card>
+      </Panel>
     );
   }
 
