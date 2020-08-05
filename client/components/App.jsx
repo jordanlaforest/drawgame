@@ -1,6 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import {Route, Router, Switch} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {ConnectedRouter} from 'connected-react-router/immutable';
+import {Route, Switch} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Lobby from './Lobby.jsx';
@@ -18,14 +19,14 @@ class App extends React.Component {
       return <Login submitCB={this.props.submitLogin} />;
     }else{
       return (
-        <Router history={this.props.history}>
+        <ConnectedRouter history={this.props.history}>
           <div>
             <Switch>
               <Route exact path="/" component={Lobby} />
               <Route path="/game/:gameid" component={GameContainer}/>
             </Switch>
           </div>
-        </Router>
+        </ConnectedRouter>
       );
     }
   }

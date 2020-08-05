@@ -1,10 +1,9 @@
+import {push} from 'connected-react-router';
 import {take, put, call, race, all, takeEvery, takeLatest} from 'redux-saga/effects';
 import {eventChannel, END} from 'redux-saga';
 import {fromJS} from 'immutable';
 
 import io from 'socket.io-client';
-
-import {historySingleton as history} from './historySingleton';
 
 import {ACTION, ACTION_FROMJS, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT, CHAT_EVENT} from '../common/EventConstants';
 
@@ -125,16 +124,15 @@ function* handleJoinGame(socket, action){
   }).then(game => ({game}), error => ({error}));
   const {game, error} = yield promise;
   if(game){
-    //yield put({type: 'JOIN_GAME_SUCCESS', payload: fromJS(game)});
     yield put(joinGameSuccess(fromJS(game)));
   }else{
     console.log('Join error: ', error);
   }
 }
 
-function handleLeaveGame(socket){
+function* handleLeaveGame(socket){
   socket.emit(LEAVE_GAME_EVENT);
-  history.push('/');
+  yield put(push('/'));
 }
 
 function* handleSendAddPoint(socket, action){

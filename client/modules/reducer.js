@@ -1,5 +1,6 @@
 import { Record } from 'immutable';
 import { combineReducers } from 'redux-immutable';
+import { connectRouter } from 'connected-react-router/immutable';
 
 import wsConnection from './wsConnection';
 import auth from './auth';
@@ -9,6 +10,7 @@ import gameList from './gameList';
 import game from '../../common/modules/game';
 
 const StateRecord = Record({
+  router: undefined,
   auth: undefined,
   joinGame: undefined,
   wsConnection: undefined,
@@ -17,7 +19,8 @@ const StateRecord = Record({
   game: undefined
 });
 
-export default combineReducers({
+const createRootReducer = (history) => combineReducers({
+  router: connectRouter(history),
   auth,
   joinGame,
   wsConnection,
@@ -25,3 +28,5 @@ export default combineReducers({
   gameList,
   game
 }, StateRecord);
+
+export default createRootReducer;
