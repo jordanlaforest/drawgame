@@ -1,5 +1,5 @@
-import {push} from 'connected-react-router';
-import {take, put, call, race, all, takeEvery, takeLatest} from 'redux-saga/effects';
+import {push} from 'connected-react-router/immutable';
+import {take, put, call, race, all, takeEvery, takeLatest, select} from 'redux-saga/effects';
 import {eventChannel, END} from 'redux-saga';
 import {fromJS} from 'immutable';
 
@@ -13,6 +13,10 @@ import {joinGame, joinGameSuccess, joinGameFailure} from './modules/joinGame';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
 import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
 /* eslint no-constant-condition: 0, no-console: 0*/ //TODO: Remove console statements
+
+//Selectors
+const getPathname = state => state.getIn(['router', 'location', 'pathname']);
+
 function connect(){
   const host = window.location.host;
   const socket = io(host, {
@@ -54,6 +58,13 @@ function* handleAuth(socket){
     }
   }
   yield put(loginSuccess(response.playerId, fromJS(response.players), fromJS(response.games)));
+
+  const pathname = yield select(getPathname);
+  if(pathname.startsWith('/game/')){ //Automatically attempt to join game when navigating to /game/:gameid
+    let gameId = pathname.substring(6);
+    yield put(joinGame(gameId));
+  }
+
   yield take('LOGOUT');
   console.log('Logout here');
 }
