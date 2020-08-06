@@ -33,7 +33,7 @@ const enhancer = composeWithDevTools({
     game,
     players
   },
-  maxAge: 2
+  maxAge: 30
 });
 
 const store = createStore(createRootReducer(history), undefined, enhancer(applyMiddleware(sagaMiddleware, routerMiddleware(history))));
