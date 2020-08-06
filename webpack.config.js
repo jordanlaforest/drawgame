@@ -1,12 +1,12 @@
 var path = require('path');
-var webpack = require('webpack');
 
 module.exports = {
   entry: './client/index.jsx',
   mode: 'development',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'public'),
+    publicPath: '/assets/'
   },
   context: __dirname,
   module: {
@@ -28,7 +28,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin()
-  ]
+  plugins: []
 };
