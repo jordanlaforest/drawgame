@@ -144,6 +144,7 @@ function* handleJoinGame(socket, action){
 function* handleLeaveGame(socket){
   socket.emit(LEAVE_GAME_EVENT);
   yield put(push('/'));
+  yield put(refreshGames()); //Update list of games in the lobby
 }
 
 function* handleSendAddPoint(socket, action){
