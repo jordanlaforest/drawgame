@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {List} from 'immutable';
 import { connect } from 'react-redux';
-import { LinkContainer } from 'react-router-bootstrap';
 
 import {Table, Glyphicon, Button} from 'react-bootstrap';
 
 import {getGameList, refreshGames} from '../modules/gameList';
-import {joinGame} from '../modules/joinGame';
+import {joinGame, getJoiningGameId} from '../modules/joinGame';
 
 class Lobby extends React.Component {
   render() {
@@ -33,9 +32,13 @@ class Lobby extends React.Component {
                   <td>{game.get('name')}</td>
                   <td>{game.get('players').size + '/' + game.get('maxPlayers')}</td>
                   <td>
-                    <LinkContainer to={`/game/${game.get('id')}`}>
-                      <Button onClick={() => this.props.joinGame(game.get('id'))}>Join</Button>
-                    </LinkContainer>
+                    <Button
+                      bsStyle='primary'
+                      onClick={() => this.props.joiningGameId === undefined ? this.props.joinGame(game.get('id')) : undefined}
+                      disabled={this.props.joiningGameId === game.get('id')}
+                    >
+                      {this.props.joiningGameId === game.get('id') ? 'Joining' : 'Join'}
+                    </Button>
                   </td>
                 </tr>
               )
@@ -49,6 +52,7 @@ class Lobby extends React.Component {
 
 Lobby.propTypes = {
   games: PropTypes.instanceOf(List).isRequired,
+  joiningGameId: PropTypes.string,
   refreshGames: PropTypes.func.isRequired,
   joinGame: PropTypes.func.isRequired
 };
@@ -56,6 +60,7 @@ Lobby.propTypes = {
 export default connect(state => {
   return {
     games: getGameList(state.gameList),
+    joiningGameId: getJoiningGameId(state.joinGame)
   };
 },
 dispatch => {

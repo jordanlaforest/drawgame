@@ -7,23 +7,28 @@ export const {joinGame, joinGameSuccess, joinGameFailure} = createActions({
   JOIN_GAME_SUCCESS: (game) => ({game}),
   JOIN_GAME_FAILURE: (error) => ({error})});
 
+//Selectors
+export function getJoiningGameId(state){
+  return state.joiningGameId;
+}
+
 //Default State
 const StateRecord = Record({
-  joiningGame: false,
+  joiningGameId: undefined
 });
 
 const initialState = new StateRecord();
 
 //Reducers
 const reducer = handleActions({
-  [joinGame]: (state) => state.merge({
-    joiningGame: true
+  [joinGame]: (state, action) => state.merge({
+    joiningGameId: action.payload.gameId
   }),
   [joinGameSuccess]: (state) => state.merge({
-    joiningGame: false
+    joiningGameId: undefined
   }),
   [joinGameFailure]: (state) => state.merge({
-    joiningGame: false,
+    joiningGameId: undefined
   })
 }, initialState);
 
