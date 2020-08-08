@@ -136,6 +136,11 @@ function* handleJoinGame(socket, action){
   const {game, error} = yield promise;
   if(game){
     yield put(joinGameSuccess(fromJS(game)));
+    const pathname = yield select(getPathname);
+    const newPath = '/game/' + gameId;
+    if(pathname !== newPath){
+      yield put(push(newPath));
+    }
   }else{
     console.log('Join error: ', error);
   }

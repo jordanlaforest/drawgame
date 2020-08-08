@@ -7,6 +7,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import {Table, Glyphicon, Button} from 'react-bootstrap';
 
 import {getGameList, refreshGames} from '../modules/gameList';
+import {joinGame} from '../modules/joinGame';
 
 class Lobby extends React.Component {
   render() {
@@ -31,7 +32,11 @@ class Lobby extends React.Component {
                   <td>{game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }</td>
                   <td>{game.get('name')}</td>
                   <td>{game.get('players').size + '/' + game.get('maxPlayers')}</td>
-                  <td> <LinkContainer to={`/game/${game.get('id')}`}><Button>Join</Button></LinkContainer> </td>
+                  <td>
+                    <LinkContainer to={`/game/${game.get('id')}`}>
+                      <Button onClick={() => this.props.joinGame(game.get('id'))}>Join</Button>
+                    </LinkContainer>
+                  </td>
                 </tr>
               )
             }
@@ -44,7 +49,8 @@ class Lobby extends React.Component {
 
 Lobby.propTypes = {
   games: PropTypes.instanceOf(List).isRequired,
-  refreshGames: PropTypes.func.isRequired
+  refreshGames: PropTypes.func.isRequired,
+  joinGame: PropTypes.func.isRequired
 };
 
 export default connect(state => {
@@ -54,6 +60,7 @@ export default connect(state => {
 },
 dispatch => {
   return {
-    refreshGames: () => dispatch(refreshGames())
+    refreshGames: () => dispatch(refreshGames()),
+    joinGame: (gameId) => dispatch(joinGame(gameId))
   };
 })(Lobby);
