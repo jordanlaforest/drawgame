@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {List} from 'immutable';
 
 import Panel from 'react-bootstrap/lib/Panel';
+import InputGroup from 'react-bootstrap/lib/InputGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import Button from 'react-bootstrap/lib/Button';
 
@@ -17,15 +18,17 @@ class Chat extends React.Component {
   render() {
     let panelFooter = (
       <div>
-        <FormControl
-          type="text"
-          onChange={this.onChange}
-          value={this.state.value}
-          onKeyDown={this.onKeyDown}
-        />
-        <span className="input-group-btn">
-          <Button onClick={this.sendMessage}>Send</Button>
-        </span>
+        <InputGroup>
+          <FormControl
+            type="text"
+            onChange={this.onChange}
+            value={this.state.value}
+            onKeyDown={this.onKeyDown}
+          />
+          <InputGroup.Button>
+            <Button onClick={this.sendMessage}>Send</Button>
+          </InputGroup.Button>
+        </InputGroup>
       </div>
     );
 

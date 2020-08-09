@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Panel from 'react-bootstrap/lib/Panel';
+import InputGroup from 'react-bootstrap/lib/InputGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
@@ -24,15 +25,17 @@ class Login extends React.Component {
             <Panel>
               <Panel.Heading>Choose a name</Panel.Heading>
               <Panel.Body>
-                <FormControl
-                  type="text"
-                  onChange={this.onChange}
-                  value={this.state.name}
-                  onKeyDown={this.onKeyDown}
-                />
-                <span className="input-group-btn">
-                  <Button onClick={this.submit}>Submit</Button>
-                </span>
+                <InputGroup>
+                  <FormControl
+                    type="text"
+                    onChange={this.onChange}
+                    value={this.state.name}
+                    onKeyDown={this.onKeyDown}
+                  />
+                  <InputGroup.Button>
+                    <Button onClick={this.submit}>Submit</Button>
+                  </InputGroup.Button>
+                </InputGroup>
               </Panel.Body>
             </Panel>
           </Col>
