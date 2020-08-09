@@ -32,7 +32,8 @@ class GameContainer extends React.Component {
               <Row>
                 <PlayerList currentlyDrawing={game.get('currentlyDrawingPlayer')}
                   gamePlayers={game.get('players')}
-                  allPlayers={this.props.allPlayers}/>
+                  allPlayers={this.props.allPlayers}
+                  thisPlayerId={this.props.thisPlayerId} />
               </Row>
               <Row>
                 <DrawingControls />
@@ -52,6 +53,7 @@ class GameContainer extends React.Component {
 GameContainer.propTypes = {
   game: PropTypes.instanceOf(GameRecord).isRequired,
   leaveGame: PropTypes.func.isRequired,
+  thisPlayerId: PropTypes.string.isRequired,
   allPlayers: PropTypes.instanceOf(Map).isRequired,
   sendChat: PropTypes.func.isRequired
 };
@@ -60,7 +62,8 @@ export default connect(
   state => {
     return {
       allPlayers: state.players,
-      game: state.game
+      game: state.game,
+      thisPlayerId: state.auth.get('playerId')
     };
   },
   dispatch => {
