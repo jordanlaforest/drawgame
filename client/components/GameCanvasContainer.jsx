@@ -1,5 +1,5 @@
 import React from 'react';
-import {Panel} from 'react-bootstrap';
+import Panel from 'react-bootstrap/lib/Panel';
 import PropTypes from 'prop-types';
 import {List, Map} from 'immutable';
 import {connect} from 'react-redux';

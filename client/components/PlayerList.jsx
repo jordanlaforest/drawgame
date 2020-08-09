@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Map, List} from 'immutable';
 
-import {Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
+import Panel from 'react-bootstrap/lib/Panel';
+import ListGroup from 'react-bootstrap/lib/ListGroup';
+import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 
 class PlayerList extends React.Component {
   render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Panel} from 'react-bootstrap';
+import Panel from 'react-bootstrap/lib/Panel';
 
 class DrawingControls extends React.Component {
   render() {

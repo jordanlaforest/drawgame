@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel, FormControl, Button} from 'react-bootstrap';
 import {List} from 'immutable';
+
+import Panel from 'react-bootstrap/lib/Panel';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import Button from 'react-bootstrap/lib/Button';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import {Map} from 'immutable';
 import {connect} from 'react-redux';
 
-import {Grid, Row, Col, Button} from 'react-bootstrap';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+import Button from 'react-bootstrap/lib/Button';
 
 import PlayerList from './PlayerList.jsx';
 import GameCanvasContainer from './GameCanvasContainer.jsx';
