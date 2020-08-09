@@ -1,11 +1,12 @@
 var path = require('path');
-var webpack = require('webpack');
 
 module.exports = {
   entry: './client/index.jsx',
+  mode: 'development',
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public')
+    path: path.resolve(__dirname, 'public'),
+    publicPath: '/assets/'
   },
   context: __dirname,
   module: {
@@ -17,17 +18,15 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['env', { modules: false }],
-              'react'
+              ['@babel/preset-env', { modules: false }],
+              '@babel/preset-react'
             ],
-            plugins: ['transform-class-properties', 'transform-regenerator'],
+            plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-transform-regenerator'],
             cacheDirectory: true
           }
         }
       }
     ]
   },
-  plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin()
-  ]
+  plugins: []
 };

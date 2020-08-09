@@ -54,7 +54,7 @@ GameContainer.propTypes = {
   leaveGame: PropTypes.func.isRequired,
   allPlayers: PropTypes.instanceOf(Map).isRequired,
   sendChat: PropTypes.func.isRequired
-}
+};
 
 export default connect(
   state => {

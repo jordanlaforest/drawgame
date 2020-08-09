@@ -12,16 +12,16 @@ class PlayerList extends React.Component {
     return (
       <Panel header="Players">
         <ListGroup>
-        {
-          gamePlayers.valueSeq()
-            .map((player, idx) => {
-              let p = allPlayers.get(player.get('id'));
-              return (
-              <ListGroupItem active={currentlyDrawing === idx} key={idx}>
-                { p.get('name') } <span className="pull-right"> { player.get('score') }</span>
-              </ListGroupItem>);
-            })
-        }
+          {
+            gamePlayers.valueSeq()
+              .map((player, idx) => {
+                let p = allPlayers.get(player.get('id'));
+                return (
+                  <ListGroupItem active={currentlyDrawing === idx} key={idx}>
+                    { p.get('name') } <span className="pull-right"> { player.get('score') }</span>
+                  </ListGroupItem>);
+              })
+          }
         </ListGroup>
       </Panel>
     );
@@ -32,6 +32,6 @@ PlayerList.propTypes = {
   gamePlayers: PropTypes.instanceOf(List).isRequired,
   allPlayers: PropTypes.instanceOf(Map).isRequired,
   currentlyDrawing: PropTypes.number.isRequired
-}
+};
 
 export default PlayerList;

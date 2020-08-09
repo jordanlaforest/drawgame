@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel, FormControl, Button, Grid, Row, Col} from 'react-bootstrap';
+
+import Panel from 'react-bootstrap/lib/Panel';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import Button from 'react-bootstrap/lib/Button';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
@@ -50,6 +56,6 @@ class Login extends React.Component {
 
 Login.propTypes = {
   submitCB: PropTypes.func.isRequired
-}
+};
 
 export default Login;

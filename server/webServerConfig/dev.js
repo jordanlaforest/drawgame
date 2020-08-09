@@ -10,8 +10,7 @@ export default function(app) {
     './client/index.jsx'
   ];
   webpackConfig.plugins = [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.HotModuleReplacementPlugin()
   ];
   const compiler = webpack(webpackConfig);
   app.use(webpackDevMiddleware(compiler, {

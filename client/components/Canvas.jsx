@@ -126,6 +126,6 @@ Canvas.propTypes = {
   paths: PropTypes.instanceOf(List).isRequired,
   addPoint: PropTypes.func.isRequired,
   endPath: PropTypes.func.isRequired
-}
+};
 
 export default Canvas;

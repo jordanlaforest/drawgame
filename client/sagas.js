@@ -1,6 +1,6 @@
-import {push} from 'react-router-redux';
-import {take, put, call, race} from 'redux-saga/effects';
-import {eventChannel, END, takeEvery, takeLatest} from 'redux-saga';
+import {push} from 'connected-react-router/immutable';
+import {take, put, call, race, all, takeEvery, takeLatest, select} from 'redux-saga/effects';
+import {eventChannel, END} from 'redux-saga';
 import {fromJS} from 'immutable';
 
 import io from 'socket.io-client';
@@ -9,9 +9,14 @@ import {ACTION, ACTION_FROMJS, REQUEST_GAMES, JOIN_GAME_EVENT, LEAVE_GAME_EVENT,
 
 import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './modules/wsConnection';
 import {login, loginSuccess, loginFailure} from './modules/auth';
+import {joinGame, joinGameSuccess, joinGameFailure} from './modules/joinGame';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
 import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
 /* eslint no-constant-condition: 0, no-console: 0*/ //TODO: Remove console statements
+
+//Selectors
+const getPathname = state => state.getIn(['router', 'location', 'pathname']);
+
 function connect(){
   const host = window.location.host;
   const socket = io(host, {
@@ -53,6 +58,13 @@ function* handleAuth(socket){
     }
   }
   yield put(loginSuccess(response.playerId, fromJS(response.players), fromJS(response.games)));
+
+  const pathname = yield select(getPathname);
+  if(pathname.startsWith('/game/')){ //Automatically attempt to join game when navigating to /game/:gameid
+    let gameId = pathname.substring(6);
+    yield put(joinGame(gameId));
+  }
+
   yield take('LOGOUT');
   console.log('Logout here');
 }
@@ -68,7 +80,7 @@ function subscribe(socket){
         action.payload = fromJS(action.payload);
         emit(action);
       });
-    })
+    });
 
     socket.on('disconnect', () => {
       console.log('disconnect');
@@ -110,30 +122,34 @@ function* handleRequestGames(socket){
   }
 }
 
-function* handleLocationChange(socket, action){
-  if(action.payload.pathname.startsWith('/game/')){
-    let gameId = action.payload.pathname.substring(6);
-    let promise = new Promise((resolve, reject) => {
-      socket.emit(JOIN_GAME_EVENT, {gameId}, res => {
-        if(res.err){
-          reject(res.err);
-        }else{
-          resolve(res.game);
-        }
-      });
-    }).then(game => ({game}), error => ({error}));
-    const {game, error} = yield promise;
-    if(game){
-      yield put({type: 'JOIN_GAME', payload: fromJS(game)});
-    }else{
-      console.log('Join error: ', error);
+function* handleJoinGame(socket, action){
+  let gameId = action.payload.gameId;
+  let promise = new Promise((resolve, reject) => {
+    socket.emit(JOIN_GAME_EVENT, {gameId}, res => {
+      if(res.err){
+        reject(res.err);
+      }else{
+        resolve(res.game);
+      }
+    });
+  }).then(game => ({game}), error => ({error}));
+  const {game, error} = yield promise;
+  if(game){
+    yield put(joinGameSuccess(fromJS(game)));
+    const pathname = yield select(getPathname);
+    const newPath = '/game/' + gameId;
+    if(pathname !== newPath){
+      yield put(push(newPath));
     }
+  }else{
+    console.log('Join error: ', error);
   }
 }
 
 function* handleLeaveGame(socket){
   socket.emit(LEAVE_GAME_EVENT);
   yield put(push('/'));
+  yield put(refreshGames()); //Update list of games in the lobby
 }
 
 function* handleSendAddPoint(socket, action){
@@ -153,7 +169,7 @@ function* watchStoreActions(socket){
     socket.emit(CHAT_EVENT, action.payload);
   }, socket);
   yield takeLatest(refreshGames, handleRequestGames, socket);
-  yield takeLatest('@@router/LOCATION_CHANGE', handleLocationChange, socket);
+  yield takeLatest(joinGame, handleJoinGame, socket);
   yield takeLatest('LEAVE_GAME', handleLeaveGame, socket);
 }
 
@@ -189,7 +205,7 @@ function* socketSaga() {
 }
 
 export default function* rootSaga(){
-  yield [
+  yield all([
     socketSaga()
-  ];
+  ]);
 }

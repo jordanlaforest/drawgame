@@ -58,12 +58,12 @@ export default connect(
       gameInIntermission: game.inIntermission,
       playerId: state.auth.playerId,
       paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'))
-    }
+    };
   },
   dispatch => {
     return {
       addPoint: point => dispatch(sendAddPoint(point)),
       endPath: () => dispatch(sendEndPath())
-    }
+    };
   }
 )(GameCanvasContainer);

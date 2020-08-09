@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Panel, FormControl, Button} from 'react-bootstrap';
 import {List} from 'immutable';
+
+import Panel from 'react-bootstrap/lib/Panel';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import Button from 'react-bootstrap/lib/Button';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
@@ -34,7 +37,7 @@ class Chat extends React.Component {
               if(msg.has('name')){
                 return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
               }else{
-                return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>
+                return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>;
               }
             })
           }
@@ -62,6 +65,6 @@ class Chat extends React.Component {
 Chat.propTypes = {
   messages: PropTypes.instanceOf(List).isRequired,
   sendChatCB: PropTypes.func.isRequired
-}
+};
 
 export default Chat;
