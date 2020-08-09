@@ -5,6 +5,7 @@ bower_components
 # build folders
 dist
 .tmp
+public/bundle.js
 
 # tool folders
 .sass-cache
@@ -14,3 +15,5 @@ dist
 *.swp
 
 npm-debug.log*
+
+package-lock.json
