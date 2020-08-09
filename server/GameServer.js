@@ -19,16 +19,29 @@ export default class GameServer {
     this.state = new AppState();
     
     //Create some test data
-    let g1 = createGame('5', 'Test game');
-    let g2 = createGame('6', 'Test game 2').set('password', 'test');
+    let g0 = createGame('4', 'Empty Game');
+    let g1 = createGame('5', 'Test Game');
+    let g2 = createGame('6', 'Passworded Game').set('password', 'test');
+    let fg = createGame('7', 'Full Game').set('maxPlayers', 2);
+    this.state.addGame(g0);
     this.state.addGame(g1);
     this.state.addGame(g2);
+    this.state.addGame(fg);
+
     let p1 = createPlayer('10', 'Bob');
     let p2 = createPlayer('11', 'Bobert');
+    let p3 = createPlayer('12', 'Bobby');
+    let p4 = createPlayer('13', 'Bobertson');
     this.state.addPlayer(p1);
     this.state.addPlayer(p2);
+    this.state.addPlayer(p3);
+    this.state.addPlayer(p4);
+
     this.state.addPlayerToGame(g1.get('id'), p1.get('id'));
     this.state.addPlayerToGame(g1.get('id'), p2.get('id'));
+
+    this.state.addPlayerToGame(fg.get('id'), p3.get('id'));
+    this.state.addPlayerToGame(fg.get('id'), p4.get('id'));
   }
 
   start() {
