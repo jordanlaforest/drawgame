@@ -10,19 +10,22 @@ class PlayerList extends React.Component {
   render() {
     let { gamePlayers, allPlayers, currentlyDrawing } = this.props;
     return (
-      <Panel header="Players">
-        <ListGroup>
-          {
-            gamePlayers.valueSeq()
-              .map((player, idx) => {
-                let p = allPlayers.get(player.get('id'));
-                return (
-                  <ListGroupItem active={currentlyDrawing === idx} key={idx}>
-                    { p.get('name') } <span className="pull-right"> { player.get('score') }</span>
-                  </ListGroupItem>);
-              })
-          }
-        </ListGroup>
+      <Panel>
+        <Panel.Heading>Players</Panel.Heading>
+        <Panel.Body>
+          <ListGroup>
+            {
+              gamePlayers.valueSeq()
+                .map((player, idx) => {
+                  let p = allPlayers.get(player.get('id'));
+                  return (
+                    <ListGroupItem active={currentlyDrawing === idx} key={idx}>
+                      { p.get('name') } <span className="pull-right"> { player.get('score') }</span>
+                    </ListGroupItem>);
+                })
+            }
+          </ListGroup>
+        </Panel.Body>
       </Panel>
     );
   }

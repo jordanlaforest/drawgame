@@ -21,16 +21,19 @@ class Login extends React.Component {
       <Grid fluid>
         <Row>
           <Col md={2} className="center-block gridClearfix">
-            <Panel header="Choose a name">
-              <FormControl
-                type="text"
-                onChange={this.onChange}
-                value={this.state.name}
-                onKeyDown={this.onKeyDown}
-              />
-              <span className="input-group-btn">
-                <Button onClick={this.submit}>Submit</Button>
-              </span>
+            <Panel>
+              <Panel.Heading>Choose a name</Panel.Heading>
+              <Panel.Body>
+                <FormControl
+                  type="text"
+                  onChange={this.onChange}
+                  value={this.state.name}
+                  onKeyDown={this.onKeyDown}
+                />
+                <span className="input-group-btn">
+                  <Button onClick={this.submit}>Submit</Button>
+                </span>
+              </Panel.Body>
             </Panel>
           </Col>
         </Row>

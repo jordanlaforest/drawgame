@@ -5,8 +5,9 @@ import Panel from 'react-bootstrap/lib/Panel';
 class DrawingControls extends React.Component {
   render() {
     return (
-      <Panel header="Drawing Controls">
-        <h2>Drawing Controls</h2>
+      <Panel>
+        <Panel.Heading>Drawing Controls</Panel.Heading>
+        <Panel.Body><h2>Drawing Controls</h2></Panel.Body>
       </Panel>
     );
   }

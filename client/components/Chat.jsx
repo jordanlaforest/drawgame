@@ -30,18 +30,22 @@ class Chat extends React.Component {
     );
 
     return (
-      <Panel header="Chat" footer={panelFooter} >
-        <ul className="list-unstyled">
-          {
-            this.props.messages.valueSeq().map( (msg, idx) => {
-              if(msg.has('name')){
-                return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
-              }else{
-                return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>;
-              }
-            })
-          }
-        </ul>
+      <Panel>
+        <Panel.Heading>Chat</Panel.Heading>
+        <Panel.Body>
+          <ul className="list-unstyled">
+            {
+              this.props.messages.valueSeq().map( (msg, idx) => {
+                if(msg.has('name')){
+                  return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
+                }else{
+                  return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>;
+                }
+              })
+            }
+          </ul>
+        </Panel.Body>
+        <Panel.Footer>{panelFooter}</Panel.Footer>
       </Panel>
     );
   }

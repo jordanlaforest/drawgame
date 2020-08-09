@@ -26,12 +26,15 @@ class GameCanvasContainer extends React.Component {
       }
     }
     return (
-      <Panel header={ canvasHeader }>
-        <Canvas
-          paths={this.props.paths}
-          addPoint={this.props.addPoint}
-          endPath={this.props.endPath}>
-        </Canvas>
+      <Panel>
+        <Panel.Heading>{canvasHeader}</Panel.Heading>
+        <Panel.Body>
+          <Canvas
+            paths={this.props.paths}
+            addPoint={this.props.addPoint}
+            endPath={this.props.endPath}>
+          </Canvas>
+        </Panel.Body>
       </Panel>
     );
   }
