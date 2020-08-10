@@ -32,20 +32,18 @@ class GameContainer extends React.Component {
         <Grid fluid>
           <Row>
             <Col md={2}>
-              <Row>
-                <PlayerList currentlyDrawing={game.get('currentlyDrawingPlayer')}
-                  gamePlayers={game.get('players')}
-                  allPlayers={this.props.allPlayers}
-                  thisPlayerId={this.props.thisPlayerId} />
-              </Row>
-              <Row>
-                <DrawingControls />
-              </Row>
+              <PlayerList currentlyDrawing={game.get('currentlyDrawingPlayer')}
+                gamePlayers={game.get('players')}
+                allPlayers={this.props.allPlayers}
+                thisPlayerId={this.props.thisPlayerId} />
+              <DrawingControls />
             </Col>
             <Col md={8}>
               <GameCanvasContainer/>
             </Col>
-            <Col md={2}> <Chat messages={chatMessages} sendChatCB={this.props.sendChat} /> </Col>
+            <Col md={2}>
+              <Chat messages={chatMessages} sendChatCB={this.props.sendChat} />
+            </Col>
           </Row>
         </Grid>
       </div>
