@@ -5,7 +5,7 @@ bower_components
 # build folders
 dist
 .tmp
-public/bundle.js
+public/assets/bundle.js
 
 # tool folders
 .sass-cache
