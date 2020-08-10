@@ -7,6 +7,7 @@ import Grid from 'react-bootstrap/lib/Grid';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 
 import PlayerList from './PlayerList.jsx';
 import GameCanvasContainer from './GameCanvasContainer.jsx';
@@ -24,8 +25,10 @@ class GameContainer extends React.Component {
     let chatMessages = game.get('chatMessages');
     return (
       <div>
-        <Button onClick={this.props.leaveGame}>Leave Game</Button>
-        <Button>Skip Word</Button>
+        <ButtonGroup className='bottomMargin'>
+          <Button onClick={this.props.leaveGame}>Leave Game</Button>
+          <Button>Skip Word</Button>
+        </ButtonGroup>
         <Grid fluid>
           <Row>
             <Col md={2}>

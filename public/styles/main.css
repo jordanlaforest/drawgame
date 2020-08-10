@@ -52,3 +52,7 @@ footer.footer a {
 .gridClearfix {
   float: none;
 }
+
+.bottomMargin {
+  margin-bottom: 20px;
+}
