@@ -2,7 +2,7 @@ import io from 'socket.io';
 import AppState from '../common/AppState';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage, addServerMessage,
-  addPointToDrawing, endPathInDrawing, createGame} from '../common/modules/game';
+  addPointToDrawing, endPathInDrawing, createGame, gameStart} from '../common/modules/game';
 import {addPlayer, removePlayer, createPlayer} from '../common/modules/players';
 
 import {
@@ -184,7 +184,7 @@ export default class GameServer {
       let gameId = this.state.getPlayer(playerId).get('gameId');
       if(gameId !== undefined){
         if(message.startsWith('\\')){
-          this.serverCommand(message.substring(1));
+          this.serverCommand(message.substring(1), socket);
         }else{
           let action = addChatMessage(this.state.getPlayer(playerId).get('name'), message);
           this.io.to(gameId).emit(ACTION_FROMJS, [action]);
@@ -193,13 +193,20 @@ export default class GameServer {
     });
   }
 
-  serverCommand(command){
+  serverCommand(command, socket){
     let cmd = command.split(' ')[0];
     let args = command.substring(cmd.length + 1);
+    let gameId = this.state.getPlayer(socket.id).get('gameId');
     switch(cmd){
       case 'broadcast': {
         let msgAction = addServerMessage(args);
         this.io.emit(ACTION, [msgAction]);
+        break;
+      }
+      case 'startgame': {
+        let action = gameStart(args);
+        socket.emit(ACTION, [action]);
+        socket.to(gameId).emit(ACTION, [gameStart()]);
         break;
       }
       default: {
