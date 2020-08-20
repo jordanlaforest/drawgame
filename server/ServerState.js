@@ -1,6 +1,6 @@
 import {Map} from 'immutable';
 
-export default class AppState {
+export default class ServerState {
   constructor() {
     this.players = Map();
     this.games = Map();

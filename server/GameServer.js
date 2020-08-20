@@ -1,5 +1,5 @@
 import io from 'socket.io';
-import AppState from '../common/AppState';
+import ServerState from './ServerState';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage, addServerMessage,
   addPointToDrawing, endPathInDrawing, createGame, gameStart} from '../common/modules/game';
@@ -16,7 +16,7 @@ export default class GameServer {
 
   constructor(httpServer) {
     this.io = io(httpServer);
-    this.state = new AppState();
+    this.state = new ServerState();
     
     //Create some test data
     let g0 = createGame('4', 'Empty Game');
