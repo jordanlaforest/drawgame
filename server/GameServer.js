@@ -230,7 +230,7 @@ export default class GameServer {
     let isPlayerDrawing = this.state.checkPlayerDrawing(socket.id);
     if(gameId !== undefined && isPlayerDrawing){
       this.state.applyActionToGame(pathAction, gameId);
-      socket.to(gameId).emit(ACTION, [pathAction]);
+      socket.to(gameId).emit(ACTION_FROMJS, [pathAction]);
     }
   }
 
