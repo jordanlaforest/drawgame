@@ -5,7 +5,7 @@ A guess what someone is drawing game. Built with React, Redux, and Socket.io
 
 # Screenshot
 
-![Screenshot of drawgame](https://i.imgur.com/4PBtKA2.png)
+![Screenshot of drawgame](https://i.imgur.com/qr0p3Ls.png)
 
 # Installing and Running
 
