@@ -205,6 +205,7 @@ export default class GameServer {
       }
       case 'startgame': {
         let action = gameStart(args);
+        this.state.applyActionToGame(action, gameId);
         socket.emit(ACTION, [action]);
         socket.to(gameId).emit(ACTION, [gameStart()]);
         break;
@@ -228,6 +229,7 @@ export default class GameServer {
     let gameId = this.state.getPlayer(socket.id).get('gameId');
     let isPlayerDrawing = this.state.checkPlayerDrawing(socket.id);
     if(gameId !== undefined && isPlayerDrawing){
+      this.state.applyActionToGame(pathAction, gameId);
       socket.to(gameId).emit(ACTION, [pathAction]);
     }
   }

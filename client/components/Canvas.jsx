@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {List} from 'immutable';
+import {List, fromJS} from 'immutable';
 
 class Canvas extends React.Component {
   componentDidMount(){
@@ -43,7 +43,7 @@ class Canvas extends React.Component {
   renderPath = (path) => {
     let ctx = this.getContext();
     path.forEach((point, i) => {
-      let {x, y} = this.scaleToPixels(point);
+      let {x, y} = this.scaleToPixels({x:point.get('x'), y:point.get('y')});
       if(i === 0){
         ctx.moveTo(x, y);
       }else{
@@ -98,13 +98,13 @@ class Canvas extends React.Component {
 
   drawStart = event => {
     let point = this.getMousePoint(event);
-    this.props.addPoint(this.scaleToPercent(point));
+    this.props.addPoint(fromJS(this.scaleToPercent(point)));
   }
 
   drawMove = event => {
     if(event.buttons > 0){ //any button pressed
       let point = this.getMousePoint(event);
-      this.props.addPoint(this.scaleToPercent(point));
+      this.props.addPoint(fromJS(this.scaleToPercent(point)));
     }
   }
 
@@ -112,7 +112,7 @@ class Canvas extends React.Component {
     if(event.buttons > 0){
       //the player has drawn off the canvas, send one last point so the line extends to the edge
       let point = this.getMousePoint(event);
-      this.props.addPoint(this.scaleToPercent(point));
+      this.props.addPoint(fromJS(this.scaleToPercent(point)));
       this.props.endPath();
     }
   }

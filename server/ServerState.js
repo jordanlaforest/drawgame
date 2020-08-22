@@ -1,5 +1,7 @@
 import {Map} from 'immutable';
 
+import {default as gameReducer, addPlayerToGame, removePlayerFromGame} from '../common/modules/game.js';
+
 export default class ServerState {
   constructor() {
     this.players = Map();
@@ -27,14 +29,17 @@ export default class ServerState {
   }
 
   addPlayerToGame(gameId, playerId){
-    let player = Map({id: playerId, score: 0});
-    this.games = this.games.updateIn([gameId, 'players'], playerList => playerList.push(player));
+    this.applyActionToGame(addPlayerToGame(playerId), gameId);
     this.players = this.players.update(playerId, player => player.set('gameId', gameId));
   }
 
   removePlayerFromGame(gameId, playerId){
-    this.games = this.games.updateIn([gameId, 'players'], playerList => playerList.delete(playerList.indexOf(playerId)));
+    this.applyActionToGame(removePlayerFromGame(playerId), gameId);
     this.players = this.players.update(playerId, player => player.delete('gameId'));
+  }
+
+  applyActionToGame(action, gameId){
+    this.games = this.games.update(gameId, game => gameReducer(game, action));
   }
 
   checkPlayerDrawing(playerId){

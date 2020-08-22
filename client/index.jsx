@@ -7,6 +7,8 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import {Provider} from 'react-redux';
 
+import Immutable from 'immutable';
+
 import {createBrowserHistory} from 'history';
 import {routerMiddleware} from 'connected-react-router/immutable';
 
@@ -32,6 +34,10 @@ const enhancer = composeWithDevTools({
     wsConnection,
     game,
     players
+  },
+  serialize: {
+    immutable: Immutable,
+    refs: [game.GameRecord]
   },
   maxAge: 30
 });

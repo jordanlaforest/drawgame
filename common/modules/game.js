@@ -11,7 +11,8 @@ export const {
   leaveGame} = createActions(
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
-    CORRECT_GUESS: (guesser, word) => ({guesser, word})
+    CORRECT_GUESS: (guesser, word) => ({guesser, word}),
+    GAME_START: (newWord) => ({newWord})
   },
   'ADD_SERVER_MESSAGE',
   'SEND_CHAT_MESSAGE',
@@ -19,7 +20,7 @@ export const {
   'REMOVE_PLAYER_FROM_GAME',
   'ADD_POINT_TO_DRAWING', 'SEND_ADD_POINT',
   'END_PATH_IN_DRAWING', 'SEND_END_PATH',
-  'GAME_START', 'OUT_OF_TIME', 'INTERMISSION_OVER',
+  'OUT_OF_TIME', 'INTERMISSION_OVER',
   'LEAVE_GAME'
 );
 
@@ -53,7 +54,6 @@ export function createGame (id, name){
 //Reducers
 const reducer = handleActions({
   'JOIN_GAME_SUCCESS': (state, action) => {
-    console.log(action);
     return new GameRecord(action.payload.game);
   },
   [addPlayerToGame]: (state, action) => {
@@ -94,7 +94,7 @@ const reducer = handleActions({
     return state.merge({
       isStarted: true,
       inIntermission: false,
-      currentWord: action.payload
+      currentWord: action.payload.newWord
     });
   },
   [correctGuess]: (state, action) => {
