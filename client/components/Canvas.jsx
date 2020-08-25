@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {List, fromJS} from 'immutable';
+import {List, Map} from 'immutable';
 
 class Canvas extends React.Component {
   componentDidMount(){
@@ -46,7 +46,7 @@ class Canvas extends React.Component {
   renderPath = (path) => {
     let ctx = this.getContext();
     path.forEach((point, i) => {
-      let {x, y} = this.scaleToPixels({x:point.get('x'), y:point.get('y')});
+      let {x, y} = this.scaleToPixels(point);
       if(i === 0){
         ctx.moveTo(x, y);
       }else{
@@ -60,19 +60,25 @@ class Canvas extends React.Component {
     this.getContext().clearRect(0, 0, w, h);
   }
 
+  /* Note that this returns a Immutable Map since it is used before sending point data to redux/the server
+   * It takes a regular js object as an argument though as that point data will come from getMousePoint
+   */
   scaleToPercent({ x, y }) {
     let { w, h } = this.getCanvasSize();
-    return {
+    return Map({
       x: x / w,
       y: y / h
-    };
+    });
   }
 
-  scaleToPixels({ x, y }) {
+  /* Note that this returns a regular js object since it is only used during render
+   * It still takes a Immutable Map as an argument though
+   */
+  scaleToPixels(point) {
     let { w, h } = this.getCanvasSize();
     return {
-      x: x * w,
-      y: y * h
+      x: point.get('x') * w,
+      y: point.get('y') * h
     };
   }
 
@@ -101,13 +107,13 @@ class Canvas extends React.Component {
 
   drawStart = event => {
     let point = this.getMousePoint(event);
-    this.props.addPoint(fromJS(this.scaleToPercent(point)));
+    this.props.addPoint(this.scaleToPercent(point));
   }
 
   drawMove = event => {
     if(event.buttons > 0){ //any button pressed
       let point = this.getMousePoint(event);
-      this.props.addPoint(fromJS(this.scaleToPercent(point)));
+      this.props.addPoint(this.scaleToPercent(point));
     }
   }
 
@@ -115,7 +121,7 @@ class Canvas extends React.Component {
     if(event.buttons > 0){
       //the player has drawn off the canvas, send one last point so the line extends to the edge
       let point = this.getMousePoint(event);
-      this.props.addPoint(fromJS(this.scaleToPercent(point)));
+      this.props.addPoint(this.scaleToPercent(point));
       this.props.endPath();
     }
   }
