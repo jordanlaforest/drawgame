@@ -28,6 +28,9 @@ class Canvas extends React.Component {
     );
   }
   renderDrawing(){
+    if(this.canvas === null){
+      return; //Canvas unmounted, skip rendering
+    }
     this.clearCanvas();
     let ctx = this.getContext();
     ctx.lineWidth = 5;
