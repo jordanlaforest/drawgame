@@ -2,7 +2,7 @@ import io from 'socket.io';
 import ServerState from './ServerState';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage, addServerMessage,
-  addPointToDrawing, endPathInDrawing, createGame, gameStart} from '../common/modules/game';
+  addPointToDrawing, endPathInDrawing, createGame, gameStart, correctGuess} from '../common/modules/game';
 import {addPlayer, removePlayer, createPlayer} from '../common/modules/players';
 
 import {
@@ -196,18 +196,31 @@ export default class GameServer {
   serverCommand(command, socket){
     let cmd = command.split(' ')[0];
     let args = command.substring(cmd.length + 1);
-    let gameId = this.state.getPlayer(socket.id).get('gameId');
+    let player = this.state.getPlayer(socket.id);
+    let gameId = player.get('gameId');
     switch(cmd){
       case 'broadcast': {
         let msgAction = addServerMessage(args);
         this.io.emit(ACTION, [msgAction]);
         break;
       }
-      case 'startgame': {
-        let action = gameStart(args);
+      case 'startgame': { //argument is the word to set
+        let action = gameStart(args); 
         this.state.applyActionToGame(action, gameId);
         socket.emit(ACTION, [action]);
         socket.to(gameId).emit(ACTION, [gameStart()]);
+        break;
+      }
+      case 'autoguess': { //argument is the index of the "guessing" player in the games player list
+        let game = this.state.getGame(gameId);
+        let playerIndex = args === '' ? game.get('players').findIndex(p => p.get('id') === socket.id) : parseInt(args, 10);
+        if(isNaN(playerIndex)){
+          socket.emit(ACTION, [addServerMessage('Invalid argument')]);
+        }else{
+          let action = correctGuess(playerIndex, game.get('currentWord'));
+          this.state.applyActionToGame(correctGuess(playerIndex), gameId);
+          this.io.to(gameId).emit(ACTION, [action]);
+        }
         break;
       }
       default: {

@@ -98,28 +98,35 @@ const reducer = handleActions({
     });
   },
   [correctGuess]: (state, action) => {
-    let s = state.merge({
-      inIntermission: true,
-      currentWord: action.payload.word
-    });
-    let drawingPlayer = s.get('currentlyDrawingPlayer');
-    s = s.updateIn(['players', action.payload.guesser] , guesser => {
-      return guesser.set('score', guesser.get('score') + 3); //TODO: Move scoring values to some config
-    });
-    s = s.updateIn(['players', drawingPlayer], drawer => {
-      return drawer.set('score', drawer.get('score') + 1);
-    });
-    let scoreLimit = 10; //TODO: Move to game settings
-    let guesserScore = s.players.get(action.payload.guesser).get('score');
-    let drawerScore = s.players.get(drawingPlayer).get('score');
-    if(guesserScore >= scoreLimit || drawerScore >= scoreLimit){
-      if(drawerScore > guesserScore){
-        s = s.set('winner', drawingPlayer);
-      }else{ //Tie goes to the guesser
-        s = s.set('winner', action.payload.guesser);
+    return state.withMutations(s => {
+      s.set('inIntermission', true);
+      if(action.payload.word !== undefined){ //Will be undefined when applying action to server state
+        s.set('currentWord', action.payload.word);
       }
-    }
-    return s;
+
+      let drawingPlayer = s.get('currentlyDrawingPlayer');
+      s.update('players', playerList => {
+        return playerList.withMutations(pList => {
+          pList.update(action.payload.guesser, guesser => {
+            return guesser.set('score', guesser.get('score') + 3); //TODO: Move scoring values to some config
+          });
+          pList.update(drawingPlayer, drawer => {
+            return drawer.set('score', drawer.get('score') + 1);
+          });
+        });
+      });
+
+      let scoreLimit = 10; //TODO: Move to game settings
+      let guesserScore = s.players.get(action.payload.guesser).get('score');
+      let drawerScore = s.players.get(drawingPlayer).get('score');
+      if(guesserScore >= scoreLimit || drawerScore >= scoreLimit){
+        if(drawerScore > guesserScore){
+          s = s.set('winner', drawingPlayer);
+        }else{ //Tie goes to the guesser
+          s = s.set('winner', action.payload.guesser);
+        }
+      }
+    });
   },
   [outOfTime]: (state, action) => {
     return state.merge({
