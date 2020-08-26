@@ -198,6 +198,7 @@ export default class GameServer {
     let args = command.substring(cmd.length + 1);
     let player = this.state.getPlayer(socket.id);
     let gameId = player.get('gameId');
+    let game = this.state.getGame(gameId);
     switch(cmd){
       case 'broadcast': {
         let msgAction = addServerMessage(args);
@@ -205,14 +206,24 @@ export default class GameServer {
         break;
       }
       case 'startgame': { //argument is the word to set
-        let action = gameStart(args); 
-        this.state.applyActionToGame(action, gameId);
-        socket.emit(ACTION, [action]);
-        socket.to(gameId).emit(ACTION, [gameStart()]);
+        let actionWithWord = gameStart(args); 
+        this.state.applyActionToGame(actionWithWord, gameId);
+
+        //Send the action with the secret word to only the drawing player
+        let drawingId = game.get('players').get(0).get('id'); //CurrentlyDrawingPlayer should be 0 at the start of the game
+        this.io.in(gameId).clients((error, ids) => {
+          if(error) throw error;
+          ids.forEach(id => {
+            if(id !== drawingId){
+              this.io.sockets.sockets[id].emit(ACTION, [gameStart()]);
+            }else{
+              this.io.sockets.sockets[id].emit(ACTION, [actionWithWord]);
+            }
+          });
+        });
         break;
       }
       case 'autoguess': { //argument is the index of the "guessing" player in the games player list
-        let game = this.state.getGame(gameId);
         let playerIndex = args === '' ? game.get('players').findIndex(p => p.get('id') === socket.id) : parseInt(args, 10);
         if(isNaN(playerIndex)){
           socket.emit(ACTION, [addServerMessage('Invalid argument')]);

@@ -12,7 +12,7 @@ export const {
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
     CORRECT_GUESS: (guesser, word) => ({guesser, word}),
-    GAME_START: (newWord) => ({newWord})
+    GAME_START: (newWord='') => ({newWord})
   },
   'ADD_SERVER_MESSAGE',
   'SEND_CHAT_MESSAGE',
