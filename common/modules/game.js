@@ -7,13 +7,12 @@ export const {
   addPointToDrawing, endPathInDrawing,
   sendAddPoint, sendEndPath,
   sendChatMessage, addChatMessage, addServerMessage,
-  gameStart, correctGuess, outOfTime, intermissionOver,
-  startTimer, timerTick,
+  gameStart, correctGuess, outOfTime, intermissionOver, timerTick,
   leaveGame} = createActions(
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
-    CORRECT_GUESS: (guesser, word) => ({guesser, word}),
-    GAME_START: (newWord='') => ({newWord})
+    CORRECT_GUESS: (guesser, word, intermissionTimer) => ({guesser, word, intermissionTimer}),
+    GAME_START: (timer, newWord='') => ({timer, newWord})
   },
   'ADD_SERVER_MESSAGE',
   'SEND_CHAT_MESSAGE',
@@ -21,8 +20,7 @@ export const {
   'REMOVE_PLAYER_FROM_GAME',
   'ADD_POINT_TO_DRAWING', 'SEND_ADD_POINT',
   'END_PATH_IN_DRAWING', 'SEND_END_PATH',
-  'OUT_OF_TIME', 'INTERMISSION_OVER',
-  'START_TIMER', 'TIMER_TICK',
+  'OUT_OF_TIME', 'INTERMISSION_OVER', 'TIMER_TICK',
   'LEAVE_GAME'
 );
 
@@ -101,7 +99,8 @@ const reducer = handleActions({
     return state.merge({
       isStarted: true,
       inIntermission: false,
-      currentWord: action.payload.newWord
+      currentWord: action.payload.newWord,
+      timer: action.payload.timer
     });
   },
   [correctGuess]: (state, action) => {
@@ -132,6 +131,8 @@ const reducer = handleActions({
         }else{ //Tie goes to the guesser
           s = s.set('winner', action.payload.guesser);
         }
+      }else{
+        s = s.set('timer', action.payload.intermissionTimer);
       }
     });
   },
@@ -139,17 +140,14 @@ const reducer = handleActions({
     return state.merge({
       inIntermission: true,
       currentWord: action.payload,
+      timer:action.payload.intermissionTimer
     });
   },
   [intermissionOver]: (state, action) => {
     return state.merge({
       inIntermission: false,
-      currentlyDrawingPlayer: action.payload
-    });
-  },
-  [startTimer]: (state, action) => {
-    return state.merge({
-      timer: action.payload
+      currentlyDrawingPlayer: action.payload,
+      timer: action.payload.timer
     });
   },
   [timerTick]: (state) => {

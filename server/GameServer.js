@@ -206,7 +206,7 @@ export default class GameServer {
         break;
       }
       case 'startgame': { //argument is the word to set
-        let actionWithWord = gameStart(args); 
+        let actionWithWord = gameStart(30, args); //TODO: Have round time in game options
         this.state.applyActionToGame(actionWithWord, gameId);
 
         //Send the action with the secret word to only the drawing player
@@ -215,7 +215,7 @@ export default class GameServer {
           if(error) throw error;
           ids.forEach(id => {
             if(id !== drawingId){
-              this.io.sockets.sockets[id].emit(ACTION, [gameStart()]);
+              this.io.sockets.sockets[id].emit(ACTION, [gameStart(30)]);
             }else{
               this.io.sockets.sockets[id].emit(ACTION, [actionWithWord]);
             }
