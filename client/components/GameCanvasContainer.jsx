@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 
-import {sendAddPoint, sendEndPath} from '../../common/modules/game';
+import {sendAddPoint, sendEndPath, getTimerSeconds} from '../../common/modules/game';
 import {isDebugEnabled} from '../modules/debug';
 import Canvas from './Canvas.jsx';
 
@@ -28,7 +28,10 @@ class GameCanvasContainer extends React.Component {
     }
     return (
       <Panel>
-        <Panel.Heading className="text-center">{canvasHeader}</Panel.Heading>
+        <Panel.Heading className="text-center">
+          {canvasHeader}
+          <span className="pull-right">{this.props.timer}</span>
+        </Panel.Heading>
         <Panel.Body>
           <Canvas
             paths={this.props.paths}
@@ -51,6 +54,7 @@ GameCanvasContainer.propTypes = {
   playerId: PropTypes.string.isRequired,
   addPoint: PropTypes.func.isRequired,
   endPath: PropTypes.func.isRequired,
+  timer: PropTypes.number.isRequired,
   debugEnabled: PropTypes.bool
 };
 
@@ -64,6 +68,7 @@ export default connect(
       gameInIntermission: game.inIntermission,
       playerId: state.auth.playerId,
       paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath')),
+      timer: getTimerSeconds(game),
       debugEnabled: isDebugEnabled(state.debug)
     };
   },

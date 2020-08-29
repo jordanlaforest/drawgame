@@ -8,6 +8,7 @@ export const {
   sendAddPoint, sendEndPath,
   sendChatMessage, addChatMessage, addServerMessage,
   gameStart, correctGuess, outOfTime, intermissionOver,
+  startTimer, timerTick,
   leaveGame} = createActions(
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
@@ -21,12 +22,17 @@ export const {
   'ADD_POINT_TO_DRAWING', 'SEND_ADD_POINT',
   'END_PATH_IN_DRAWING', 'SEND_END_PATH',
   'OUT_OF_TIME', 'INTERMISSION_OVER',
+  'START_TIMER', 'TIMER_TICK',
   'LEAVE_GAME'
 );
 
 //Selectors
 export function getChatMessages(state){
   return state.chatMessages;
+}
+
+export function getTimerSeconds(state){
+  return state.timer;
 }
 
 //Default State
@@ -42,7 +48,8 @@ export const GameRecord = Record({
   inIntermission: false,
   isStarted: false,
   winner: undefined,
-  chatMessages: List()
+  chatMessages: List(),
+  timer: 0
 });
 
 const initialState = new GameRecord();
@@ -138,6 +145,16 @@ const reducer = handleActions({
     return state.merge({
       inIntermission: false,
       currentlyDrawingPlayer: action.payload
+    });
+  },
+  [startTimer]: (state, action) => {
+    return state.merge({
+      timer: action.payload
+    });
+  },
+  [timerTick]: (state) => {
+    return state.merge({
+      timer: state.timer - 1
     });
   }
 }, initialState);
