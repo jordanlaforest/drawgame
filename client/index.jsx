@@ -20,6 +20,7 @@ import * as auth from './modules/auth';
 import * as gameList from './modules/gameList';
 import * as joinGame from './modules/joinGame';
 import * as wsConnection from './modules/wsConnection';
+import * as debug from './modules/debug';
 import * as game from '../common/modules/game';
 import * as players from '../common/modules/players';
 
@@ -33,7 +34,8 @@ const enhancer = composeWithDevTools({
     joinGame,
     wsConnection,
     game,
-    players
+    players,
+    debug
   },
   serialize: {
     immutable: Immutable,

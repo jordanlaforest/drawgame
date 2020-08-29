@@ -5,6 +5,7 @@ import {List, Map} from 'immutable';
 class Canvas extends React.Component {
   componentDidMount(){
     window.requestAnimationFrame(this.renderDrawing.bind(this));
+    this.lastRenderTime = 0;
     let setCanvasSize = () => {
       this.size = {w: this.canvas.clientWidth, h: this.canvas.clientWidth / 2};
       this.canvas.width = this.size.w;
@@ -27,19 +28,39 @@ class Canvas extends React.Component {
       </canvas>
     );
   }
+
+  renderPerformanceInfo(ctx, renderTime, numPaths, numPoints){
+    let fps = Math.round(1000/(performance.now() - this.lastRenderTime));
+    this.lastRenderTime = performance.now();
+    renderTime = Math.round(renderTime);
+    ctx.fillText(
+      'fps: ' + fps + '  render: ' + renderTime + 'ms  paths: ' + numPaths + '  points: ' + numPoints,
+      3, 12
+    );
+  }
+
   renderDrawing(){
     if(this.canvas === null){
       return; //Canvas unmounted, skip rendering
     }
+    let before = performance.now();
     this.clearCanvas();
     let ctx = this.getContext();
     ctx.lineWidth = 5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     let paths = this.props.paths;
+    let numPoints = 0;
     ctx.beginPath();
-    paths.forEach(this.renderPath);
+    paths.forEach(path => {
+      this.renderPath(path);
+      numPoints += path.size;
+    });
     ctx.stroke();
+    if(this.props.debugEnabled){
+      let renderTime = performance.now() - before;
+      this.renderPerformanceInfo(ctx, renderTime, paths.size, numPoints);
+    }
     window.requestAnimationFrame(this.renderDrawing.bind(this));
   }
 
@@ -134,7 +155,8 @@ class Canvas extends React.Component {
 Canvas.propTypes = {
   paths: PropTypes.instanceOf(List).isRequired,
   addPoint: PropTypes.func.isRequired,
-  endPath: PropTypes.func.isRequired
+  endPath: PropTypes.func.isRequired,
+  debugEnabled: PropTypes.bool
 };
 
 export default Canvas;

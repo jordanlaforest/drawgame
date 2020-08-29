@@ -5,6 +5,7 @@ import {List, Map} from 'immutable';
 import {connect} from 'react-redux';
 
 import {sendAddPoint, sendEndPath} from '../../common/modules/game';
+import {isDebugEnabled} from '../modules/debug';
 import Canvas from './Canvas.jsx';
 
 class GameCanvasContainer extends React.Component {
@@ -32,7 +33,8 @@ class GameCanvasContainer extends React.Component {
           <Canvas
             paths={this.props.paths}
             addPoint={this.props.addPoint}
-            endPath={this.props.endPath}>
+            endPath={this.props.endPath}
+            debugEnabled={this.props.debugEnabled}>
           </Canvas>
         </Panel.Body>
       </Panel>
@@ -48,7 +50,8 @@ GameCanvasContainer.propTypes = {
   paths: PropTypes.instanceOf(List).isRequired,
   playerId: PropTypes.string.isRequired,
   addPoint: PropTypes.func.isRequired,
-  endPath: PropTypes.func.isRequired
+  endPath: PropTypes.func.isRequired,
+  debugEnabled: PropTypes.bool
 };
 
 export default connect(
@@ -60,7 +63,8 @@ export default connect(
       gameHasStarted: game.isStarted,
       gameInIntermission: game.inIntermission,
       playerId: state.auth.playerId,
-      paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath'))
+      paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath')),
+      debugEnabled: isDebugEnabled(state.debug)
     };
   },
   dispatch => {

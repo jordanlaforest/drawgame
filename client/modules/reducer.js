@@ -8,6 +8,7 @@ import joinGame from './joinGame';
 import players from '../../common/modules/players';
 import gameList from './gameList';
 import game from '../../common/modules/game';
+import debug from './debug';
 
 const StateRecord = Record({
   router: undefined,
@@ -16,7 +17,8 @@ const StateRecord = Record({
   wsConnection: undefined,
   players: undefined,
   gameList: undefined,
-  game: undefined
+  game: undefined,
+  debug: undefined
 });
 
 const createRootReducer = (history) => combineReducers({
@@ -26,7 +28,8 @@ const createRootReducer = (history) => combineReducers({
   wsConnection,
   players,
   gameList,
-  game
+  game,
+  debug
 }, StateRecord);
 
 export default createRootReducer;

@@ -12,6 +12,7 @@ import {login, loginSuccess, loginFailure} from './modules/auth';
 import {joinGame, joinGameSuccess, joinGameFailure} from './modules/joinGame';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
 import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
+import {toggleDebug} from './modules/debug';
 /* eslint no-constant-condition: 0, no-console: 0*/ //TODO: Remove console statements
 
 //Selectors
@@ -162,12 +163,29 @@ function* handleSendEndPath(socket){
   yield put(endPathInDrawing());
 }
 
+function* handleSendChatMessage(socket, action){
+  if(action.payload.startsWith('\\')){
+    let clientCommand = action.payload.substring(1);
+    let cmd = clientCommand.split(' ')[0];
+    //let args = command.substring(cmd.length + 1);
+    switch(cmd){
+      case 'debug': {
+        yield put(toggleDebug());
+        break;
+      }
+      default: {
+        //Client command not found, pass along to server
+        socket.emit(CHAT_EVENT, action.payload);
+      }
+    }
+  }
+  socket.emit(CHAT_EVENT, action.payload);
+}
+
 function* watchStoreActions(socket){
   yield takeEvery(sendAddPoint, handleSendAddPoint, socket);
   yield takeEvery(sendEndPath, handleSendEndPath, socket);
-  yield takeEvery('SEND_CHAT_MESSAGE', (socket, action) => {
-    socket.emit(CHAT_EVENT, action.payload);
-  }, socket);
+  yield takeEvery('SEND_CHAT_MESSAGE', handleSendChatMessage, socket);
   yield takeLatest(refreshGames, handleRequestGames, socket);
   yield takeLatest(joinGame, handleJoinGame, socket);
   yield takeLatest('LEAVE_GAME', handleLeaveGame, socket);
