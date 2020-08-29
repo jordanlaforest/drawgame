@@ -178,8 +178,9 @@ function* handleSendChatMessage(socket, action){
         socket.emit(CHAT_EVENT, action.payload);
       }
     }
+  }else{
+    socket.emit(CHAT_EVENT, action.payload);
   }
-  socket.emit(CHAT_EVENT, action.payload);
 }
 
 function* watchStoreActions(socket){
