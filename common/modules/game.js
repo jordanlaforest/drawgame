@@ -11,8 +11,10 @@ export const {
   leaveGame} = createActions(
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
-    CORRECT_GUESS: (guesser, word, intermissionTimer) => ({guesser, word, intermissionTimer}),
-    GAME_START: (timer, newWord='') => ({timer, newWord})
+    CORRECT_GUESS: (guesser, word, timer) => ({guesser, word, timer}),
+    GAME_START: (timer, newWord='') => ({timer, newWord}),
+    OUT_OF_TIME: (timer, word) => ({timer, word}),
+    INTERMISSION_OVER: (timer) => ({timer})
   },
   'ADD_SERVER_MESSAGE',
   'SEND_CHAT_MESSAGE',
@@ -132,21 +134,21 @@ const reducer = handleActions({
           s = s.set('winner', action.payload.guesser);
         }
       }else{
-        s = s.set('timer', action.payload.intermissionTimer);
+        s = s.set('timer', action.payload.timer);
       }
     });
   },
   [outOfTime]: (state, action) => {
     return state.merge({
       inIntermission: true,
-      currentWord: action.payload,
-      timer:action.payload.intermissionTimer
+      currentWord: action.payload.word,
+      timer:action.payload.timer
     });
   },
   [intermissionOver]: (state, action) => {
     return state.merge({
       inIntermission: false,
-      currentlyDrawingPlayer: action.payload,
+      currentlyDrawingPlayer: (state.currentlyDrawingPlayer + 1) % state.players.size,
       timer: action.payload.timer
     });
   },

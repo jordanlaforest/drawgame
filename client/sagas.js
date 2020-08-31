@@ -11,7 +11,8 @@ import {wsConnect, wsConnectFailure, wsConnectSuccess, wsDisconnected} from './m
 import {login, loginSuccess, loginFailure} from './modules/auth';
 import {joinGame, joinGameSuccess, joinGameFailure} from './modules/joinGame';
 import {refreshGames, refreshGamesSuccess, refreshGamesFailure} from './modules/gameList';
-import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath} from '../common/modules/game';
+import {addPointToDrawing, endPathInDrawing, sendAddPoint, sendEndPath,
+  gameStart, correctGuess, outOfTime, intermissionOver, timerTick} from '../common/modules/game';
 import {toggleDebug} from './modules/debug';
 /* eslint no-constant-condition: 0, no-console: 0*/ //TODO: Remove console statements
 
@@ -183,6 +184,29 @@ function* handleSendChatMessage(socket, action){
   }
 }
 
+function* handleGameTimer(action){
+  let timerChannel = yield call(countdown, action.payload.timer);
+  yield takeEvery(timerChannel, function* (){
+    yield put(timerTick());
+  });
+}
+
+function countdown(secs) {
+  return eventChannel(emitter => {
+    const iv = setInterval(() => {
+      secs -= 1;
+      if (secs >= 0) {
+        emitter(secs);
+      } else {
+        emitter(END);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(iv);
+    };
+  });
+}
+
 function* watchStoreActions(socket){
   yield takeEvery(sendAddPoint, handleSendAddPoint, socket);
   yield takeEvery(sendEndPath, handleSendEndPath, socket);
@@ -190,6 +214,7 @@ function* watchStoreActions(socket){
   yield takeLatest(refreshGames, handleRequestGames, socket);
   yield takeLatest(joinGame, handleJoinGame, socket);
   yield takeLatest('LEAVE_GAME', handleLeaveGame, socket);
+  yield takeLatest([gameStart, correctGuess, outOfTime, intermissionOver], handleGameTimer);
 }
 
 function* handleSocket(socket){
