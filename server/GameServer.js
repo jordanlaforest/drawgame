@@ -2,7 +2,7 @@ import io from 'socket.io';
 import ServerState from './ServerState';
 
 import {addPlayerToGame, removePlayerFromGame, addChatMessage, addServerMessage,
-  addPointToDrawing, endPathInDrawing, createGame, gameStart, correctGuess} from '../common/modules/game';
+  addPointToDrawing, endPathInDrawing, createGame, gameStart, correctGuess, outOfTime, timerTick, intermissionOver} from '../common/modules/game';
 import {addPlayer, removePlayer, createPlayer} from '../common/modules/players';
 
 import {
@@ -207,7 +207,7 @@ export default class GameServer {
       }
       case 'startgame': { //argument is the word to set
         let actionWithWord = gameStart(30, args); //TODO: Have round time in game options
-        this.state.applyActionToGame(actionWithWord, gameId);
+        this.applyActionToGame(actionWithWord, gameId);
 
         //Send the action with the secret word to only the drawing player
         let drawingId = game.get('players').get(0).get('id'); //CurrentlyDrawingPlayer should be 0 at the start of the game
@@ -229,7 +229,7 @@ export default class GameServer {
           socket.emit(ACTION, [addServerMessage('Invalid argument')]);
         }else{
           let action = correctGuess(playerIndex, game.get('currentWord'));
-          this.state.applyActionToGame(correctGuess(playerIndex), gameId);
+          this.applyActionToGame(correctGuess(playerIndex), gameId);
           this.io.to(gameId).emit(ACTION, [action]);
         }
         break;
@@ -253,7 +253,7 @@ export default class GameServer {
     let gameId = this.state.getPlayer(socket.id).get('gameId');
     let isPlayerDrawing = this.state.checkPlayerDrawing(socket.id);
     if(gameId !== undefined && isPlayerDrawing){
-      this.state.applyActionToGame(pathAction, gameId);
+      this.applyActionToGame(pathAction, gameId);
       socket.to(gameId).emit(ACTION_FROMJS, [pathAction]);
     }
   }
@@ -284,6 +284,26 @@ export default class GameServer {
       this.state.removePlayerFromGame(gameId, socket.id);
       let msgAction = addServerMessage(player.get('name') + ' has left the game');
       socket.to(gameId).emit(ACTION, [a, msgAction]);
+    }
+  }
+
+  applyActionToGame(action, gameId){
+    this.state.applyActionToGame(action, gameId);
+
+    //Check for actions needing a timer
+    if(action.payload.timer !== undefined){
+      let secs = action.payload.timer;
+      let iv = setInterval(() => {
+        secs -= 1;
+        this.state.applyActionToGame(timerTick(), gameId);
+        if(secs <= 0){
+          clearInterval(iv);
+          let game = this.state.getGame(gameId);
+          let action = game.inIntermission ? intermissionOver(30) : outOfTime(15, game.currentWord);
+          this.io.to(gameId).emit(ACTION, [action]);
+          this.applyActionToGame(action, gameId);
+        }
+      }, 1000);
     }
   }
 
