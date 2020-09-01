@@ -11,7 +11,7 @@ export const {
   leaveGame} = createActions(
   {
     ADD_CHAT_MESSAGE: (name, message) => Map({name, message}),
-    CORRECT_GUESS: (guesser, word, timer) => ({guesser, word, timer}),
+    CORRECT_GUESS: (guesser, timer, word) => ({guesser, word, timer}),
     GAME_START: (timer, newWord='') => ({timer, newWord}),
     OUT_OF_TIME: (timer, word) => ({timer, word}),
     INTERMISSION_OVER: (timer) => ({timer})

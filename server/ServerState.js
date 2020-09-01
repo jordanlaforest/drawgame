@@ -6,6 +6,7 @@ export default class ServerState {
   constructor() {
     this.players = Map();
     this.games = Map();
+    this.intervalIds = Map();
   }
 
   addGame(game){
@@ -46,5 +47,14 @@ export default class ServerState {
     let game = this.getGame(this.getPlayer(playerId).get('gameId'));
     return game.get('isStarted') && !game.get('inIntermission')
       && game.get('players').get(game.get('currentlyDrawingPlayer')).get('id') === playerId;
+  }
+
+  saveTimer(gameId, intervalId){
+    this.intervalIds = this.intervalIds.set(gameId, intervalId);
+  }
+
+  clearTimer(gameId){
+    clearInterval(this.intervalIds.get(gameId));
+    this.intervalIds = this.intervalIds.delete(gameId);
   }
 }

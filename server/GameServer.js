@@ -228,8 +228,8 @@ export default class GameServer {
         if(isNaN(playerIndex)){
           socket.emit(ACTION, [addServerMessage('Invalid argument')]);
         }else{
-          let action = correctGuess(playerIndex, game.get('currentWord'));
-          this.applyActionToGame(correctGuess(playerIndex), gameId);
+          let action = correctGuess(playerIndex, 15, game.get('currentWord'));
+          this.applyActionToGame(correctGuess(playerIndex, 15), gameId);
           this.io.to(gameId).emit(ACTION, [action]);
         }
         break;
@@ -289,6 +289,9 @@ export default class GameServer {
 
   applyActionToGame(action, gameId){
     this.state.applyActionToGame(action, gameId);
+    if(action.type == correctGuess){
+      this.state.clearTimer(gameId);
+    }
 
     //Check for actions needing a timer
     if(action.payload.timer !== undefined){
@@ -297,13 +300,14 @@ export default class GameServer {
         secs -= 1;
         this.state.applyActionToGame(timerTick(), gameId);
         if(secs <= 0){
-          clearInterval(iv);
+          this.state.clearTimer(gameId);
           let game = this.state.getGame(gameId);
           let action = game.inIntermission ? intermissionOver(30) : outOfTime(15, game.currentWord);
           this.io.to(gameId).emit(ACTION, [action]);
           this.applyActionToGame(action, gameId);
         }
       }, 1000);
+      this.state.saveTimer(gameId, iv);
     }
   }
 
