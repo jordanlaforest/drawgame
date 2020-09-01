@@ -185,7 +185,7 @@ function* handleSendChatMessage(socket, action){
 }
 
 function* handleGameTimer(action){
-  let timerChannel = yield call(countdown, action.payload.timer);
+  let timerChannel = yield call(countdown, action.payload.timer || action.payload.game.get('timer'));
   yield takeEvery(timerChannel, function* (){
     yield put(timerTick());
   });
@@ -214,7 +214,7 @@ function* watchStoreActions(socket){
   yield takeLatest(refreshGames, handleRequestGames, socket);
   yield takeLatest(joinGame, handleJoinGame, socket);
   yield takeLatest('LEAVE_GAME', handleLeaveGame, socket);
-  yield takeLatest([gameStart, correctGuess, outOfTime, intermissionOver], handleGameTimer);
+  yield takeLatest([gameStart, correctGuess, outOfTime, intermissionOver, joinGameSuccess], handleGameTimer);
 }
 
 function* handleSocket(socket){
