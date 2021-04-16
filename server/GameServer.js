@@ -234,8 +234,15 @@ export default class GameServer {
         }
         break;
       }
+      case 'skiptimer': {
+        this.state.clearTimer(gameId);
+        let action = game.inIntermission ? intermissionOver(30) : outOfTime(15, game.currentWord);
+        this.io.to(gameId).emit(ACTION, [action]);
+        this.applyActionToGame(action, gameId);
+        break;
+      }
       default: {
-        console.log('Unknown command');
+        console.log('Unknown command: ' + command);
       }
     }
   }
