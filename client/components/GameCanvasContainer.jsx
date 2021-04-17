@@ -13,12 +13,13 @@ class GameCanvasContainer extends React.Component {
     let currentWord = this.props.currentWord;
     let amIDrawing = this.props.playerId === this.props.currentlyDrawing.get('id');
     let name = amIDrawing ? '' : this.props.currentlyDrawing.get('name');
+    let winMsg = this.props.winner ? this.props.winner.get('name') + ' has won the game!' : '';
 
     let canvasHeader;
     if(!this.props.gameHasStarted){
       canvasHeader = <span>Please wait for the game to start.</span>;
     }else if(this.props.gameInIntermission){
-      canvasHeader = <span>The correct answer was <strong>{currentWord}</strong></span>;
+      canvasHeader = <span>The correct answer was <strong>{currentWord}</strong>. {winMsg}</span>;
     }else{
       if(amIDrawing){
         canvasHeader = <span>Your word is <strong>{currentWord}</strong></span>;
@@ -50,6 +51,7 @@ GameCanvasContainer.propTypes = {
   currentWord: PropTypes.string.isRequired,
   gameHasStarted: PropTypes.bool.isRequired,
   gameInIntermission: PropTypes.bool.isRequired,
+  winner: PropTypes.object,
   paths: PropTypes.instanceOf(List).isRequired,
   playerId: PropTypes.string.isRequired,
   addPoint: PropTypes.func.isRequired,
@@ -66,6 +68,7 @@ export default connect(
       currentWord: game.currentWord,
       gameHasStarted: game.isStarted,
       gameInIntermission: game.inIntermission,
+      winner: game.winner ? state.players.get(game.players.get(game.winner).get('id')) : undefined,
       playerId: state.auth.playerId,
       paths: game.get('drawingData').get('paths').push(game.get('drawingData').get('curPath')),
       timer: getTimerSeconds(game),

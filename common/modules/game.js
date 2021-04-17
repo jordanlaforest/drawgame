@@ -101,8 +101,11 @@ const reducer = handleActions({
     return state.merge({
       isStarted: true,
       inIntermission: false,
+      winner: undefined,
+      currentlyDrawingPlayer: 0,
       currentWord: action.payload.newWord,
-      timer: action.payload.timer
+      timer: action.payload.timer,
+      players: state.players.map(p => Map({id: p.get('id'), score: 0}))
     });
   },
   [correctGuess]: (state, action) => {

@@ -236,7 +236,7 @@ export default class GameServer {
       }
       case 'skiptimer': {
         this.state.clearTimer(gameId);
-        let action = game.inIntermission ? intermissionOver(30) : outOfTime(15, game.currentWord);
+        let action = game.inIntermission ? game.winner ? gameStart(30, 'NewWord') : intermissionOver(30) : outOfTime(15, game.currentWord);
         this.io.to(gameId).emit(ACTION, [action]);
         this.applyActionToGame(action, gameId);
         break;
@@ -296,7 +296,7 @@ export default class GameServer {
 
   applyActionToGame(action, gameId){
     this.state.applyActionToGame(action, gameId);
-    if(action.type == correctGuess){
+    if(action.type === correctGuess.toString()){
       this.state.clearTimer(gameId);
     }
 
@@ -309,7 +309,7 @@ export default class GameServer {
         if(secs <= 0){
           this.state.clearTimer(gameId);
           let game = this.state.getGame(gameId);
-          let action = game.inIntermission ? intermissionOver(30) : outOfTime(15, game.currentWord);
+          let action = game.inIntermission ? game.winner ? gameStart(30, 'NewWord') : intermissionOver(30) : outOfTime(15, game.currentWord);
           this.io.to(gameId).emit(ACTION, [action]);
           this.applyActionToGame(action, gameId);
         }
