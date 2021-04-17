@@ -3,7 +3,7 @@ import {Record} from 'immutable';
 
 //Actions
 export const {joinGame, joinGameSuccess, joinGameFailure} = createActions({
-  JOIN_GAME: (gameId) => ({gameId}),
+  JOIN_GAME: (gameId, password) => ({gameId, password}),
   JOIN_GAME_SUCCESS: (game) => ({game}),
   JOIN_GAME_FAILURE: (error) => ({error})});
 

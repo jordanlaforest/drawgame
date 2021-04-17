@@ -15,11 +15,16 @@ import Chat from './Chat.jsx';
 import DrawingControls from './DrawingControls.jsx';
 
 import {GameRecord, sendChatMessage, leaveGame} from '../../common/modules/game';
+import { joinGame } from '../modules/joinGame.js';
+import Prompt from './Prompt.jsx';
 
 class GameContainer extends React.Component {
   render() {
     let game = this.props.game;
     if(game.get('id') === undefined){
+      if(this.props.thisPlayerId){
+        return <Prompt title="Enter game password" submitCB={this.props.submitPassword} />;
+      }
       return <div>Loading</div>;
     }
     let chatMessages = game.get('chatMessages');
@@ -56,7 +61,8 @@ GameContainer.propTypes = {
   leaveGame: PropTypes.func.isRequired,
   thisPlayerId: PropTypes.string.isRequired,
   allPlayers: PropTypes.instanceOf(Map).isRequired,
-  sendChat: PropTypes.func.isRequired
+  sendChat: PropTypes.func.isRequired,
+  submitPassword: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -67,10 +73,11 @@ export default connect(
       thisPlayerId: state.auth.get('playerId')
     };
   },
-  dispatch => {
+  (dispatch, ownProps) => {
     return {
       sendChat: message => dispatch(sendChatMessage(message)),
-      leaveGame: () => dispatch(leaveGame())
+      leaveGame: () => dispatch(leaveGame()),
+      submitPassword: password => dispatch(joinGame(ownProps.match.params.gameid, password))
     };
   }
 )(GameContainer);

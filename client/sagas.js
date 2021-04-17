@@ -62,9 +62,12 @@ function* handleAuth(socket){
   yield put(loginSuccess(response.playerId, fromJS(response.players), fromJS(response.games)));
 
   const pathname = yield select(getPathname);
-  if(pathname.startsWith('/game/')){ //Automatically attempt to join game when navigating to /game/:gameid
+  if(pathname.startsWith('/game/')){ //Automatically attempt to join unpassworded game when navigating to /game/:gameid
     let gameId = pathname.substring(6);
-    yield put(joinGame(gameId));
+    let password = response.games.find(g => g.id === gameId).password;
+    if(!password){
+      yield put(joinGame(gameId, ''));
+    }
   }
 
   yield take('LOGOUT');
@@ -125,9 +128,9 @@ function* handleRequestGames(socket){
 }
 
 function* handleJoinGame(socket, action){
-  let gameId = action.payload.gameId;
+  let {gameId, password} = action.payload;
   let promise = new Promise((resolve, reject) => {
-    socket.emit(JOIN_GAME_EVENT, {gameId}, res => {
+    socket.emit(JOIN_GAME_EVENT, {gameId, password}, res => {
       if(res.err){
         reject(res.err);
       }else{
@@ -144,6 +147,7 @@ function* handleJoinGame(socket, action){
       yield put(push(newPath));
     }
   }else{
+    yield put(joinGameFailure());
     console.log('Join error: ', error);
   }
 }

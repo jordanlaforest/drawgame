@@ -39,7 +39,7 @@ export function getTimerSeconds(state){
 export const GameRecord = Record({
   id: undefined,
   name: '',
-  password: undefined,
+  password: '',
   maxPlayers: 5,
   currentlyDrawingPlayer: 0,
   players: List(),

@@ -11,10 +11,10 @@ import Col from 'react-bootstrap/lib/Col';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
-class Login extends React.Component {
+class Prompt extends React.Component {
   constructor(props){
     super(props);
-    this.state = {name: ''};
+    this.state = {value: ''};
   }
 
   render() {
@@ -23,13 +23,13 @@ class Login extends React.Component {
         <Row>
           <Col md={2} className="center-block gridClearfix">
             <Panel>
-              <Panel.Heading>Choose a name</Panel.Heading>
+              <Panel.Heading>{this.props.title}</Panel.Heading>
               <Panel.Body>
                 <InputGroup>
                   <FormControl
                     type="text"
                     onChange={this.onChange}
-                    value={this.state.name}
+                    value={this.state.value}
                     onKeyDown={this.onKeyDown}
                   />
                   <InputGroup.Button>
@@ -45,7 +45,7 @@ class Login extends React.Component {
   }
 
   onChange = (event) => {
-    this.setState({name: event.target.value});
+    this.setState({value: event.target.value});
   }
 
   onKeyDown = ({ keyCode }) => {
@@ -55,13 +55,14 @@ class Login extends React.Component {
   }
 
   submit = () => {
-    this.props.submitCB(this.state.name);
-    this.setState({name: ''});
+    this.props.submitCB(this.state.value);
+    this.setState({value: ''});
   }
 }
 
-Login.propTypes = {
-  submitCB: PropTypes.func.isRequired
+Prompt.propTypes = {
+  submitCB: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired
 };
 
-export default Login;
+export default Prompt;

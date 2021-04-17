@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import Lobby from './Lobby.jsx';
 import GameContainer from './GameContainer.jsx';
-import Login from './Login.jsx';
+import Prompt from './Prompt.jsx';
 
 import {isConnected} from '../modules/wsConnection';
 import {isLoggedIn, login} from '../modules/auth';
@@ -16,7 +16,7 @@ class App extends React.Component {
     if(!this.props.connected){
       return (<div><h2>Not Connected to Server</h2></div>);
     }else if(!this.props.loggedIn){
-      return <Login submitCB={this.props.submitLogin} />;
+      return <Prompt title="Choose a name" submitCB={this.props.submitLogin} />;
     }else{
       return (
         <ConnectedRouter history={this.props.history}>

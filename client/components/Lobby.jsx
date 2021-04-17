@@ -55,6 +55,6 @@ export default connect(state => {
 dispatch => {
   return {
     refreshGames: () => dispatch(refreshGames()),
-    joinGame: (gameId) => dispatch(joinGame(gameId))
+    joinGame: (gameId, password='') => dispatch(joinGame(gameId, password))
   };
 })(Lobby);

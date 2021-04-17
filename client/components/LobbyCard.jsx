@@ -37,7 +37,7 @@ class LobbyCard extends React.Component {
               : null
             }
             <InputGroup.Button>
-              <Button id='joinBtn' bsStyle='primary' onClick={() => this.props.joinGame(game.get('id'))}>
+              <Button id='joinBtn' bsStyle='primary' onClick={() => this.props.joinGame(game.get('id'), this.state.password)}>
                 {this.props.joining ? 'Joining' : 'Join'}
               </Button>
             </InputGroup.Button>
