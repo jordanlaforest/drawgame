@@ -20,8 +20,10 @@ class Lobby extends React.Component {
     let games = this.props.games;
     return (
       <div>
-        {/*<ButtonLink to="creategame">Create Game</ButtonLink>*/}
-        <Button onClick={this.props.refreshGames}><Glyphicon glyph="refresh" /></Button>
+        <nav>
+          <Button onClick={this.props.refreshGames}>Create Game</Button>
+          <Button onClick={this.props.refreshGames}><Glyphicon glyph="refresh" /></Button>
+        </nav>
         <Grid fluid>
           <Row>
             {
