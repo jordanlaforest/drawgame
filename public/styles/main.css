@@ -7,6 +7,19 @@ body {
   margin-bottom: 20px;
 }
 
+.glyphicon-lock {
+  padding-right: 5px;
+}
+
+.panel-footer .input-group {
+  width: 100%;
+}
+
+.input-group-btn:only-child>.btn {
+  width: 100%;
+  border-radius: 4px;
+}
+
 canvas {
   border: 1px solid grey;
   width: 100%;

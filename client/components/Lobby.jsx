@@ -6,6 +6,11 @@ import { connect } from 'react-redux';
 import Table from 'react-bootstrap/lib/Table';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Button from 'react-bootstrap/lib/Button';
+import Grid from 'react-bootstrap/lib/Grid';
+import Row from 'react-bootstrap/lib/Row';
+import Col from 'react-bootstrap/lib/Col';
+
+import LobbyCard from './LobbyCard.jsx';
 
 import {getGameList, refreshGames} from '../modules/gameList';
 import {joinGame, getJoiningGameId} from '../modules/joinGame';
@@ -17,36 +22,17 @@ class Lobby extends React.Component {
       <div>
         {/*<ButtonLink to="creategame">Create Game</ButtonLink>*/}
         <Button onClick={this.props.refreshGames}><Glyphicon glyph="refresh" /></Button>
-        <Table striped bordered condensed hover>
-          <thead>
-            <tr>
-              <th>Password </th>
-              <th>Game Name</th>
-              <th>Players</th>
-              <th>Join</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Grid fluid>
+          <Row>
             {
               games.map(game =>
-                <tr key={game.get('id')}>
-                  <td>{game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }</td>
-                  <td>{game.get('name')}</td>
-                  <td>{game.get('players').size + '/' + game.get('maxPlayers')}</td>
-                  <td>
-                    <Button
-                      bsStyle='primary'
-                      onClick={() => this.props.joiningGameId === undefined ? this.props.joinGame(game.get('id')) : undefined}
-                      disabled={this.props.joiningGameId === game.get('id')}
-                    >
-                      {this.props.joiningGameId === game.get('id') ? 'Joining' : 'Join'}
-                    </Button>
-                  </td>
-                </tr>
+                <Col md={3} key={game.get('id')}>
+                  <LobbyCard game={game} joinGame={this.props.joinGame} joining={this.props.joiningGameId === game.get('id')}/>
+                </Col>
               )
             }
-          </tbody>
-        </Table>
+          </Row>
+        </Grid>
       </div>
     );
   }
