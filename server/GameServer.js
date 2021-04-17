@@ -301,7 +301,7 @@ export default class GameServer {
     }
 
     //Check for actions needing a timer
-    if(action.payload.timer !== undefined){
+    if(action.payload?.timer){ 
       let secs = action.payload.timer;
       let iv = setInterval(() => {
         secs -= 1;
