@@ -25,6 +25,10 @@ module.exports = {
             cacheDirectory: true
           }
         }
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
       }
     ]
   },
