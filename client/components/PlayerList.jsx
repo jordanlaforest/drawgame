@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {Map, List} from 'immutable';
 
 import Badge from 'react-bootstrap/lib/Badge';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import Panel from 'react-bootstrap/lib/Panel';
 import ListGroup from 'react-bootstrap/lib/ListGroup';
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
+import Icon from './Icon.jsx';
 
 class PlayerList extends React.Component {
   render() {
@@ -21,7 +21,7 @@ class PlayerList extends React.Component {
                 let p = allPlayers.get(player.get('id'));
                 return (
                   <ListGroupItem active={currentlyDrawing === idx} key={idx}>
-                    { currentlyDrawing === idx ? <Glyphicon glyph='pencil' /> : undefined }
+                    { currentlyDrawing === idx ? <Icon icon='edit' /> : undefined }
                     { 
                       player.get('id') === thisPlayerId ? (
                         <strong>{' ' + p.get('name')}</strong>

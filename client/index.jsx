@@ -12,7 +12,13 @@ import Immutable from 'immutable';
 import {createBrowserHistory} from 'history';
 import {routerMiddleware} from 'connected-react-router/immutable';
 
+import './styles/index.css';
+import './styles/panel.css';
+import './styles/inputs.css';
 import App from './components/App.jsx';
+import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
+
 import createRootReducer from './modules/reducer';
 import rootSaga from './sagas';
 
@@ -64,4 +70,14 @@ store.subscribe(() =>{
   dispatches++;
 });
 
-ReactDOM.render((<Provider store={store}><App history={history}/></Provider>), document.getElementById('view'));
+ReactDOM.render((
+  <Provider store={store}>
+    <div className="container">
+      <Header />
+      <main>
+        <App history={history}/>
+      </main>
+    </div>
+    <Footer />
+  </Provider>
+), document.getElementById('view'));

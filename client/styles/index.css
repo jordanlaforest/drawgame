@@ -1,0 +1,50 @@
+html {
+  height:100%;
+  position:relative;
+}
+
+body {
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body * {
+  display: flex;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+
+  flex-direction: column;
+}
+
+main {
+  align-items: center;
+  flex-direction: column;
+  overflow: scroll;
+  height: 100%;
+}
+
+div#view {
+  height: 100%;
+}
+
+nav {
+  width: 100%;
+  padding: 10px;
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+}

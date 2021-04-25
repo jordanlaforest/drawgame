@@ -20,12 +20,10 @@ class App extends React.Component {
     }else{
       return (
         <ConnectedRouter history={this.props.history}>
-          <div>
-            <Switch>
-              <Route exact path="/" component={Lobby} />
-              <Route path="/game/:gameid" component={GameContainer}/>
-            </Switch>
-          </div>
+          <Switch>
+            <Route exact path="/" component={Lobby} />
+            <Route path="/game/:gameid" component={GameContainer}/>
+          </Switch>
         </ConnectedRouter>
       );
     }

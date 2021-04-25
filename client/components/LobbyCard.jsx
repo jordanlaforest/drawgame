@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 
 import {Map} from 'immutable';
 
+import './styles/lobbyCard.css';
 import Panel from 'react-bootstrap/lib/Panel';
 import Button from 'react-bootstrap/lib/Button';
 import InputGroup from 'react-bootstrap/lib/InputGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import { ENTER_KEY_CODE } from '../../common/constants';
+import Icon from './Icon.jsx';
 
 class LobbyCard extends React.Component {
   constructor(props){
@@ -19,9 +20,9 @@ class LobbyCard extends React.Component {
   render() {
     let game = this.props.game;
     return (
-      <Panel>
+      <Panel className="lobbyCard">
         <Panel.Heading>
-          <Panel.Title componentClass="h3">{game.get('password') ? <Glyphicon glyph="lock" /> : <div></div> }<b>{game.get('name')}</b></Panel.Title>
+          <Panel.Title componentClass="h3">{game.get('password') ? <Icon icon="lock" /> : <div></div> }<b>{game.get('name')}</b></Panel.Title>
         </Panel.Heading>
         <Panel.Body>{game.get('players').size + '/' + game.get('maxPlayers')} players</Panel.Body>
         <Panel.Footer>

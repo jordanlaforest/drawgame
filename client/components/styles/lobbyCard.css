@@ -1,0 +1,25 @@
+.lobbyCard {
+  margin: 10px;
+}
+
+.lobbyCard > .panel-body {
+  height: 50px;
+}
+
+.lobbyCard > .panel-footer > .input-group {
+  justify-content: flex-end;
+}
+
+@media (min-width: 600px){
+  .lobbyCard {
+    flex: 1 0 43%;
+    max-width: 43%;
+  }
+}
+
+@media (min-width: 992px){
+  .lobbyCard {
+    flex: 1 0 31%;
+    max-width: 31%;
+  }
+}

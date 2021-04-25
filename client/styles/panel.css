@@ -1,0 +1,27 @@
+.panel {
+    flex-direction: column;
+    border: 1px solid black;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: whitesmoke;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    background-color: lightseagreen;
+    border-bottom: 1px solid black;
+}
+
+.panel-footer {
+    padding: 10px;
+    flex-grow: 0;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+h3.panel-title {
+    margin: 0;
+    font-size: 1em;
+}

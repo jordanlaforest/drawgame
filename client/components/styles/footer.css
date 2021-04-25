@@ -1,0 +1,12 @@
+footer {
+  justify-content: center;
+  position: absolute;
+  bottom: 1px;
+  height: 20px;
+  width: 100%;
+}
+footer a {
+  color: lightgrey;
+  text-decoration: none;
+  font-weight: bold;
+}

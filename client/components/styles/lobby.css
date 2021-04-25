@@ -1,0 +1,12 @@
+.lobby {
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+@media (max-width: 599px) {
+  .lobby {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
