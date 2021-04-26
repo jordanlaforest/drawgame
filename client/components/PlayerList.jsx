@@ -8,6 +8,8 @@ import ListGroup from 'react-bootstrap/lib/ListGroup';
 import ListGroupItem from 'react-bootstrap/lib/ListGroupItem';
 import Icon from './Icon.jsx';
 
+import './styles/playerList.css';
+
 class PlayerList extends React.Component {
   render() {
     let { gamePlayers, allPlayers, currentlyDrawing, thisPlayerId } = this.props;
@@ -21,12 +23,12 @@ class PlayerList extends React.Component {
                 let p = allPlayers.get(player.get('id'));
                 return (
                   <ListGroupItem active={currentlyDrawing === idx} key={idx}>
-                    { currentlyDrawing === idx ? <Icon icon='edit' /> : undefined }
                     { 
                       player.get('id') === thisPlayerId ? (
                         <strong>{' ' + p.get('name')}</strong>
                       ) : ' ' + p.get('name')
                     }
+                    { currentlyDrawing === idx ? <Icon icon='edit' /> : undefined }
                     <Badge pullRight> { player.get('score') + ' pts'}</Badge>
                   </ListGroupItem>);
               })

@@ -19,12 +19,12 @@ class GameCanvasContainer extends React.Component {
     if(!this.props.gameHasStarted){
       canvasHeader = <span>Please wait for the game to start.</span>;
     }else if(this.props.gameInIntermission){
-      canvasHeader = <span>The correct answer was <strong>{currentWord}</strong>. {winMsg}</span>;
+      canvasHeader = <span>The correct answer was&nbsp;<strong>{currentWord}</strong>. {winMsg}</span>;
     }else{
       if(amIDrawing){
-        canvasHeader = <span>Your word is <strong>{currentWord}</strong></span>;
+        canvasHeader = <span>Your word is&nbsp;<strong>{currentWord}</strong></span>;
       }else{
-        canvasHeader = <span><strong>{name}</strong> is currently drawing</span>;
+        canvasHeader = <span><strong>{name}</strong>&nbsp;is currently drawing</span>;
       }
     }
     return (

@@ -1,0 +1,28 @@
+.list-group {
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.list-group-item {
+  border-bottom: solid 1px black;
+  margin-bottom: -1px;
+  padding: 5px;
+  justify-content: space-between;
+}
+
+.list-group-item > .badge {
+  color: white;
+  background-color: lightseagreen;
+  padding: 3px 7px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border: solid 1px white;
+}
+
+.list-group-item.active > .badge {
+  color: lightseagreen;
+  background-color: white;
+  border: solid 1px lightseagreen;
+}

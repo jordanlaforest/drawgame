@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {List} from 'immutable';
 
+import './styles/chat.css';
+
 import Panel from 'react-bootstrap/lib/Panel';
 import InputGroup from 'react-bootstrap/lib/InputGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
@@ -40,7 +42,7 @@ class Chat extends React.Component {
             {
               this.props.messages.valueSeq().map( (msg, idx) => {
                 if(msg.has('name')){
-                  return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
+                  return <li key={idx}><strong>{msg.get('name')}:&nbsp;</strong> {msg.get('message')}</li>;
                 }else{
                   return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>;
                 }

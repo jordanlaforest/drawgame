@@ -22,7 +22,8 @@ class LobbyCard extends React.Component {
     return (
       <Panel className="lobbyCard">
         <Panel.Heading>
-          <Panel.Title componentClass="h3">{game.get('password') ? <Icon icon="lock" /> : <div></div> }<b>{game.get('name')}</b></Panel.Title>
+          {game.get('password') ? <Icon icon="lock" /> : <div></div>}
+          <Panel.Title componentClass="h2"><b>{game.get('name')}</b></Panel.Title>
         </Panel.Heading>
         <Panel.Body>{game.get('players').size + '/' + game.get('maxPlayers')} players</Panel.Body>
         <Panel.Footer>

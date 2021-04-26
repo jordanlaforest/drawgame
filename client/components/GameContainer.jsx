@@ -1,13 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import {Map} from 'immutable';
 import {connect} from 'react-redux';
 
-import Grid from 'react-bootstrap/lib/Grid';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
+import './styles/gameContainer.css';
 
 import PlayerList from './PlayerList.jsx';
 import GameCanvasContainer from './GameCanvasContainer.jsx';
@@ -29,29 +26,27 @@ class GameContainer extends React.Component {
     }
     let chatMessages = game.get('chatMessages');
     return (
-      <div>
-        <ButtonGroup className='bottomMargin'>
+      <Fragment>
+        <nav>
           <Button onClick={this.props.leaveGame}>Leave Game</Button>
           <Button>Skip Word</Button>
-        </ButtonGroup>
-        <Grid fluid>
-          <Row>
-            <Col md={2}>
-              <PlayerList currentlyDrawing={game.get('currentlyDrawingPlayer')}
-                gamePlayers={game.get('players')}
-                allPlayers={this.props.allPlayers}
-                thisPlayerId={this.props.thisPlayerId} />
-              <DrawingControls />
-            </Col>
-            <Col md={8}>
-              <GameCanvasContainer/>
-            </Col>
-            <Col md={2}>
-              <Chat messages={chatMessages} sendChatCB={this.props.sendChat} />
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+        </nav>
+        <div className="gameContainer">
+          <div className="gameSidebar">
+            <PlayerList currentlyDrawing={game.get('currentlyDrawingPlayer')}
+              gamePlayers={game.get('players')}
+              allPlayers={this.props.allPlayers}
+              thisPlayerId={this.props.thisPlayerId} />
+            <DrawingControls />
+          </div>
+          <div className="canvasPanel">
+            <GameCanvasContainer/>
+          </div>
+          <div className="gameSidebar">
+            <Chat messages={chatMessages} sendChatCB={this.props.sendChat} />
+          </div>
+        </div>
+      </Fragment>
     );
   }
 }

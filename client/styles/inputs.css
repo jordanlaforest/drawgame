@@ -27,11 +27,25 @@
   overflow: hidden;
 }
 
+button {
+  background-color: rgb(13, 88, 85);
+  color: white;
+  padding: 5px;
+}
+
+nav > button {
+  border: solid 1px black;
+  border-radius: 4px;
+  align-items: center;
+}
+
 .input-group-btn > button {
   width: 70px;
   justify-content: center;
   border: 0;
-  background-color: rgb(13, 88, 85);
-  color: white;
-  padding: 5px;
+}
+
+.input-group-btn:only-child > .btn,
+.input-group-btn:only-child {
+  width: 100%;
 }

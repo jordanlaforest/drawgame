@@ -3,11 +3,7 @@
 }
 
 .lobbyCard > .panel-body {
-  height: 50px;
-}
-
-.lobbyCard > .panel-footer > .input-group {
-  justify-content: flex-end;
+  height: 100px;
 }
 
 @media (min-width: 600px){

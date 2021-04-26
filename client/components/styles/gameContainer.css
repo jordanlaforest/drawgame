@@ -1,0 +1,38 @@
+.gameContainer {
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.gameContainer .panel {
+    margin: 10px;
+    flex-grow: 1;
+}
+
+.gameSidebar {
+    flex-direction: column;
+    flex: 0 0 18%;
+    width: 18%;
+    min-width: 150px;
+}
+
+.gameSidebar > .panel:first-child > .panel-body {
+    height: 100%;
+}
+
+.canvasPanel {
+    flex-grow: 1;
+}
+
+.canvasPanel .panel-heading {
+    justify-content: space-between;
+}
+
+.canvasPanel > .panel, canvas {
+    width: 100%;
+}
+
+canvas {
+    border: solid 1px black;
+    background-color: white;
+}
