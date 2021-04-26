@@ -31,6 +31,7 @@ button {
   background-color: rgb(13, 88, 85);
   color: white;
   padding: 5px;
+  cursor: pointer;
 }
 
 nav > button {

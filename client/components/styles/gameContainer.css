@@ -1,7 +1,6 @@
 .gameContainer {
     width: 100%;
     justify-content: space-between;
-    padding: 10px;
 }
 
 .gameContainer .panel {
@@ -16,8 +15,9 @@
     min-width: 150px;
 }
 
-.gameSidebar > .panel:first-child > .panel-body {
-    height: 100%;
+.gameSidebar .panel-body {
+    height: 0px;
+    flex: 1;
 }
 
 .canvasPanel {

@@ -5,6 +5,16 @@
   width: 100%;
 }
 
+.list-unstyled {
+  overflow-y: scroll;
+    flex: 1;
+}
+
+
+.list-unstyled strong {
+  display: contents;
+}
+
 .server-message {
   justify-content: center;
 }

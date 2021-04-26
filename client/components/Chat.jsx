@@ -42,7 +42,7 @@ class Chat extends React.Component {
             {
               this.props.messages.valueSeq().map( (msg, idx) => {
                 if(msg.has('name')){
-                  return <li key={idx}><strong>{msg.get('name')}:&nbsp;</strong> {msg.get('message')}</li>;
+                  return <li key={idx}><strong>{msg.get('name')}:</strong> {msg.get('message')}</li>;
                 }else{
                   return <li className="server-message" key={idx}><strong>{msg.get('message')}</strong></li>;
                 }
