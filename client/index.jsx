@@ -12,6 +12,7 @@ import Immutable from 'immutable';
 import {createBrowserHistory} from 'history';
 import {routerMiddleware} from 'connected-react-router/immutable';
 
+import './styles/theme.css';
 import './styles/index.css';
 import './styles/panel.css';
 import './styles/inputs.css';

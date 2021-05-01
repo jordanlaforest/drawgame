@@ -3,12 +3,12 @@
   border: 1px solid black;
   border-radius: 4px;
   overflow: hidden;
-  background-color: whitesmoke;
+  background-color: var(--theme-off-white);
 }
 
 .panel-heading {
   padding: 10px 15px;
-  background-color: lightseagreen;
+  background-color: var(--theme-secondary);
   border-bottom: 1px solid black;
   flex: none;
 }
@@ -17,7 +17,7 @@
   padding: 10px;
   flex-grow: 1;
   border-top: 1px solid black;
-  background-color: lightseagreen;
+  background-color: var(--theme-secondary);
   flex: none;
 }
 

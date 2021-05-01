@@ -13,7 +13,7 @@
 
 .list-group-item > .badge {
   color: white;
-  background-color: lightseagreen;
+  background-color: var(--theme-secondary);
   padding: 3px 7px;
   border-radius: 10px;
   font-size: 12px;
@@ -22,7 +22,7 @@
 }
 
 .list-group-item.active > .badge {
-  color: lightseagreen;
+  color: var(--theme-secondary);
   background-color: white;
-  border: solid 1px lightseagreen;
+  border: solid 1px var(--theme-secondary);
 }

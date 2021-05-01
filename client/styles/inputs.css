@@ -28,7 +28,7 @@
 }
 
 button {
-  background-color: rgb(13, 88, 85);
+  background-color: var(--theme-primary);
   color: white;
   padding: 5px;
   cursor: pointer;
