@@ -6,7 +6,7 @@ import InputGroup from 'react-bootstrap/lib/InputGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import Button from 'react-bootstrap/lib/Button';
 
-import './styles/prompt.css';
+//import './styles/prompt.css';
 
 import {ENTER_KEY_CODE} from '../../common/constants';
 
