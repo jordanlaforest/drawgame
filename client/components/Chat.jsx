@@ -19,19 +19,17 @@ class Chat extends React.Component {
 
   render() {
     let panelFooter = (
-      <div>
-        <InputGroup>
-          <FormControl
-            type="text"
-            onChange={this.onChange}
-            value={this.state.value}
-            onKeyDown={this.onKeyDown}
-          />
-          <InputGroup.Button>
-            <Button onClick={this.sendMessage}>Send</Button>
-          </InputGroup.Button>
-        </InputGroup>
-      </div>
+      <InputGroup>
+        <FormControl
+          type="text"
+          onChange={this.onChange}
+          value={this.state.value}
+          onKeyDown={this.onKeyDown}
+        />
+        <InputGroup.Button>
+          <Button onClick={this.sendMessage}>Send</Button>
+        </InputGroup.Button>
+      </InputGroup>
     );
 
     return (
