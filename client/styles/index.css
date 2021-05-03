@@ -22,8 +22,6 @@ body * {
 
 .container {
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
 
@@ -33,8 +31,8 @@ body * {
 main {
   align-items: center;
   flex-direction: column;
-  overflow: scroll;
-  height: 100%;
+  height: 1px;
+  flex-grow: 1;
 }
 
 div#view {

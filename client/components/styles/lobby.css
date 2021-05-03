@@ -2,6 +2,7 @@
   width: 100%;
   flex-wrap: wrap;
   justify-content: space-between;
+  overflow-y: auto;
 }
 
 @media (max-width: 599px) {
