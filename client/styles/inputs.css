@@ -38,6 +38,11 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  background-color: var(--theme-secondary);
+  color:black;
+}
+
 nav > button {
   border: solid 1px black;
   border-radius: 4px;
