@@ -1,0 +1,30 @@
+.gameContainer .drawingControls {
+    flex-grow: 0;
+}
+
+.drawingControls > .panel-body {
+    flex-direction: column;
+
+}
+
+.drawingControls .react-colorful {
+    width: 100%;
+}
+
+.brushSizeBg {
+    background-color: white;
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.brushSizeContainer {
+    margin-top: 5px;
+}
+
+.brushSizeContainer > input {
+    flex-grow: 1;
+}

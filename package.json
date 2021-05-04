@@ -46,6 +46,7 @@
     "pug": "^3.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^0.32.1",
+    "react-colorful": "^5.1.4",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
